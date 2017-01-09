@@ -1,0 +1,25 @@
+<html>
+    <head>
+        <title>Goprod, deployment manager</title>
+    </head>
+    <body>
+        <div id="app">
+            <div class="auth" v-if="!user.authenticated">
+                <div class="auth-loading" v-if="user.authenticating">
+                    Identification en cours...
+                </div>
+                <div class="auth-process" @click="auth" v-else>
+                    Identification Github
+                </div>
+            </div>
+        </div>
+        <script type="text/javascript">
+        var Github = {
+            url : "{{ github.url }}",
+            clientId : "{{ github.client_id }}",
+            clientSecret : "{{ github.client_secret }}"
+        };
+        </script>
+        <script type="text/javascript" src="js/build.js"></script>
+    </body>
+</html>

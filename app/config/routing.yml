@@ -1,0 +1,3 @@
+m6_video_status:
+    resource: '@AppBundle/Resources/config/routing.yml'
+    prefix:   /
