@@ -9,8 +9,14 @@ class FrontController extends Controller
 {
     public function indexAction()
     {
-        return $this->render('AppBundle::index.html.twig', [
-            'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR,
-        ]);
+        return $this->render(
+            'AppBundle::index.html.twig',
+            [
+                'github' => [
+                    'url' => $this->container->getParameter('app_bundle.github.url'),
+                    'client_id' => $this->container->getParameter('app_bundle.github.client_id')
+                ]
+            ]
+        );
     }
 }

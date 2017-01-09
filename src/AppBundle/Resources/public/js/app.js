@@ -9,8 +9,9 @@ var vue = new Vue({
         }
     },
     mounted: function() {
-        var urlParams = new URLSearchParams(window.location.search);
+        var urlParams = new URLSearchParams(window.location.search.slice(1));
         if (urlParams.has('code')) {
+            console.log('okaa');
             this.user.authenticating = true;
             this.$http.get(
                 Github.url +'login/oauth/access_token',

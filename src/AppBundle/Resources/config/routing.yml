@@ -2,3 +2,8 @@ index:
   path: /
   defaults:
     _controller: AppBundle:Front:index
+
+auth:
+  path: /auth
+  defaults:
+    _controller: AppBundle:Api:auth
