@@ -11,22 +11,17 @@ var vue = new Vue({
     mounted: function() {
         var urlParams = new URLSearchParams(window.location.search.slice(1));
         if (urlParams.has('code')) {
-            console.log('okaa');
             this.user.authenticating = true;
             this.$http.get(
-                Github.url +'login/oauth/access_token',
-                {
-                    params : {
-                        client_id: Github.clientId,
-                        client_secret: Github.clientSecret,
-                        code: urlParams.get('code')
-                    }
-                }
-            ).then(function(reponse) {
-console.log(response);
+                'auth?code='+urlParams.get('code') // @todo: js routing
+            ).then(function(response) {
+                this.user = Object.assign(this.user, response.data);
+                this.user.authenticated = true;
+                this.user.authenticating = false;
+                console.log(this.user);
             },
             function(response) {
-
+                // @todo: gérer l'erreur
             });
         }
     },
@@ -37,3 +32,4 @@ console.log(response);
         }
     }
 });
+// @todo: github auth component
