@@ -2,6 +2,7 @@
   "name": "goprod",
   "version": "1.0.0",
   "dependencies": {
+    "cookies-js": "^1.2.3",
     "gulp": "^3.9.1",
     "gulp-concat": "^2.6.1",
     "gulp-if": "^2.0.2",

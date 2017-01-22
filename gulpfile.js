@@ -12,7 +12,10 @@ var path = {
     js : [
         'node_modules/vue/dist/vue.min.js',
         'node_modules/vue-resource/dist/vue-resource.min.js',
-        'src/**/Resources/public/js/**/*.js'
+        'node_modules/cookies-js/dist/cookies.min.js',
+        'src/AppBundle/Resources/public/js/component/github/client.js',
+        'src/AppBundle/Resources/public/js/component/github/auth.js',
+        'src/AppBundle/Resources/public/js/app.js'
     ],
     css: ['src/**/Resources/public/scss/**/*.scss'],
     img: ['src/**/Resources/public/img/**/*.*']

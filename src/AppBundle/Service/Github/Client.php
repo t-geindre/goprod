@@ -48,7 +48,7 @@ class Client
         $this->accessToken = $accessToken;
     }
 
-    public function authUser()
+    public function authUser($code)
     {
         $authResponse = $this->request(
             'login/oauth/access_token',
@@ -67,15 +67,7 @@ class Client
             ));
         }
 
-        $this->accessToken = $authResponse['access_token'];
-
-        // @todo: throw event to register user in database
-        return array_merge($authResponse, $this->getUser());
-    }
-
-    public function getUser($userName = null)
-    {
-        return $this->request('api/v3/user'.($userName ? '/'.$userName : ''));
+        return $authResponse;
     }
 
     public function request($url, $method = RequestInterface::METHOD_GET, $content = '', $headers = array())

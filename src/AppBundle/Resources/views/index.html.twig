@@ -4,20 +4,37 @@
     </head>
     <body>
         <div id="app">
-            <div class="auth" v-if="!user.authenticated">
-                <div class="auth-loading" v-if="user.authenticating">
+        </div>
+
+        <script type="text/template" id="app-template">
+            <div>
+                <div v-if="authenticating">
                     Identification en cours...
                 </div>
-                <div class="auth-process" @click="auth" v-else>
-                    Identification Github
+                <div class="auth" v-if="!authenticated">
+                    Identification Github requise
+                    <div class="auth-process" @click="authenticate(true)">
+                        Auth process
+                    </div>
+                </div>
+                <div v-else>
+                    Identifié
                 </div>
             </div>
-        </div>
+        </script>
+
         <script type="text/javascript">
-        var Github = {
-            url : "{{ github.url }}",
-            clientId : "{{ github.client_id }}"
-        };
+            window.GithubClient = {
+                app: {
+                    clientId: "{{ github.client_id }}",
+                    scope: "repo"
+                },
+                url: {
+                    site: "{{ github.url }}",
+                    api: "{{ github.url }}api/v3/",
+                    authProxy: "{{ path('auth') }}"
+                }
+            };
         </script>
         <script type="text/javascript" src="/js/build.js"></script>
     </body>
