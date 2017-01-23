@@ -1,5 +1,6 @@
 parameters:
-    github.url: https://github.m6web.fr/
+    github.urls.site: https://github.m6web.fr/
+    github.urls.api: https://github.m6web.fr/api/v3/
     github.client_id: ~
     github.client_secret: ~
     kernel.secret: ~

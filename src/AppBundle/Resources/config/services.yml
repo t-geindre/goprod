@@ -3,6 +3,6 @@ services:
     class: "AppBundle\\Service\\Github\\Client"
     arguments:
       - "@buzz"
-      - "%app_bundle.github.url%"
+      - "%app_bundle.github.urls.site%"
       - "%app_bundle.github.client_id%"
       - "%app_bundle.github.client_secret%"

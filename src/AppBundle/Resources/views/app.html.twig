@@ -1,0 +1,34 @@
+<script type="text/template" id="app-template">
+    <div>
+        <user-details
+            v-bind:authenticated="authenticated"
+            v-bind:user="user"
+            v-on:authenticate="authenticate">
+        </user-details>
+
+        <div v-if="authenticating">Identification en cours...</div>
+
+        <div class="auth" v-on:click="authenticate" v-else v-if="!authenticated">
+            Identification Github
+        </div>
+
+        <div v-else>
+        main app
+        </div>
+
+    </div>
+</script>
+
+<script type="text/javascript">
+    window.GithubClient = {
+        app: {
+            clientId: "{{ github.client_id }}",
+            scope: "repo"
+        },
+        url: {
+            site: "{{ github.site }}",
+            api: "{{ github.api }}",
+            authProxy: "{{ path('auth') }}"
+        }
+    };
+</script>

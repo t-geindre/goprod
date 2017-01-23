@@ -13,7 +13,8 @@ class FrontController extends Controller
             'AppBundle::index.html.twig',
             [
                 'github' => [
-                    'url' => $this->container->getParameter('app_bundle.github.url'),
+                    'site' => $this->container->getParameter('app_bundle.github.urls.site'),
+                    'api' => $this->container->getParameter('app_bundle.github.urls.api'),
                     'client_id' => $this->container->getParameter('app_bundle.github.client_id')
                 ]
             ]

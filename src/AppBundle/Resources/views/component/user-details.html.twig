@@ -1,0 +1,13 @@
+<script type="text/template" id="user-details-template">
+    <div class="user-details">
+        <template v-if="authenticated">
+            <p class="avatar">
+                <img :src="user.avatar_url" alt="avatar" />
+            </p>
+            <p class="name">[[ user.name ]]</p>
+        </template>
+        <template v-else>
+            <p class="auth-link" @click="authenticate">Connexion</p>
+        </template>
+    </div>
+</script>

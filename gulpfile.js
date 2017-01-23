@@ -14,8 +14,7 @@ var path = {
         'node_modules/vue-resource/dist/vue-resource.min.js',
         'node_modules/cookies-js/dist/cookies.min.js',
         'src/AppBundle/Resources/public/js/component/github/client.js',
-        'src/AppBundle/Resources/public/js/component/github/auth.js',
-        'src/AppBundle/Resources/public/js/app.js'
+        'src/**/Resources/public/js/**/*.js'
     ],
     css: ['src/**/Resources/public/scss/**/*.scss'],
     img: ['src/**/Resources/public/img/**/*.*']
@@ -45,7 +44,7 @@ gulp.task('img', function() {
 
 gulp.task('default', ['js', 'css', 'img']);
 
-gulp.task('watch', function() {
+gulp.task('watch', ['default'], function() {
     gulp.watch(path.js, ['js']);
     gulp.watch(path.css, ['css']);
     gulp.watch(path.img, ['img']);

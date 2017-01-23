@@ -34,6 +34,8 @@ doctrine:
 
 app:
     github:
-        url: "%github.url%"
+        urls:
+            site: "%github.urls.site%"
+            api:  "%github.urls.api%"
         client_id: "%github.client_id%"
         client_secret: "%github.client_secret%"

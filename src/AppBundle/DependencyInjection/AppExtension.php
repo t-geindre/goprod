@@ -16,10 +16,18 @@ class AppExtension extends Extension
         $configuration = $this->getConfiguration($configs, $container);
         $config = $this->processConfiguration($configuration, $configs);
 
-        foreach ($config as $root => $values) {
-            foreach ($values as $key => $value) {
-                $container->setParameter(sprintf('app_bundle.%s.%s', $root, $key), $value);
+        $this->flatten($config, 'app_bundle', $container);
+    }
+
+    protected function flatten(array $arr, $parentKey, ContainerBuilder $container)
+    {
+        foreach ($arr as $key => $value) {
+            $key = $parentKey.'.'.$key;
+            if (is_array($value)) {
+                $this->flatten($value, $key, $container);
+                continue;
             }
+            $container->setParameter($key, $value);
         }
     }
 }
