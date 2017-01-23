@@ -12,13 +12,10 @@
                     <a class="navbar-brand" href="#">Goprod</a>
                 </div>
                 <div id="navbar" class="collapse navbar-collapse">
-                <!--
                     <ul class="nav navbar-nav">
-                        <li class="active"><a href="#">Home</a></li>
-                        <li><a href="#about">About</a></li>
-                        <li><a href="#contact">Contact</a></li>
+                        <li class="active"><a href="#">New</a></li>
+                        <li><a href="#about">In progress</a></li>
                     </ul>
-                -->
                     <user-details
                         v-bind:authenticated="authenticated"
                         v-bind:user="user"
@@ -51,7 +48,12 @@
                     </ul>
                     <div class="tab-content">
                         <div class="tab-pane active border-right border-bottom border-left" id="deploy-pull-request">
-                            <github-issues type="pr"></github-issues>
+                            <github-issues
+                                query-append="is:pr"
+                                :query="'is:open author:'+user.login"
+                                v-bind:user-login="user.login"
+                            >
+                            </github-issues>
                         </div>
                         <div class="tab-pane border-right border-bottom border-left" id="deploy-project">
 
