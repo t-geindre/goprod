@@ -32,7 +32,8 @@
         {
             params = Object.assign({
                 redirect: false,
-                remember: true
+                remember: true,
+                clearAuthCode: true
             }, params);
 
 
@@ -69,6 +70,17 @@
                         }
                     }})(this.$context)
                 );
+
+                // clear used code
+                if (window.history && params.clearAuthCode) {
+                    urlParams.delete('code')
+                    var search = urlParams.toString();
+                    window.history.pushState(
+                        {},
+                        'Authenticated',
+                        window.location.pathname + (search.length ? '?' + search : '')
+                    );
+                }
 
                 return;
             }
