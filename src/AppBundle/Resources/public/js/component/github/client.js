@@ -83,6 +83,13 @@
             }
         };
 
+        this.clearAuthCookie = function()
+        {
+            if (window.Cookies) {
+                window.Cookies.set('github-auth', undefined, { expires: Infinity });
+            }
+        }
+
         this.apiQuery = function(url, data = {})
         {
             if (this.auth.access_token) {

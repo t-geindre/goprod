@@ -6,8 +6,11 @@ Vue.component('user-details', {
         console.log(this.user);
     },
     methods: {
-        authenticate: function() {
-            this.$emit('authenticate');
+        login: function() {
+            this.$emit('login');
+        },
+        logout: function() {
+            this.$emit('logout');
         }
     }
 });

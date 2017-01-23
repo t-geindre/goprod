@@ -2,6 +2,7 @@
   "name": "goprod",
   "version": "1.0.0",
   "dependencies": {
+    "bootstrap": "^3.3.7",
     "cookies-js": "^1.2.3",
     "gulp": "^3.9.1",
     "gulp-concat": "^2.6.1",
@@ -11,6 +12,7 @@
     "gulp-uglify": "^2.0.0",
     "gulp-uglifycss": "^1.0.6",
     "gulp-watch": "^4.3.11",
+    "jquery": "^3.1.1",
     "vue": "^2.1.8",
     "vue-resource": "^1.0.3"
   }

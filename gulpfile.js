@@ -10,14 +10,24 @@ var env = process.env.GULP_ENV;
 
 var path = {
     js : [
+        'node_modules/jquery/dist/jquery.min.js',
+        'node_modules/bootstrap/dist/js/bootstrap.min.js',
         'node_modules/vue/dist/vue.min.js',
         'node_modules/vue-resource/dist/vue-resource.min.js',
         'node_modules/cookies-js/dist/cookies.min.js',
         'src/AppBundle/Resources/public/js/component/github/client.js',
         'src/**/Resources/public/js/**/*.js'
     ],
-    css: ['src/**/Resources/public/scss/**/*.scss'],
-    img: ['src/**/Resources/public/img/**/*.*']
+    css: [
+        'node_modules/bootstrap/dist/css/bootstrap.min.css',
+        'src/**/Resources/public/scss/**/*.scss'
+    ],
+    font: [
+        'node_modules/bootstrap/dist/fonts/*.*'
+    ],
+    img: [
+        'src/**/Resources/public/img/**/*.*'
+    ]
 };
 
 gulp.task('js', function () {
@@ -42,10 +52,16 @@ gulp.task('img', function() {
         .pipe(gulp.dest('web/img'));
 });
 
-gulp.task('default', ['js', 'css', 'img']);
+gulp.task('font', function() {
+    return gulp.src(path.font)
+        .pipe(gulp.dest('web/fonts'));
+});
+
+gulp.task('default', ['js', 'css', 'img', 'font']);
 
 gulp.task('watch', ['default'], function() {
     gulp.watch(path.js, ['js']);
     gulp.watch(path.css, ['css']);
     gulp.watch(path.img, ['img']);
+    gulp.watch(path.img, ['font']);
 });

@@ -26,6 +26,11 @@ var vue = new Vue({
                     this.authenticating = false;
                 }
             });
+        },
+        clearAuth: function() {
+            this.$github.clearAuthCookie();
+            this.authenticated = false;
+            this.user = {};
         }
     }
 });
