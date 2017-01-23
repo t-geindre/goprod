@@ -1,0 +1,61 @@
+<script type="text/template" id="github-issues-template">
+<div>
+    <div class="row form-group">
+        <div class="btn-group col-md-5" data-toggle="buttons">
+            <label class="btn btn-default active">
+                <input type="radio" name="iam" autocomplete="off" checked> Created
+            </label>
+            <label class="btn btn-default">
+                <input type="radio" name="iam" autocomplete="off"> Assigned
+            </label>
+            <label class="btn btn-default">
+                <input type="radio" name="iam" autocomplete="off"> Mentioned
+            </label>
+        </div>
+        <div class="col-md-7">
+            <div class="input-group">
+                <div class="input-group-addon">
+                    <span class="glyphicon glyphicon-search"></span>
+                </div>
+                <input type="text" class="form-control" id="query" />
+            </div>
+        </div>
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <div class="btn-group btn-group-sm" role="group" data-toggle="buttons">
+                <label class="btn btn-default active">
+                    <input type="radio" name="open" autocomplete="off" checked>
+                    <span class="glyphicon glyphicon-ok"></span> Open
+                </label>
+                <label class="btn btn-default">
+                    <input type="radio" name="open" autocomplete="off">
+                    <span class="glyphicon glyphicon-remove"></span> Closed
+                </label>
+            </div>
+            <div class="dropdown pull-right">
+                <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                    Sort <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                    <li><a href="#">Newest</a></li>
+                    <li><a href="#">Oldest</a></li>
+                    <li><a href="#">Most commented</a></li>
+                    <li><a href="#">Least commented</a></li>
+                    <li><a href="#">Recently updated</a></li>
+                    <li><a href="#">Least recently updated</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="list-group">
+            <a href="#" class="list-group-item">
+            </a>
+            <a href="#" class="list-group-item">Dapibus ac facilisis in</a>
+            <a href="#" class="list-group-item">Morbi leo risus</a>
+            <a href="#" class="list-group-item">Porta ac consectetur ac</a>
+            <a href="#" class="list-group-item">Vestibulum at eros</a>
+        </div>
+    </div>
+
+</div>
+</script>

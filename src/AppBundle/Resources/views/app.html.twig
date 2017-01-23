@@ -12,11 +12,13 @@
                     <a class="navbar-brand" href="#">Goprod</a>
                 </div>
                 <div id="navbar" class="collapse navbar-collapse">
+                <!--
                     <ul class="nav navbar-nav">
                         <li class="active"><a href="#">Home</a></li>
                         <li><a href="#about">About</a></li>
                         <li><a href="#contact">Contact</a></li>
                     </ul>
+                -->
                     <user-details
                         v-bind:authenticated="authenticated"
                         v-bind:user="user"
@@ -29,10 +31,33 @@
 
         </nav>
         <div class="container" id="container">
-            <p v-if="authenticating">Identification en cours...</p>
-            <p class="auth" v-on:click="authenticate" v-else v-if="!authenticated">Identification Github</p>
-            <div v-else>
-            main app
+            <p v-if="authenticating">Processing...</p>
+            <div v-if="authenticated">
+                <div class="page-header">
+                    <h1>Let's go prod ! <small>New deployment</small></h1>
+                </div>
+                <div>
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li class="active">
+                            <a href="#deploy-pull-request" aria-controls="home" role="tab" data-toggle="tab">
+                                Pull Requests
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#deploy-project" aria-controls="profile" role="tab" data-toggle="tab">
+                                Projects
+                            </a>
+                        </li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane active border-right border-bottom border-left" id="deploy-pull-request">
+                            <github-issues type="pr"></github-issues>
+                        </div>
+                        <div class="tab-pane border-right border-bottom border-left" id="deploy-project">
+
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -53,3 +78,4 @@
 </script>
 
 {% include '@App/component/user-details.html.twig' %}
+{% include '@App/component/github/github-issues.html.twig' %}
