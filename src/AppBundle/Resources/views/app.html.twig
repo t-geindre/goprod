@@ -28,39 +28,41 @@
 
         </nav>
         <div class="container" id="container">
-            <p v-if="authenticating">Processing...</p>
-            <div v-if="authenticated">
-                <div class="page-header">
-                    <h1>Let's go prod ! <small>New deployment</small></h1>
-                </div>
-                <div>
-                    <ul class="nav nav-tabs" role="tablist">
-                        <li class="active">
-                            <a href="#deploy-pull-request" aria-controls="home" role="tab" data-toggle="tab">
-                                Pull Requests
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#deploy-project" aria-controls="profile" role="tab" data-toggle="tab">
-                                Projects
-                            </a>
-                        </li>
-                    </ul>
-                    <div class="tab-content">
-                        <div class="tab-pane active border-right border-bottom border-left" id="deploy-pull-request">
-                            <github-issues
-                                query-append="is:pr"
-                                :query="'is:open author:'+user.login"
-                                v-bind:user-login="user.login"
-                            >
-                            </github-issues>
-                        </div>
-                        <div class="tab-pane border-right border-bottom border-left" id="deploy-project">
+            <transition name="fade">
+                <p v-if="authenticating">Processing...</p>
+                <div v-if="authenticated">
+                    <div class="page-header">
+                        <h1>Let's go prod ! <small>New deployment</small></h1>
+                    </div>
+                    <div>
+                        <ul class="nav nav-tabs" role="tablist">
+                            <li class="active">
+                                <a href="#deploy-pull-request" aria-controls="home" role="tab" data-toggle="tab">
+                                    Pull Requests
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#deploy-project" aria-controls="profile" role="tab" data-toggle="tab">
+                                    Projects
+                                </a>
+                            </li>
+                        </ul>
+                        <div class="tab-content">
+                            <div class="tab-pane active border-right border-bottom border-left" id="deploy-pull-request">
+                                <github-issues
+                                    query-append="is:pr"
+                                    :query="'is:open author:'+user.login"
+                                    v-bind:user-login="user.login"
+                                >
+                                </github-issues>
+                            </div>
+                            <div class="tab-pane border-right border-bottom border-left" id="deploy-project">
 
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            </transition>
         </div>
     </div>
 </script>
