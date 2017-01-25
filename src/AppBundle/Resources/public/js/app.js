@@ -1,4 +1,25 @@
-var vue = new Vue({
+// jQuery required by bootsrap
+// @todo fix this
+window.jQuery = require('jquery');
+require('bootstrap');
+
+var Vue         = require('vue');
+var VueRouter   = require('vue-router');
+var Vuex        = require('vuex');
+var VueResource = require('vue-resource');
+
+var GithubClient = require('./lib/github-client');
+
+var Components = {
+    deployePullrequest: require('./component/deploy-pullrequest'),
+    userDetails:        require('./component/user-details')
+};
+
+Vue.use(Vuex);
+Vue.use(VueResource);
+Vue.use(VueRouter);
+
+new Vue({
     el: '#app',
     template: '#app-template',
     replace: false,
@@ -15,12 +36,12 @@ var vue = new Vue({
             {
                 name: 'deploy-by-pullrequest',
                 path: '/deploy/pullrequest',
-                component: Vue.component('deploy-pullrequest')
+                component: Components.deployePullrequest
             },
             {
                 name: 'deploy-create-by-pullrequest',
                 path: '/deploy/pullrequest/:id',
-                component: Vue.component('user-details')
+                component: Components.userDetails
             }
         ]
     }),
@@ -52,26 +73,26 @@ var vue = new Vue({
     methods: {
         authenticate: function(redirect = true) {
             this.authenticating = true;
-            this.$github.authenticate({
+            GithubClient.authenticate({
                 redirect: redirect,
                 success: function() {
-                    this.$github.getCurrentUser().then(function(response) {
+                    GithubClient.getCurrentUser().then(function(response) {
                         this.$store.commit('loadUser', response.data);
                         this.$store.commit('authenticated', true);
                         this.authenticating = false;
-                    }, function(response) {
+                    }.bind(this), function(response) {
                         this.$store.commit('authenticated', false);
-                        this.$github.clearAuthCookie();
+                        GithubClient.clearAuthCookie();
                         this.authenticating = false;
-                    })
-                },
+                    }.bind(this))
+                }.bind(this),
                 error: function() {
                     this.authenticating = false;
-                }
+                }.bind(this)
             });
         },
         clearAuth: function() {
-            this.$github.clearAuthCookie();
+            GithubClient.clearAuthCookie();
             this.$store.commit('loadUser', {});
             this.$store.commit('authenticated', false);
         }

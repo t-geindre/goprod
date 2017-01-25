@@ -1,145 +1,129 @@
-(function () {
-    var client;
-    var GithubClient = function()
+var Vue     = require('vue');
+var Cookies = require('cookies-js');
+
+var client;
+var GithubClient = function()
+{
+    this.url = {
+        site: 'https://www.github.com/',
+        api: 'https://api.github.com/',
+        authProxy: ''
+    };
+
+    this.auth = {};
+
+    this.app = {
+        clientId: '',
+        scope: ''
+    };
+
+    this.getCurrentUser = function()
     {
-        this.url = {
-            site: 'https://www.github.com/',
-            api: 'https://api.github.com/',
-            authProxy: ''
-        };
+        return this.apiQuery('user');
+    }
 
-        this.auth = {
-        };
+    this.searchIssues = function(terms)
+    {
+        return this.apiQuery('search/issues', terms);
+    }
 
-        this.app = {
-            clientId: '',
-            scope: ''
-        };
+    this.authenticate = function(params)
+    {
+        params = Object.assign({
+            redirect: false,
+            remember: true,
+            clearAuthCode: true
+        }, params);
 
-        this.$context = null;
 
-        this.getCurrentUser = function()
-        {
-            return this.apiQuery('user');
+        // cookie auth
+        var auth = Cookies.get('github-auth');
+        if (typeof auth != 'undefined') {
+            this.auth = JSON.parse(auth);
+            if (params.success) {
+                params.success(this.auth);
+            }
+            return;
         }
 
-        this.searchIssues = function(terms)
-        {
-            return this.apiQuery('search/issues', terms);
-        }
-
-        this.authenticate = function(params)
-        {
-            params = Object.assign({
-                redirect: false,
-                remember: true,
-                clearAuthCode: true
-            }, params);
-
-
-            // cookie auth
-            if (window.Cookies) {
-                var auth = window.Cookies.get('github-auth');
-                if (typeof auth != 'undefined') {
-                    this.auth = JSON.parse(auth);
+        // github code callback
+        var urlParams = new URLSearchParams(window.location.search.slice(1));
+        if (urlParams.has('code')) {
+            Vue.http.get(
+                this.url.authProxy+'?code='+urlParams.get('code')
+            ).then(
+                function(response) {
+                    client.auth = response.data;
+                    Cookies.set('github-auth', JSON.stringify(client.auth), { expires: Infinity });
                     if (params.success) {
-                        params.success.apply(this.$context, [this.auth]);
+                        params.success(response.data);
                     }
-                    return;
+                },
+                function(response) {
+                    if (params.error) {
+                        params.error(response.data);
+                    }
                 }
-            }
+            );
 
-            // github code callback
-            var urlParams = new URLSearchParams(window.location.search.slice(1));
-            if (urlParams.has('code')) {
-                this.$context.$http.get(
-                    this.url.authProxy+'?code='+urlParams.get('code')
-                ).then(
-                    (function (context) { return function(response) {
-                        client.auth = response.data;
-                        if (params.remember && window.Cookies) {
-                            window.Cookies.set('github-auth', JSON.stringify(client.auth), { expires: Infinity });
-                        }
-                        if (params.success) {
-                            params.success.apply(context, [response.data]);
-                        }
-                    }})(this.$context),
-                    (function (context) { return function(response) {
-                        if (params.error) {
-                            params.error.apply(context, [response.data]);
-                        }
-                    }})(this.$context)
+            // clear used code
+            if (window.history && params.clearAuthCode) {
+                urlParams.delete('code')
+                var search = urlParams.toString();
+                window.history.pushState(
+                    {},
+                    'Authenticated',
+                    window.location.pathname + (search.length ? '?' + search : '')
                 );
-
-                // clear used code
-                if (window.history && params.clearAuthCode) {
-                    urlParams.delete('code')
-                    var search = urlParams.toString();
-                    window.history.pushState(
-                        {},
-                        'Authenticated',
-                        window.location.pathname + (search.length ? '?' + search : '')
-                    );
-                }
-
-                return;
             }
 
-            // redirect to github to get token
-            if (params.redirect) {
-                window.location = this.url.site + 'login/oauth/authorize?scope=' + this.app.scope + '&client_id=' + this.app.clientId;
-            }
-
-            if (params.error) {
-                params.error.apply(this.$context, [{}]);
-            }
-        };
-
-        this.clearAuthCookie = function()
-        {
-            if (window.Cookies) {
-                window.Cookies.set('github-auth', undefined, { expires: Infinity });
-            }
+            return;
         }
 
-        this.apiQuery = function(url, data = {})
-        {
-            if (this.auth.access_token) {
-                data = Object.assign(
-                    { access_token: this.auth.access_token },
-                    data
-                );
-            }
+        // redirect to github to get token
+        if (params.redirect) {
+            window.location = this.url.site + 'login/oauth/authorize?scope=' + this.app.scope + '&client_id=' + this.app.clientId;
+        }
 
-            var queryParams = [];
-            for (var x in data) {
-                queryParams.push(
-                    encodeURIComponent(x) + '=' + encodeURIComponent(data[x])
-                );
-            }
+        if (params.error) {
+            params.error.apply(this.$context, [{}]);
+        }
+    };
 
-            return this.$context.$http.get(
-                this.url.api + url + '?' + queryParams.join('&')
+    this.clearAuthCookie = function()
+    {
+        Cookies.set('github-auth', undefined, { expires: Infinity });
+    }
+
+    this.apiQuery = function(url, data = {})
+    {
+        if (this.auth.access_token) {
+            data = Object.assign(
+                { access_token: this.auth.access_token },
+                data
             );
         }
-    }
 
-    // Global setup
-    if (typeof window !== 'undefined' && window.Vue) {
-
-        client = new GithubClient();
-        if (window.GithubClient) {
-            client = Object.assign(client, window.GithubClient);
+        var queryParams = [];
+        for (var x in data) {
+            queryParams.push(
+                encodeURIComponent(x) + '=' + encodeURIComponent(data[x])
+            );
         }
-        window.GithubClient = client;
 
-        Object.defineProperties(Vue.prototype, {
-            $github: {
-                get: function () {
-                    client.$context = this;
-                    return client;
-                }
-            }
-        });
+        return Vue.http.get(
+            this.url.api + url + '?' + queryParams.join('&')
+        );
     }
-})();
+}
+
+// Global setup
+if (typeof window !== 'undefined') {
+    client = new GithubClient();
+    if (window.GithubClient) {
+        client = Object.assign(client, window.GithubClient);
+    }
+    window.GithubClient = client;
+}
+
+module.exports = client;

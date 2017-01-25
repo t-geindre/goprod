@@ -1,4 +1,7 @@
-Vue.component('deploy-pullrequest', {
+var Vue = require('vue');
+require('./github-issues');
+
+module.exports = Vue.component('deploy-pullrequest', {
     template: '#deploy-pullrequest-template',
     computed: {
         user: function() {

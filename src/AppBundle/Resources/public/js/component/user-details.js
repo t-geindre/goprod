@@ -1,6 +1,8 @@
-Vue.component('user-details', {
+var Vue  = require('vue');
+var Vuex = require('vuex');
+
+module.exports = Vue.component('user-details', {
     template: '#user-details-template',
-    props: ['authenticated', 'user'],
     delimiters: ['[[', ']]'],
     computed: Vuex.mapState(['user', 'authenticated']),
     methods: {

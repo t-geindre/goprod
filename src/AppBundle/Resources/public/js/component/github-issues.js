@@ -1,4 +1,7 @@
-Vue.component('github-issues', {
+var Vue          = require('vue');
+var GithubClient = require('../lib/github-client');
+
+module.exports = Vue.component('github-issues', {
     delimiters: ['[[', ']]'],
     template: '#github-issues-template',
     props: ['query', 'queryAppend', 'userLogin'],
@@ -24,9 +27,9 @@ Vue.component('github-issues', {
             if (this.queryAppend) {
                 data.q += ' ' + this.queryAppend;
             }
-            this.$github.searchIssues(data).then(function(response) {
+            GithubClient.searchIssues(data).then(function(response) {
                 this.issues = response.data.items;
-            });
+            }.bind(this));
         },
         setSort: function(type, order) {
             this.sort = type;

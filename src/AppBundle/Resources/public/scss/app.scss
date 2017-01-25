@@ -7,15 +7,12 @@
 }
 
 .fade-enter-active, .fade-leave-active {
-    position: absolute;
     transition: opacity .2s
 }
 .fade-enter, .fade-leave-to {
-    position: absolute;
     opacity: 0
 }
 
 .navbar-inverse .navbar-brand {
-    position: absolute;
     color:#19C9FF;
 }

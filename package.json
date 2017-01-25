@@ -4,6 +4,18 @@
   "dependencies": {
     "bootstrap": "^3.3.7",
     "cookies-js": "^1.2.3",
+    "jquery": "^3.1.1",
+    "vue": "^2.1.8",
+    "vue-resource": "^1.0.3",
+    "vue-router": "^2.1.3",
+    "vuex": "^2.1.1"
+  },
+  "devDependencies": {
+    "babelify": "^7.3.0",
+    "browserify": "^14.0.0",
+    "browserify-shim": "^3.8.13",
+    "hbsfy": "^2.7.0",
+    "vinyl-source-stream": "^1.1.0",
     "gulp": "^3.9.1",
     "gulp-concat": "^2.6.1",
     "gulp-if": "^2.0.2",
@@ -11,11 +23,10 @@
     "gulp-sourcemaps": "^1.9.1",
     "gulp-uglify": "^2.0.0",
     "gulp-uglifycss": "^1.0.6",
-    "gulp-watch": "^4.3.11",
-    "jquery": "^3.1.1",
-    "vue": "^2.1.8",
-    "vue-resource": "^1.0.3",
-    "vue-router": "^2.1.3",
-    "vuex": "^2.1.1"
+    "gulp-watch": "^4.3.11"
+  },
+  "browser": {
+    "vue": "vue/dist/vue.common",
+    "bootstrap": "bootstrap/dist/js/bootstrap"
   }
 }

@@ -5,21 +5,14 @@ var uglifycss = require('gulp-uglifycss');
 var sass = require('gulp-sass');
 var concat = require('gulp-concat');
 var sourcemaps = require('gulp-sourcemaps');
+var source = require('vinyl-source-stream');
+var browserify = require('browserify');
 var env = process.env.GULP_ENV;
 
 
 var path = {
+    js_entry: 'src/AppBundle/Resources/public/js/app.js',
     js : [
-        'node_modules/jquery/dist/jquery.min.js',
-        'node_modules/bootstrap/dist/js/bootstrap.min.js',
-        'node_modules/vue/dist/vue.min.js',
-        'node_modules/vue-resource/dist/vue-resource.min.js',
-        'node_modules/vue-router/dist/vue-router.min.js',
-        'node_modules/vuex/dist/vuex.min.js',
-        'node_modules/cookies-js/dist/cookies.min.js',
-        'src/AppBundle/Resources/public/js/component/github/client.js',
-        'src/**/Resources/public/js/lib/**/*.js',
-        'src/**/Resources/public/js/component/**/*.js',
         'src/**/Resources/public/js/**/*.js'
     ],
     css: [
@@ -35,11 +28,11 @@ var path = {
 };
 
 gulp.task('js', function () {
-    return gulp.src(path.js)
-        .pipe(concat('build.js'))
-        .pipe(gulpif(env === 'prod', uglify()))
-        .pipe(sourcemaps.write('./'))
-        .pipe(gulp.dest('web/js'));
+  browserify(path.js_entry)
+    .bundle()
+    .pipe(source('build.js'))
+    .pipe(gulpif(env === 'prod', uglify()))
+    .pipe(gulp.dest('web/js'));
 });
 
 gulp.task('css', function () {
