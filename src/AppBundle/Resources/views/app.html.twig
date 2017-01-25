@@ -18,17 +18,13 @@
                         <li class="dropdown" class="active">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">New deployment <span class="caret"></span></a>
                             <ul class="dropdown-menu">
-                                <li><a href="#">Pull request</a></li>
-                                <li><a href="#">Project</a></li>
+                                <li><router-link :to="{ name: 'deploy-by-pullrequest' }">Pull request</router-link></li>
+                                <li><a href="#project">Project</a></li>
                             </ul>
                         </li>
                         <li><a href="#about">In progress</a></li>
                     </ul>
-                    <user-details
-                        v-bind:authenticated="authenticated"
-                        v-bind:user="user"
-                        v-on:login="authenticate"
-                        v-on:logout="clearAuth">
+                    <user-details v-on:login="authenticate" v-on:logout="clearAuth">
                     </user-details>
                 </div>
 
@@ -38,17 +34,7 @@
         <div class="container" id="container">
             <transition name="fade">
                 <p v-if="authenticating">Processing...</p>
-                <div v-if="authenticated">
-                    <div class="page-header">
-                        <h1>Let's go prod ! <small>Select pull request</small></h1>
-                    </div>
-                    <github-issues
-                        query-append="is:pr"
-                        :query="'is:open author:'+user.login"
-                        v-bind:user-login="user.login"
-                    >
-                    </github-issues>
-                </div>
+                <router-view v-if="authenticated"></router-view>
             </transition>
         </div>
     </div>
@@ -69,4 +55,5 @@
 </script>
 
 {% include '@App/component/user-details.html.twig' %}
-{% include '@App/component/github/github-issues.html.twig' %}
+{% include '@App/component/deploy-pullrequest.html.twig' %}
+{% include '@App/component/github-issues.html.twig' %}

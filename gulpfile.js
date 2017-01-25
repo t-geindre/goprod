@@ -14,8 +14,12 @@ var path = {
         'node_modules/bootstrap/dist/js/bootstrap.min.js',
         'node_modules/vue/dist/vue.min.js',
         'node_modules/vue-resource/dist/vue-resource.min.js',
+        'node_modules/vue-router/dist/vue-router.min.js',
+        'node_modules/vuex/dist/vuex.min.js',
         'node_modules/cookies-js/dist/cookies.min.js',
         'src/AppBundle/Resources/public/js/component/github/client.js',
+        'src/**/Resources/public/js/lib/**/*.js',
+        'src/**/Resources/public/js/component/**/*.js',
         'src/**/Resources/public/js/**/*.js'
     ],
     css: [

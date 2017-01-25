@@ -48,7 +48,7 @@
             </div>
         </div>
         <div class="list-group">
-            <a v-for="issue in issues" href="#" class="list-group-item issue">
+            <a v-for="issue in issues" href="#" class="list-group-item issue" v-on:click.prevent="$emit('select-issue', issue)">
                 <svg
                     aria-hidden="true"
                     height="16"
