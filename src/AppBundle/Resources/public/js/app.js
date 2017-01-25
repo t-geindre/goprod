@@ -20,9 +20,14 @@ var vue = new Vue({
                         this.user = response.data;
                         this.authenticated = true;
                         this.authenticating = false;
+                    }, function(response) {
+                        this.$github.clearAuthCookie();
+                        this.authenticated = false;
+                        this.authenticating = false;
                     })
                 },
                 error: function() {
+                    console.log('ok');
                     this.authenticating = false;
                 }
             });
