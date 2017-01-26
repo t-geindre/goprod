@@ -1,9 +1,18 @@
-auth:
-  path: /user/auth
-  defaults:
-    _controller: ApiBundle:User:auth
+user_auth:
+    path: /user/auth
+    defaults:
+        _controller: ApiBundle:User:auth
 
-chekprofile:
-  path: /user/check_profile
-  defaults:
-    _controller: ApiBundle:User:checkProfile
+user_chekprofile:
+    path: /user/check_profile
+    defaults:
+        _controller: ApiBundle:User:checkProfile
+    options:
+        expose: true
+
+app_config:
+    path: /config
+    defaults:
+        _controller: ApiBundle:Config:config
+    options:
+        expose: true

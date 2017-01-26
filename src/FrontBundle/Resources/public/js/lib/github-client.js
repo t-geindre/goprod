@@ -7,16 +7,16 @@ Vue.use(VueResource);
 var client;
 var GithubClient = function()
 {
-    this.url = {
+    this.urls = {
         site: 'https://www.github.com/',
         api: 'https://api.github.com/',
-        authProxy: ''
+        auth_proxy: ''
     };
 
     this.auth = {};
 
     this.app = {
-        clientId: '',
+        client_id: '',
         scope: ''
     };
 
@@ -28,6 +28,14 @@ var GithubClient = function()
     this.searchIssues = function(terms)
     {
         return this.apiQuery('search/issues', terms);
+    }
+
+    this.setupUrls = function(urls) {
+        this.urls = urls;
+    }
+
+    this.setupApp = function(app) {
+        this.app = app;
     }
 
     this.authenticate = function(params)
@@ -51,7 +59,7 @@ var GithubClient = function()
             if (urlParams.has('code')) {
 
                 Vue.http.get(
-                    client.url.authProxy+'?code='+urlParams.get('code')
+                    client.urls.auth_proxy+'?code='+urlParams.get('code')
                 ).then(
                     function(response) {
                         client.auth = response.data;
@@ -80,7 +88,7 @@ var GithubClient = function()
             }
             // redirect to github to get token
             if (params.redirect) {
-                window.location = client.url.site + 'login/oauth/authorize?scope=' + client.app.scope + '&client_id=' + client.app.clientId;
+                window.location = client.urls.site + 'login/oauth/authorize?scope=' + client.app.scope + '&client_id=' + client.app.client_id;
             }
 
             resolve({ authenticated: false, auth: {}});
@@ -102,18 +110,9 @@ var GithubClient = function()
         }
 
         return Vue.http.get(
-            this.url.api + url, { params: data }
+            this.urls.api + url, { params: data }
         );
     }
 }
 
-// Global setup
-if (typeof window !== 'undefined') {
-    client = new GithubClient();
-    if (window.GithubClient) {
-        client = Object.assign(client, window.GithubClient);
-    }
-    window.GithubClient = client;
-}
-
-module.exports = client;
+module.exports = client = new GithubClient();

@@ -9,6 +9,7 @@ var VueResource  = require('vue-resource');
 var Router       = require('./routing/router');
 var GithubClient = require('./lib/github-client');
 var UserStore    = require('./store/user');
+var ConfigStore  = require('./store/config');
 
 var Components = {
     deployePullrequest: require('./component/deploy-pullrequest'),
@@ -33,10 +34,13 @@ var app = new Vue({
         authenticating: function()
         {
             return UserStore.state.authenticating;
+        },
+        configured: function() {
+            return ConfigStore.state.configured;
         }
     },
     mounted: function() {
-        this.login(false);
+        ConfigStore.dispatch('loadConfig');
     },
     methods: {
         login: function(redirect = true) {
@@ -45,6 +49,18 @@ var app = new Vue({
                     app.authError = true;
                 }
             );
+        }
+    },
+    watch: {
+        configured: function() {
+            if (this.configured) {
+                GithubClient.setupUrls(ConfigStore.state.config.github.urls);
+                GithubClient.setupApp({
+                    client_id: ConfigStore.state.config.github.client_id,
+                    scope: 'repo'
+                });
+                this.login(false);
+            }
         }
     }
 });

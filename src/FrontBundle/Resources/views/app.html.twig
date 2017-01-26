@@ -1,5 +1,6 @@
 <script type="text/template" id="app-template">
-    <div>
+<transition name="fade">
+    <div v-if="configured">
         <nav class="navbar navbar-inverse navbar-fixed-top">
             <div class="container">
                 <div class="navbar-header">
@@ -44,21 +45,7 @@
             </transition>
         </div>
     </div>
-</script>
-
-<script type="text/javascript">
-    // @todo better way to configure client
-    window.GithubClient = {
-        app: {
-            clientId: "{{ github.client_id }}",
-            scope: "repo"
-        },
-        url: {
-            site: "{{ github.site }}",
-            api: "{{ github.api }}",
-            authProxy: "{{ path('auth') }}"
-        }
-    };
+</transition>
 </script>
 
 {% include '@Front/component/user-details.html.twig' %}

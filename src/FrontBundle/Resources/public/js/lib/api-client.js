@@ -4,15 +4,37 @@ var UserStore   = require('../store/user');
 
 Vue.use(VueResource);
 
-var ApiClient = function() {
+// Fos Router
+// @todo better solution to import and load routing
+require('../../../../../../vendor/friendsofsymfony/jsrouting-bundle/Resources/public/js/router.js')
+
+var client;
+var ApiClient = function()
+{
+    this.routerConfigured = false;
+
+    this.getAppConfig = function() {
+        return this.query('app_config');
+    }
+
     this.checkProfile = function() {
-        return this.query('api/user/check_profile');
+        return this.query('user_chekprofile');
     };
 
-    this.query = function(url, data = {})
+    this.query = function(route, params = {}, data = {})
     {
+        if (!this.routerConfigured) {
+            return new Promise(function(resolve, reject) {
+                Vue.http.get('js/routing.json').then(function(response) {
+                    fos.Router.setData(response.data);
+                    client.routerConfigured = true;
+                    client.query(route, params, data).then(resolve, reject);
+                });
+            });
+        }
+
         return Vue.http.get(
-            url,
+            Routing.generate(route, params),
             {
                 params: Object.assign(
                     {
@@ -27,4 +49,4 @@ var ApiClient = function() {
 
 }
 
-module.exports = new ApiClient;
+module.exports = client = new ApiClient;
