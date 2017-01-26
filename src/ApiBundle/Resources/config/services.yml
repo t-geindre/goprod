@@ -1,0 +1,28 @@
+services:
+    api_bundle.repository.user:
+        class: Doctrine\ORM\EntityRepository
+        factory: ["@doctrine.orm.entity_manager", getRepository]
+        arguments:
+            - "ApiBundle\\Entity\\User"
+
+    api_bundle.github_client:
+        class: "ApiBundle\\Service\\Github\\Client"
+        arguments:
+            - "@buzz"
+            - "%api_bundle.github.urls.site%"
+            - "%api_bundle.github.urls.api%"
+            - "%api_bundle.github.client_id%"
+            - "%api_bundle.github.client_secret%"
+            - ~
+            - "@event_dispatcher"
+
+    api_bundle.listener.github.user.login:
+        class: "ApiBundle\\Listener\\User\\UserLogin"
+        arguments:
+            - "@api_bundle.repository.user"
+            - "@doctrine.orm.entity_manager"
+        tags:
+            -
+                name: "kernel.event_listener"
+                event: "github.client.user.login"
+                method: "onUserLogin"

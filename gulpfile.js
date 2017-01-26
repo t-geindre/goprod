@@ -11,7 +11,7 @@ var env = process.env.GULP_ENV;
 
 
 var path = {
-    js_entry: 'src/AppBundle/Resources/public/js/app.js',
+    js_entry: 'src/FrontBundle/Resources/public/js/app.js',
     js : [
         'src/**/Resources/public/js/**/*.js'
     ],

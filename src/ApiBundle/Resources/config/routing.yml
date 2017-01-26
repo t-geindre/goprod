@@ -1,0 +1,9 @@
+auth:
+  path: /user/auth
+  defaults:
+    _controller: ApiBundle:User:auth
+
+chekprofile:
+  path: /user/check_profile
+  defaults:
+    _controller: ApiBundle:User:checkProfile

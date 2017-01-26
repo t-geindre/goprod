@@ -2,6 +2,7 @@ imports:
     - { resource: parameters.yml }
     - { resource: security.yml }
     - { resource: services.yml }
+    - { resource: "@ApiBundle/Resources/config/services.yml" }
 
 framework:
     router:
@@ -36,7 +37,7 @@ doctrine:
         auto_generate_proxy_classes: true
         auto_mapping: true
 
-app:
+api:
     github:
         urls:
             site: "%github.urls.site%"

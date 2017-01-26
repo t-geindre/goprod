@@ -1,0 +1,67 @@
+<script type="text/template" id="app-template">
+    <div>
+        <nav class="navbar navbar-inverse navbar-fixed-top">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="#">
+                        <span class="glyphicon glyphicon-play-circle"></span>
+                    </a>
+                </div>
+                <div id="navbar" class="collapse navbar-collapse">
+                    <ul class="nav navbar-nav">
+                        <li class="dropdown active" v-if="authenticated">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">New deployment <span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <li><router-link :to="{ name: 'deploy-by-pullrequest' }">Pull request</router-link></li>
+                                <li><a href="#project">Project</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="#about">In progress</a></li>
+                    </ul>
+                    <user-details></user-details>
+                </div>
+
+            </div>
+
+        </nav>
+        <div class="container" id="container">
+                <div class="page-header" v-if="authError">
+                    <h1>Oops :-(</h1>
+                </div>
+                <div class="alert alert-danger" v-if="authError">
+                    <h4>Authentication error</h4>
+                    <p>An error occured during the authentication process. Please try again.</p>
+                </div>
+            <transition name="fade">
+                <p v-if="authenticating">Processing...</p>
+                <router-view v-if="authenticated"></router-view>
+            </transition>
+        </div>
+    </div>
+</script>
+
+<script type="text/javascript">
+    // @todo better way to configure client
+    window.GithubClient = {
+        app: {
+            clientId: "{{ github.client_id }}",
+            scope: "repo"
+        },
+        url: {
+            site: "{{ github.site }}",
+            api: "{{ github.api }}",
+            authProxy: "{{ path('auth') }}"
+        }
+    };
+</script>
+
+{% include '@Front/component/user-details.html.twig' %}
+{% include '@Front/component/deploy-pullrequest.html.twig' %}
+{% include '@Front/component/deploy-create.html.twig' %}
+{% include '@Front/component/github-issues.html.twig' %}
