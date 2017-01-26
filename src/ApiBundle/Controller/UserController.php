@@ -36,4 +36,13 @@ class UserController extends BaseController
                 ) == 0
         ];
     }
+
+    public function updateAction(Request $request)
+    {
+        return $this->handleForm(
+            $request,
+            \ApiBundle\Form\UserType::class,
+            $this->getUser()
+        );
+    }
 }

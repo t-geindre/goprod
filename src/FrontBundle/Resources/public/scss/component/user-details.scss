@@ -10,7 +10,8 @@
     }
 }
 
-// Fix backdrop appearing over modals
+// quickfix backdrop appearing over modals
+// @todo
 .modal-backdrop {
     z-index: 500;
 }

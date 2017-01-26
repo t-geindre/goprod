@@ -20,6 +20,8 @@ framework:
     validation:
         enabled: true
         enable_annotations: true
+    form:
+        enabled: true
 
 twig:
     debug:            "%kernel.debug%"

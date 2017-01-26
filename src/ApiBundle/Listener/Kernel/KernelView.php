@@ -20,7 +20,7 @@ class KernelView
 
     public function onKernelView(GetResponseForControllerResultEvent $event)
     {
-        if (!($result = $event->getControllerResult()) instanceof Response) {
+        if (!($result = $event->getControllerResult()) instanceof Response && !is_null($result)) {
             $event->setResponse($this->getResponse($result));
         }
     }
@@ -33,7 +33,7 @@ class KernelView
             if ('\\'.$controllerClass instanceof ApiController) {
                 if (($exception = $event->getException()) instanceof HttpExceptionInterface) {
                     $event->setResponse($this->getResponse(
-                        ['error' => $exception->getMessage()],
+                        $exception->getMessage(),
                         $exception->getStatusCode()
                     ));
                 }

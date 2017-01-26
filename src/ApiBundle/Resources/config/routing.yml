@@ -3,10 +3,11 @@ user_auth:
     defaults:
         _controller: ApiBundle:User:auth
 
-user_profile:
-    path: /user/profile
+user_update:
+    path: /user
+    methods:  [POST]
     defaults:
-        _controller: ApiBundle:User:profile
+        _controller: ApiBundle:User:update
     options:
         expose: true
 

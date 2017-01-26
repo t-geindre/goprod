@@ -32,4 +32,28 @@ class BaseController extends Controller
     {
         return new BadRequestHttpException($message, $previous);
     }
+
+    protected function handleForm(Request $request, $type, $entity)
+    {
+        $form = $this->createForm($type, $entity);
+
+        $form->submit(
+            json_decode($request->getContent(), true)
+        );
+
+        $result = ['entity' => $entity];
+
+        if ($valid = $form->isValid()) {
+            $em = $this->get('doctrine')->getEntityManager();
+            $em->persist($entity);
+            $em->flush();
+        } else {
+            $result['errors'] = $this
+                ->get('api_bundle.serializer.form.error')
+                ->serializeErrors($form)
+            ;
+        }
+
+        return $result;
+    }
 }

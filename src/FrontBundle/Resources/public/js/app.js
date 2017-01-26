@@ -10,6 +10,7 @@ var Vuex         = require('vuex');
 var VueResource  = require('vue-resource');
 var Router       = require('./routing/router');
 var GithubClient = require('./lib/github-client');
+var ApiClient    = require('./lib/api-client');
 var UserStore    = require('./store/user');
 var ConfigStore  = require('./store/config');
 
@@ -57,6 +58,14 @@ var app = new Vue({
                     scope: 'repo'
                 });
                 this.login(false);
+            }
+        },
+        authenticated: function() {
+            if (this.authenticated) {
+                ApiClient.setCredentials(
+                    UserStore.state.user.login,
+                    UserStore.state.user.access_token
+                );
             }
         }
     }

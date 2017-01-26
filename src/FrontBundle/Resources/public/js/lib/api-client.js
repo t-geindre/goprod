@@ -1,6 +1,5 @@
 var Vue         = require('vue');
 var VueResource = require('vue-resource');
-var UserStore   = require('../store/user');
 
 Vue.use(VueResource);
 
@@ -11,46 +10,68 @@ require('../../../../../../vendor/friendsofsymfony/jsrouting-bundle/Resources/pu
 var client;
 var ApiClient = function()
 {
+    this.credentials = {};
     this.routerConfigured = false;
 
-    this.getAppConfig = function() {
-        return this.query('app_config');
+    this.getAppConfig = function(options) {
+        return this.query({ route: 'app_config' }, options);
     }
 
-    this.getUserProfile = function() {
-        return this.query('user_profile');
+    this.getUserProfile = function(options) {
+        return this.query({ route: 'user_profile' }, options);
     }
 
-    this.checkProfile = function() {
-        return this.query('user_chekprofile');
+    this.checkProfile = function(options) {
+        return this.query({ route: 'user_chekprofile' }, options);
     };
 
-    this.query = function(route, params = {}, data = {})
+    this.updateUser = function(user) {
+        return this.updateQuery(
+            'user_update',
+            {},
+            { method: 'post', body: user }
+        );
+    }
+
+    this.setCredentials = function(login, accessToken) {
+        this.credentials = { login: login, access_token: accessToken };
+    }
+
+    this.updateQuery = function(route, options = {}) {
+        return new Promise(function(resolve, reject) {
+            client.query(route, options).then(function(response) {
+                if (response.data.errors) {
+                    return reject(response);
+                }
+                resolve(response);
+            });
+        });
+    }
+
+    this.query = function(route, options = {})
     {
         if (!this.routerConfigured) {
             return new Promise(function(resolve, reject) {
                 Vue.http.get('js/routing.json').then(function(response) {
                     fos.Router.setData(response.data);
                     client.routerConfigured = true;
-                    client.query(route, params, data).then(resolve, reject);
+                    client.query(route, options).then(resolve, reject);
                 });
             });
         }
 
-        return Vue.http.get(
-            Routing.generate(route, params),
-            {
-                params: Object.assign(
-                    {
-                        access_token: UserStore.state.user.access_token,
-                        login: UserStore.state.user.login
-                    },
-                    data
-                )
-            }
+        options.params = Object.assign(
+            this.credentials,
+            options.params
+        );
+
+        return Vue.http(
+            Object.assign(
+                { method: 'get', url: Routing.generate(route.route, route.params) },
+                options
+            )
         );
     }
 
 }
-
 module.exports = client = new ApiClient;

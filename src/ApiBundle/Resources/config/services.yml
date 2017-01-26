@@ -40,3 +40,6 @@ services:
                 name: "kernel.event_listener"
                 event: "kernel.exception"
                 method: "onKernelException"
+
+    api_bundle.serializer.form.error:
+        class: "ApiBundle\\Form\\Serializer\\ErrorSerializer"

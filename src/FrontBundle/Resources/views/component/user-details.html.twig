@@ -38,25 +38,31 @@
                         <h4 class="modal-title">[[ user.name ]] - <small>Profile</small></h4>
                     </div>
                     <div class="modal-body">
-                        <div class="alert alert-warning alert-dismissible fade in" role="alert">
-                            Please, <strong>complete your profile</strong> before starting using this app.
+                        <div class="alert alert-warning" role="alert" v-if="!profileComplete">
+                            Please, <strong>complete your profile</strong>
                         </div>
                         <form>
-                            <div class="form-group">
+                            <div class="form-group" v-bind:class="{'has-error':this.formErrors.fields.goliveKey}">
                                 <label for="goliveApiKey">Golive API Key (<a href="#">manage</a>):</label>
-                                <input type="password" name="goliveKey" class="form-control" id="goliveApiKey" placeholder="fds54fds98sd8ds897vd8s7" :value="user.golive_key" />
+                                <input type="password" name="goliveKey" class="form-control" id="goliveApiKey" placeholder="fds54fds98sd8ds897vd8s7" v-model="formData.goliveKey" />
+                                <span id="helpBlock" class="help-block" v-if="this.formErrors.fields.goliveKey">
+                                    A valid API key is required
+                                </span>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group" v-bind:class="{'has-error':this.formErrors.fields.hipchatName}">
                                 <label for="hipchatName">Hipchat name:</label>
-                                <input type="text" name="hipchatName" class="form-control" id="hipchatName" placeholder="Raoul" :value="user.hipchatName" />
+                                <input type="text" name="hipchatName" class="form-control" id="hipchatName" placeholder="John Doe" v-model="formData.hipchatName" />
+                                <span id="helpBlock" class="help-block" v-if="this.formErrors.fields.hipchatName">
+                                    Required to send you notifications about your deployments
+                                </span>
                             </div>
                         </form>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal" v-if="profileComplete">
-                            Close
+                            Cancel
                         </button>
-                        <button type="button" class="btn btn-primary">
+                        <button type="button" class="btn btn-primary" v-on:click="updateProfile">
                             Save changes
                         </button>
                     </div>

@@ -10,14 +10,17 @@ module.exports = Vue.component('user-details', {
     data: function() {
         return {
             profileModal: null,
-            profileComplete: true
+            profileComplete: true,
+            formData: {},
+            formErrors: { fields: {} }
         }
     },
     mounted: function() {
         this.profileModal = jQuery('#profile-modal');
     },
     computed: {
-        user: function() {
+        user: function()
+        {
             return UserStore.state.user;
         },
         authenticated: function()
@@ -37,11 +40,30 @@ module.exports = Vue.component('user-details', {
             UserStore.dispatch('logout');
         },
         displayProfile: function() {
+            this.formData = {
+                goliveKey: this.user.golive_key,
+                hipchatName: this.user.hipchat_name
+            };
+            this.formErrors = { fields: {} };
             this.profileModal.modal({
                 backdrop: (this.profileComplete ? true : 'static'),
                 keyboard: this.profileComplete,
                 show: true
             });
+        },
+        hideProfile: function() {
+            this.profileModal.modal('hide');
+        },
+        updateProfile: function() {
+            UserStore.dispatch('update', this.formData).then(
+                function(response) {
+                    this.profileComplete = true;
+                    this.hideProfile();
+                }.bind(this),
+                function(response) {
+                    this.formErrors = response.data.errors;
+                }.bind(this)
+            );
         }
     },
     watch: {
@@ -54,7 +76,7 @@ module.exports = Vue.component('user-details', {
         },
         profileComplete: function() {
             if (!this.profileComplete) {
-                // this.displayProfile();
+                this.displayProfile();
             }
         }
     }
