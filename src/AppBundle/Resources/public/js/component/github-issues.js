@@ -1,20 +1,28 @@
 var Vue          = require('vue');
 var GithubClient = require('../lib/github-client');
+var UserStore    = require('../store/user');
 
 module.exports = Vue.component('github-issues', {
     delimiters: ['[[', ']]'],
     template: '#github-issues-template',
-    props: ['query', 'queryAppend', 'userLogin'],
+    props: ['queryAppend'],
+    computed: {
+        user: function() {
+            return UserStore.state.user;
+        }
+    },
     data: function() {
         return {
             issues: [],
             sort: 'created',
             order: 'desc',
             open: true,
-            iam: 'author'
+            iam: 'author',
+            query: ''
         }
     },
     mounted: function() {
+        this.query = 'is:open author:'+this.user.login;
         this.update();
     },
     methods: {
@@ -79,11 +87,11 @@ module.exports = Vue.component('github-issues', {
         iam: function() {
             this.queryUpdate(
                 [
-                    'author:'+this.userLogin,
-                    'assignee:'+this.userLogin,
-                    'mentions:'+this.userLogin
+                    'author:'+this.user.login,
+                    'assignee:'+this.user.login,
+                    'mentions:'+this.user.login
                 ],
-                this.iam+':'+this.userLogin
+                this.iam+':'+this.user.login
             );
             this.update();
         }

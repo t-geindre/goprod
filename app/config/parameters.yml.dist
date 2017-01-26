@@ -4,3 +4,7 @@ parameters:
     github.client_id: ~
     github.client_secret: ~
     kernel.secret: ~
+    database.host: localhost
+    database.name: goprod
+    database.user: ~
+    database.password: ~

@@ -6,13 +6,15 @@
     padding-top: 20px;
 }
 
-.fade-enter-active, .fade-leave-active {
-    transition: opacity .2s
-}
-.fade-enter, .fade-leave-to {
-    opacity: 0
-}
-
 .navbar-inverse .navbar-brand {
     color:#19C9FF;
+}
+
+
+.fade-enter-active, .fade-leave-active {
+    transition: opacity .2s;
+}
+
+.fade-enter, .fade-leave-to {
+    opacity: 0;
 }

@@ -1,14 +1,9 @@
 <script type="text/template" id="deploy-pullrequest-template">
 <div>
     <div class="page-header">
-        <h1>Let's go prod ! <small>Select pull request</small></h1>
+        <h1>Let's go prod! <small>Select pull request</small></h1>
     </div>
-    <github-issues
-        query-append="is:pr"
-        :query="'is:open author:'+user.login"
-        v-bind:user-login="user.login"
-        v-on:select-issue="deploy"
-    >
+    <github-issues query-append="is:pr" v-on:select-issue="deploy">
     </github-issues>
 </div>
 </script>

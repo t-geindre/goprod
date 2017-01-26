@@ -3,6 +3,7 @@
 namespace AppBundle\Service\Github;
 
 use Buzz\Message\RequestInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class Client
 {
@@ -14,7 +15,12 @@ class Client
     /**
      * @var string
      */
-    protected $baseUrl;
+    protected $siteUrl;
+
+    /**
+     * @var string
+     */
+    protected $apiUrl;
 
     /**
      * @var string
@@ -32,26 +38,35 @@ class Client
     protected $accessToken;
 
     /**
+     * @var EventDispatcherInterface
+     */
+    protected $eventDispatcher;
+
+    /**
      * @param Buzz\Browser $client
      */
     public function __construct(
         \Buzz\Browser $client,
-        $baseUrl,
+        $siteUrl,
+        $apiUrl,
         $clientId,
         $clientSecret,
-        $accessToken = null
+        $accessToken = null,
+        EventDispatcherInterface $eventDispatcher = null
     ) {
         $this->client = $client;
-        $this->baseUrl = $baseUrl;
+        $this->siteUrl = $siteUrl;
+        $this->apiUrl = $apiUrl;
         $this->clientId = $clientId;
         $this->clientSecret = $clientSecret;
         $this->accessToken = $accessToken;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
-    public function authUser($code)
+    public function authUser($code) : array
     {
         $authResponse = $this->request(
-            'login/oauth/access_token',
+            $this->siteUrl.'login/oauth/access_token',
             RequestInterface::METHOD_POST,
             [
                 'client_id' => $this->clientId,
@@ -67,12 +82,31 @@ class Client
             ));
         }
 
+        $this->accessToken = $authResponse['access_token'];
+
+        if (!is_null($this->eventDispatcher)) {
+            $this->eventDispatcher->dispatch(
+                Event\UserLogin::NAME,
+                $event = new Event\UserLogin($this, $authResponse)
+            );
+            $authResponse = $event->getResponse();
+        }
+
         return $authResponse;
     }
 
-    public function request($url, $method = RequestInterface::METHOD_GET, $content = '', $headers = array())
+    public function getCurrentUser() : array
     {
-        $url = $this->baseUrl.$url;
+        return $this->apiRequest('user');
+    }
+
+    public function apiRequest($url, $method = RequestInterface::METHOD_GET, $content = '', $headers = []) : array
+    {
+        return $this->request($this->apiUrl.$url, $method, $content, $headers);
+    }
+
+    public function request($url, $method = RequestInterface::METHOD_GET, $content = '', $headers = []) : array
+    {
         if (!is_null($this->accessToken)) {
             $url .= (parse_url($url, PHP_URL_QUERY) ? '&' : '?').'access_token='.$this->accessToken;
         }

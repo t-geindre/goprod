@@ -1,5 +1,8 @@
-var Vue     = require('vue');
-var Cookies = require('cookies-js');
+var Vue         = require('vue');
+var VueResource = require('vue-resource')
+var Cookies     = require('cookies-js');
+
+Vue.use(VueResource);
 
 var client;
 var GithubClient = function()
@@ -35,59 +38,53 @@ var GithubClient = function()
             clearAuthCode: true
         }, params);
 
-
-        // cookie auth
-        var auth = Cookies.get('github-auth');
-        if (typeof auth != 'undefined') {
-            this.auth = JSON.parse(auth);
-            if (params.success) {
-                params.success(this.auth);
+        return new Promise(function(resolve, reject) {
+            // cookie auth
+            var auth = Cookies.get('github-auth');
+            if (typeof auth != 'undefined') {
+                client.auth = JSON.parse(auth);
+                return resolve({ authenticated: true, auth: client.auth});
             }
-            return;
-        }
 
-        // github code callback
-        var urlParams = new URLSearchParams(window.location.search.slice(1));
-        if (urlParams.has('code')) {
-            Vue.http.get(
-                this.url.authProxy+'?code='+urlParams.get('code')
-            ).then(
-                function(response) {
-                    client.auth = response.data;
-                    Cookies.set('github-auth', JSON.stringify(client.auth), { expires: Infinity });
-                    if (params.success) {
-                        params.success(response.data);
-                    }
-                },
-                function(response) {
-                    if (params.error) {
-                        params.error(response.data);
-                    }
-                }
-            );
+            // github code callback
+            var urlParams = new URLSearchParams(window.location.search.slice(1));
+            if (urlParams.has('code')) {
 
-            // clear used code
-            if (window.history && params.clearAuthCode) {
-                urlParams.delete('code')
-                var search = urlParams.toString();
-                window.history.pushState(
-                    {},
-                    'Authenticated',
-                    window.location.pathname + (search.length ? '?' + search : '')
+                Vue.http.get(
+                    client.url.authProxy+'?code='+urlParams.get('code')
+                ).then(
+                    function(response) {
+                        client.auth = response.data;
+                        if (params.remember) {
+                            Cookies.set('github-auth', JSON.stringify(client.auth), { expires: Infinity });
+                        }
+                        resolve({ authenticated: true, auth: response.data })
+                    },
+                    function(response) {
+                        reject(response.data);
+                    }
                 );
+
+                // clear used code
+                if (window.history && params.clearAuthCode) {
+                    urlParams.delete('code')
+                    var search = urlParams.toString();
+                    window.history.pushState(
+                        {},
+                        'Authenticated',
+                        window.location.pathname + (search.length ? '?' + search : '')
+                    );
+                }
+
+                return;
+            }
+            // redirect to github to get token
+            if (params.redirect) {
+                window.location = client.url.site + 'login/oauth/authorize?scope=' + client.app.scope + '&client_id=' + client.app.clientId;
             }
 
-            return;
-        }
-
-        // redirect to github to get token
-        if (params.redirect) {
-            window.location = this.url.site + 'login/oauth/authorize?scope=' + this.app.scope + '&client_id=' + this.app.clientId;
-        }
-
-        if (params.error) {
-            params.error.apply(this.$context, [{}]);
-        }
+            resolve({ authenticated: false, auth: {}});
+        })
     };
 
     this.clearAuthCookie = function()
@@ -104,15 +101,8 @@ var GithubClient = function()
             );
         }
 
-        var queryParams = [];
-        for (var x in data) {
-            queryParams.push(
-                encodeURIComponent(x) + '=' + encodeURIComponent(data[x])
-            );
-        }
-
         return Vue.http.get(
-            this.url.api + url + '?' + queryParams.join('&')
+            this.url.api + url, { params: data }
         );
     }
 }

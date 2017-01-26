@@ -1,17 +1,26 @@
-var Vue = require('vue');
 require('./github-issues');
+
+var Vue = require('vue');
+var UserStore = require('../store/user');
 
 module.exports = Vue.component('deploy-pullrequest', {
     template: '#deploy-pullrequest-template',
     computed: {
         user: function() {
-            return this.$store.state.user;
+            return UserStore.state.user;
         }
     },
     methods: {
         deploy: function(pr) {
-            console.log(pr.id);
-            this.$router.push({ name: 'deploy-create-by-pullrequest', params: {  id: pr.id }});
+            var repo = pr.repository_url.split('/');
+            this.$router.push({
+                name: 'deploy-create-by-pullrequest',
+                params: {
+                    owner: repo[repo.length - 2],
+                    repo: repo[repo.length - 1],
+                    number: pr.number
+                }
+            });
         }
     }
 });
