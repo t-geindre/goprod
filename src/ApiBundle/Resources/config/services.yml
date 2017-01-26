@@ -26,3 +26,17 @@ services:
                 name: "kernel.event_listener"
                 event: "github.client.user.login"
                 method: "onUserLogin"
+
+    api_bundle.listener.kernel.view:
+        class: "ApiBundle\\Listener\\Kernel\\KernelView"
+        arguments:
+            - "@serializer"
+        tags:
+            -
+                name: "kernel.event_listener"
+                event: "kernel.view"
+                method: "onKernelView"
+            -
+                name: "kernel.event_listener"
+                event: "kernel.exception"
+                method: "onKernelException"
