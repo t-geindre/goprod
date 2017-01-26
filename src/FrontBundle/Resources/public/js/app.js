@@ -2,6 +2,8 @@
 // @todo fix this
 window.jQuery = require('jquery');
 require('bootstrap');
+require('./component/loading-spinner');
+require('./component/user-details');
 
 var Vue          = require('vue');
 var Vuex         = require('vuex');
@@ -10,11 +12,6 @@ var Router       = require('./routing/router');
 var GithubClient = require('./lib/github-client');
 var UserStore    = require('./store/user');
 var ConfigStore  = require('./store/config');
-
-var Components = {
-    deployePullrequest: require('./component/deploy-pullrequest'),
-    userDetails:        require('./component/user-details')
-};
 
 Vue.use(Vuex);
 Vue.use(VueResource);

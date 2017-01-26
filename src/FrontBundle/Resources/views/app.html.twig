@@ -17,13 +17,31 @@
                 <div id="navbar" class="collapse navbar-collapse">
                     <ul class="nav navbar-nav">
                         <li class="dropdown active" v-if="authenticated">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">New deployment <span class="caret"></span></a>
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                                <span class="glyphicon glyphicon-plus"></span>
+                                Deploy <span class="caret"></span>
+                            </a>
                             <ul class="dropdown-menu">
-                                <li><router-link :to="{ name: 'deploy-by-pullrequest' }">Pull request</router-link></li>
-                                <li><a href="#project">Project</a></li>
+                                <li>
+                                    <router-link :to="{ name: 'deploy-by-pullrequest' }">
+                                        <span class="glyphicon glyphicon-plus"></span>
+                                        Pull request
+                                    </router-link>
+                                </li>
+                                <li>
+                                    <a href="#project">
+                                        <span class="glyphicon glyphicon-plus"></span>
+                                        Project
+                                    </a>
+                                </li>
                             </ul>
                         </li>
-                        <li><a href="#about">In progress</a></li>
+                        <li>
+                            <a href="#deploys">
+                                <span class="glyphicon glyphicon-time"></span>
+                                In progress
+                            </a>
+                        </li>
                     </ul>
                     <user-details></user-details>
                 </div>
@@ -40,7 +58,8 @@
                     <p>An error occured during the authentication process. Please try again.</p>
                 </div>
             <transition name="fade">
-                <p v-if="authenticating">Processing...</p>
+                <loading-spinner v-if="authenticating" class="big center">
+                </loading-spinner>
                 <router-view v-if="authenticated"></router-view>
             </transition>
         </div>
@@ -52,3 +71,4 @@
 {% include '@Front/component/deploy-pullrequest.html.twig' %}
 {% include '@Front/component/deploy-create.html.twig' %}
 {% include '@Front/component/github-issues.html.twig' %}
+{% include '@Front/component/loading-spinner.html.twig' %}

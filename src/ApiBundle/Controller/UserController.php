@@ -15,7 +15,12 @@ class UserController extends BaseController
         }
 
         try {
-            return $this->get('api_bundle.github_client')->authUser($code);
+            $github = $this->get('api_bundle.github_client');
+
+            return $this->getUser(
+                $github->authUser($code)['access_token'],
+                $github->getCurrentUser()['login']
+            );
         } catch (\ApiBundle\Service\Github\Exception\Exception $e) {
             throw $this->createBadRequestException($e->getMessage(), $e);
         }

@@ -2,17 +2,67 @@
     <div class="user-details">
         <ul class="nav navbar-nav navbar-right" v-if="authenticated">
             <li class="dropdown">
-                <a href="#" class="dropdown-toggle user-infos" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                <a href="#" class="dropdown-toggle user-infos" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <img :src="user.avatar_url" alt="avatar" />
                         [[ user.name ]]
                         <span class="caret"></span>
                 </a>
                 <ul class="dropdown-menu">
-                    <li><a href="#" v-on:click="logout">Logout</a></li>
+                    <li>
+                        <a href="#" v-on:click.prevent="displayProfile">
+                            <span class="glyphicon glyphicon-user"></span>
+                            Profile
+                        </a>
+                    </li>
+                    <li role="separator" class="divider"></li>
+                    <li>
+                        <a href="#" v-on:click.prevent="logout">
+                            <span class="glyphicon glyphicon glyphicon-off"></span>
+                            Logout
+                        </a>
+                    </li>
                 </ul>
             </li>
         </ul>
-        <button v-else type="button" class="navbar-right btn btn-default navbar-btn" v-on:click="login">Login</button>
+        <button v-else-if="!authenticating" type="button" class="navbar-right btn btn-default navbar-btn" v-on:click="login">
+            <span class="glyphicon glyphicon glyphicon-off"></span>
+            Login
+        </button>
+        <div class="modal fade" id="profile-modal" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close" v-if="profileComplete">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <h4 class="modal-title">[[ user.name ]] - <small>Profile</small></h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="alert alert-warning alert-dismissible fade in" role="alert">
+                            Please, <strong>complete your profile</strong> before starting using this app.
+                        </div>
+                        <form>
+                            <div class="form-group">
+                                <label for="goliveApiKey">Golive API Key (<a href="#">manage</a>):</label>
+                                <input type="password" name="goliveKey" class="form-control" id="goliveApiKey" placeholder="fds54fds98sd8ds897vd8s7" :value="user.golive_key" />
+                            </div>
+                            <div class="form-group">
+                                <label for="hipchatName">Hipchat name:</label>
+                                <input type="text" name="hipchatName" class="form-control" id="hipchatName" placeholder="Raoul" :value="user.hipchatName" />
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal" v-if="profileComplete">
+                            Close
+                        </button>
+                        <button type="button" class="btn btn-primary">
+                            Save changes
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </script>
 

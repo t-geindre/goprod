@@ -43,6 +43,11 @@ class Client
     protected $eventDispatcher;
 
     /**
+     * @var null|array
+     */
+    protected $currentUser = null;
+
+    /**
      * @param Buzz\Browser $client
      */
     public function __construct(
@@ -61,6 +66,14 @@ class Client
         $this->clientSecret = $clientSecret;
         $this->accessToken = $accessToken;
         $this->eventDispatcher = $eventDispatcher;
+    }
+
+    public function setAccessToken($token) : Client
+    {
+        $this->accessToken = $token;
+        $this->currentUser = null;
+
+        return $this;
     }
 
     public function authUser($code) : array
@@ -82,7 +95,7 @@ class Client
             ));
         }
 
-        $this->accessToken = $authResponse['access_token'];
+        $this->setAccessToken($authResponse['access_token']);
 
         if (!is_null($this->eventDispatcher)) {
             $this->eventDispatcher->dispatch(
@@ -97,7 +110,11 @@ class Client
 
     public function getCurrentUser() : array
     {
-        return $this->apiRequest('user');
+        if (!is_null($this->currentUser)) {
+            return $this->currentUser;
+        }
+
+        return $this->currentUser = $this->apiRequest('user');
     }
 
     public function apiRequest($url, $method = RequestInterface::METHOD_GET, $content = '', $headers = []) : array

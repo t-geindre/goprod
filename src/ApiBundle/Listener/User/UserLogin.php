@@ -29,12 +29,15 @@ class UserLogin
         $response = $event->getResponse();
 
         if (is_null($user = $this->repository->findOneByLogin($githubUser['login']))) {
-            $user = (new User())
-                ->setLogin($githubUser['login'])
-                ->setName($githubUser['name']);
+            $user = (new User());
         }
 
-        $user->setAccessToken($response['access_token']);
+        $user
+            ->setLogin($githubUser['login'])
+            ->setName($githubUser['name'])
+            ->setAvatarUrl($githubUser['avatar_url'])
+            ->setAccessToken($response['access_token'])
+        ;
 
         $this->em->persist($user);
         $this->em->flush();

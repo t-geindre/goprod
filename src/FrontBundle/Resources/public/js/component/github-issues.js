@@ -1,3 +1,5 @@
+require('./loading-spinner');
+
 var Vue          = require('vue');
 var GithubClient = require('../lib/github-client');
 var UserStore    = require('../store/user');
@@ -18,7 +20,8 @@ module.exports = Vue.component('github-issues', {
             order: 'desc',
             open: true,
             iam: 'author',
-            query: ''
+            query: '',
+            loading: false
         }
     },
     mounted: function() {
@@ -27,6 +30,7 @@ module.exports = Vue.component('github-issues', {
     },
     methods: {
         update: function() {
+            this.loading = true;
             var data = {
                 q: this.query,
                 sort: this.sort,
@@ -37,6 +41,7 @@ module.exports = Vue.component('github-issues', {
             }
             GithubClient.searchIssues(data).then(function(response) {
                 this.issues = response.data.items;
+                this.loading = false;
             }.bind(this));
         },
         setSort: function(type, order) {

@@ -9,3 +9,8 @@
         padding-bottom: 8px;
     }
 }
+
+// Fix backdrop appearing over modals
+.modal-backdrop {
+    z-index: 500;
+}

@@ -63,6 +63,13 @@ class User
     protected $accessToken;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="avatarUrl", type="string", length=255)
+     */
+    protected $avatarUrl;
+
+    /**
      * Get id
      *
      * @return int
@@ -190,5 +197,29 @@ class User
     public function getAccessToken()
     {
         return $this->accessToken;
+    }
+
+    /**
+     * Set avatarUrl
+     *
+     * @param string $avatarUrl
+     *
+     * @return User
+     */
+    public function setAvatarUrl($avatarUrl)
+    {
+        $this->avatarUrl = $avatarUrl;
+
+        return $this;
+    }
+
+    /**
+     * Get avatarUrl
+     *
+     * @return string
+     */
+    public function getAvatarUrl()
+    {
+        return $this->avatarUrl;
     }
 }

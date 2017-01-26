@@ -8,16 +8,13 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class BaseController extends Controller
 {
-    protected function getUser(Request $request = null)
+    protected function getUser($accessToken = null, $login = null)
     {
-        if (is_null($request)) {
-            $request = $this->get('request_stack')->getMasterRequest();
-        }
+        $request = $this->get('request_stack')->getMasterRequest();
+        $accessToken = $accessToken ?? $request->get('access_token');
+        $login = $login ?? $request->get('login');
 
-        if (
-            !is_null($accessToken = $request->get('access_token'))
-            && !is_null($login = $request->get('login'))
-        ) {
+        if (!is_null($login) && !is_null($accessToken)) {
             $user = $this
                 ->get('doctrine')
                 ->getRepository('ApiBundle\\Entity\\User')

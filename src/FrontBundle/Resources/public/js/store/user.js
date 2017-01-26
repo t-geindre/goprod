@@ -8,8 +8,7 @@ module.exports = new Vuex.Store({
     state: {
         authenticated: false,
         authenticating: false,
-        user: {},
-        auth: {}
+        user: {}
     },
     mutations: {
         authenticated: function(state, authenticated) {
@@ -21,44 +20,23 @@ module.exports = new Vuex.Store({
         },
         user: function(state, user) {
             state.user = user;
-        },
-        auth: function(state, auth) {
-            state.auth = auth;
         }
     },
     actions: {
         login: function(context, redirect = true) {
             context.commit('authenticating', true);
             return new Promise(function(resolve, reject) {
-                GithubClient.authenticate({redirect: redirect}).then(
-                    function(response) {
-                        if (response.authenticated) {
-                            context.commit('auth', response.auth);
-                            return GithubClient.getCurrentUser().then(
-                                function(response) {
-                                    context.commit('authenticated', true);
-                                    context.commit('user', response.data);
-                                    resolve(true);
-                                },
-                                function(error) {
-                                    context.commit('authenticated', false);
-                                    context.commit('user', {});
-                                    GithubClient.clearAuthCookie();
-                                    resolve(false);
-                                }
-                            );
-                        }
+                GithubClient.authenticate({redirect: redirect})
+                    .then(function(response) {
+                        context.commit('user', response.auth);
+                        context.commit('authenticated', response.authenticated);
+                        resolve(response);
+                    })
+                    .catch(function(response) {
                         context.commit('authenticated', false);
-                        context.commit('user', {});
-                        resolve(false);
-                    },
-                    function(error) {
-                        context.commit('authenticated', false);
-                        context.commit('user', {});
-                        reject(error);
-                    }
-                );
-            })
+                        reject(response);
+                    });
+            });
         },
         logout: function(context) {
             context.commit('authenticated', false);

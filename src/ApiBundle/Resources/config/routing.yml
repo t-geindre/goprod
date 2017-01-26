@@ -3,8 +3,15 @@ user_auth:
     defaults:
         _controller: ApiBundle:User:auth
 
+user_profile:
+    path: /user/profile
+    defaults:
+        _controller: ApiBundle:User:profile
+    options:
+        expose: true
+
 user_chekprofile:
-    path: /user/check_profile
+    path: /user/profile/complete
     defaults:
         _controller: ApiBundle:User:checkProfile
     options:

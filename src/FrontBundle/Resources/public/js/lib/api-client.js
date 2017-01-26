@@ -17,6 +17,10 @@ var ApiClient = function()
         return this.query('app_config');
     }
 
+    this.getUserProfile = function() {
+        return this.query('user_profile');
+    }
+
     this.checkProfile = function() {
         return this.query('user_chekprofile');
     };
@@ -38,7 +42,7 @@ var ApiClient = function()
             {
                 params: Object.assign(
                     {
-                        access_token: UserStore.state.auth.access_token,
+                        access_token: UserStore.state.user.access_token,
                         login: UserStore.state.user.login
                     },
                     data

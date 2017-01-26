@@ -47,7 +47,7 @@
                 </ul>
             </div>
         </div>
-        <div class="list-group">
+        <div v-if="!loading" class="list-group">
             <a v-for="issue in issues" href="#" class="list-group-item issue" v-on:click.prevent="$emit('select-issue', issue)">
                 <svg
                     aria-hidden="true"
@@ -85,6 +85,7 @@
                 </p>
             </a>
         </div>
+        <loading-spinner class="medium" v-else></loading-spinner>
     </div>
 
 </div>
