@@ -43,7 +43,7 @@ var app = new Vue({
     methods: {
         login: function(redirect = true) {
             UserStore.dispatch('login', redirect).catch(
-                function(error) {
+                function(response) {
                     app.authError = true;
                 }
             );

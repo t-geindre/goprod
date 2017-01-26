@@ -9,7 +9,8 @@ module.exports = new Vuex.Store({
     state: {
         authenticated: false,
         authenticating: false,
-        user: {}
+        user: {},
+        complete: true
     },
     mutations: {
         authenticated: function(state, authenticated) {
@@ -21,6 +22,9 @@ module.exports = new Vuex.Store({
         },
         user: function(state, user) {
             state.user = user;
+        },
+        complete: function(state, complete) {
+            state.complete = complete;
         }
     },
     actions: {
@@ -40,9 +44,21 @@ module.exports = new Vuex.Store({
             context.commit('authenticating', true);
             return new Promise(function(resolve, reject) {
                 GithubClient.authenticate({redirect: redirect})
+                    .then(function(data) {
+                        if (data.authenticated) {
+                            return ApiClient.getUserProfile({
+                                params: {
+                                    access_token: data.auth.access_token,
+                                    login: data.auth.login
+                                }
+                            })
+                        }
+                        resolve(data);
+                    })
                     .then(function(response) {
-                        context.commit('user', response.auth);
-                        context.commit('authenticated', response.authenticated);
+                        context.commit('user', response.data.user);
+                        context.commit('complete', response.data.complete);
+                        context.commit('authenticated', true);
                         resolve(response);
                     })
                     .catch(function(response) {

@@ -17,10 +17,11 @@ class UserController extends BaseController
         try {
             $github = $this->get('api_bundle.github_client');
 
-            return $this->getUser(
-                $github->authUser($code)['access_token'],
-                $github->getCurrentUser()['login']
-            );
+            return [
+                'access_token' => $github->authUser($code)['access_token'],
+                'login' => $github->getCurrentUser()['login']
+            ];
+
         } catch (\ApiBundle\Service\Github\Exception\Exception $e) {
             throw $this->createBadRequestException($e->getMessage(), $e);
         }
@@ -29,6 +30,18 @@ class UserController extends BaseController
     public function checkProfileAction()
     {
         return [
+            'complete' => count(
+                $this
+                    ->get('validator')
+                    ->validate($this->getUser(), null, ['complete_profile'])
+                ) == 0
+        ];
+    }
+
+    public function profileAction()
+    {
+        return [
+            'user' => $this->getUser(),
             'complete' => count(
                 $this
                     ->get('validator')

@@ -27,8 +27,7 @@ var ApiClient = function()
 
     this.updateUser = function(user) {
         return this.updateQuery(
-            'user_update',
-            {},
+            { route: 'user_update' },
             { method: 'post', body: user }
         );
     }

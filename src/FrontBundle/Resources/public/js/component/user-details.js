@@ -1,5 +1,4 @@
 var Vue       = require('vue');
-var Vuex      = require('vuex');
 var UserStore = require('../store/user');
 var ApiClient = require('../lib/api-client');
 var jQuery    = require('jquery');
@@ -10,7 +9,6 @@ module.exports = Vue.component('user-details', {
     data: function() {
         return {
             profileModal: null,
-            profileComplete: true,
             formData: {},
             formErrors: { fields: {} }
         }
@@ -30,6 +28,9 @@ module.exports = Vue.component('user-details', {
         authenticating: function()
         {
             return UserStore.state.authenticating;
+        },
+        profileComplete: function() {
+            return UserStore.state.complete;
         }
     },
     methods: {
@@ -67,13 +68,6 @@ module.exports = Vue.component('user-details', {
         }
     },
     watch: {
-        authenticated: function() {
-            if (this.authenticated) {
-                ApiClient.checkProfile().then(function(response) {
-                    this.profileComplete = response.data.complete;
-                }.bind(this));
-            }
-        },
         profileComplete: function() {
             if (!this.profileComplete) {
                 this.displayProfile();
