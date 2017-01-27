@@ -2,7 +2,6 @@ var Vue = require('vue');
 
 Vue.component('github-issue', {
     template: '#github-issue-template',
-    delimiters: ['[[', ']]'],
     props: ['issue'],
     methods: {
         getTextLabelColor: function(background) {
@@ -24,7 +23,7 @@ Vue.component('github-issue', {
     },
     filters: {
         "repo-name": function (value) {
-            return value.split('repos')[1].slice(1);
+            return value.split('repos')[1].slice(1).split('/issues')[0];
         }
     },
 });

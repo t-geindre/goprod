@@ -4,7 +4,6 @@ var jQuery    = require('jquery');
 
 module.exports = Vue.component('user-details', {
     template: '#user-details-template',
-    delimiters: ['[[', ']]'],
     data: function() {
         return {
             profileModal: null,
@@ -57,7 +56,6 @@ module.exports = Vue.component('user-details', {
         updateProfile: function() {
             UserStore.dispatch('update', this.formData).then(
                 function(response) {
-                    this.profileComplete = true;
                     this.hideProfile();
                 }.bind(this),
                 function(response) {

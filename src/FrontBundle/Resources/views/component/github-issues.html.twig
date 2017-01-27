@@ -34,7 +34,7 @@
                 </label>
             </div>
             <div class="dropdown pull-right">
-                <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
+                <button class="btn btn-sm btn-default dropdown-toggle" type="button" data-toggle="dropdown">
                     Sort <span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu">
@@ -52,6 +52,7 @@
                 v-for="issue in issues"
                 v-bind:issue="issue"
                 v-on:select-issue="$emit('select-issue', issue)"
+                class="list-group-item"
             >
             </github-issue>
         </div>

@@ -4,7 +4,7 @@
             <li class="dropdown">
                 <a href="#" class="dropdown-toggle user-infos" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <img :src="user.avatar_url" alt="avatar" />
-                        [[ user.name ]]
+                        {{ user.name }}
                         <span class="caret"></span>
                 </a>
                 <ul class="dropdown-menu">
@@ -35,7 +35,7 @@
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close" v-if="profileComplete">
                             <span aria-hidden="true">&times;</span>
                         </button>
-                        <h4 class="modal-title">[[ user.name ]] - <small>Profile</small></h4>
+                        <h4 class="modal-title">{{ user.name }} - <small>Profile</small></h4>
                     </div>
                     <div class="modal-body">
                         <div class="alert alert-warning" role="alert" v-if="!profileComplete">

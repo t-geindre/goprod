@@ -30,6 +30,18 @@ var GithubClient = function()
         return this.apiQuery('search/issues', terms);
     }
 
+    this.getPullRequest = function(pullrequest) {
+        return this.apiQuery(
+            'repos/'+pullrequest.owner+'/'+pullrequest.repo+'/pulls/'+pullrequest.number
+        );
+    }
+
+    this.getIssue = function(issues) {
+        return this.apiQuery(
+            'repos/'+issues.owner+'/'+issues.repo+'/issues/'+issues.number
+        );
+    }
+
     this.setupUrls = function(urls) {
         this.urls = urls;
     }

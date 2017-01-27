@@ -7,7 +7,6 @@ var GithubClient = require('../lib/github-client');
 var UserStore    = require('../store/user');
 
 module.exports = Vue.component('github-issues', {
-    delimiters: ['[[', ']]'],
     template: '#github-issues-template',
     props: ['queryAppend'],
     computed: {

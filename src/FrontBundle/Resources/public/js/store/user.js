@@ -34,6 +34,7 @@ module.exports = new Vuex.Store({
                     Object.assign(context.state.user, data)
                 ).then(function(response) {
                     context.commit('user', response.data.entity);
+                    context.commit('complete', true);
                     resolve(response);
                 }, function(response) {
                     reject(response);
