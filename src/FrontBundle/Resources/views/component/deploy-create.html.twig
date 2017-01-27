@@ -4,49 +4,49 @@
         <h1>Let's go prod! <small>You're about to create a new deployment</small></h1>
     </div>
     <template v-if="!loading">
-        <div class="alert alert-danger" role="alert" v-if="!pullrequest.merged && !pullrequest.mergeable">
-            <p>
-                This Pull Request is not merged yet and is not mergeable.
-                Please <a :href="pullrequest.html_url" target="_blank" class="alert-link">fix this</a>
-                before creating a new deployment.
-            </p>
-        </div>
-        <div class="alert alert-warning" role="alert" v-if="pullrequest.mergeable && pullrequest.mergeable_state != 'clean'">
-            <p>
-                This Pull Request is meargeable but is in an unstable state. You shlould consider
-                <a :href="pullrequest.html_url" target="_blank" class="alert-link">fixing it</a>
-                before starting a new deployment.
-            </p>
-        </div>
-        <div
-            class="panel panel-success"
-            v-if="issue && pullrequest"
-            v-bind:class="{
-                'panel-danger': !pullrequest.merged && !pullrequest.mergeable,
-                'panel-warning' : pullrequest.mergeable && pullrequest.mergeable_state != 'clean'
-            }"
-        >
+        <div class="panel panel-default">
             <div class="panel-heading">
-                <a :href="pullrequest.html_url" target="_blank" class="btn btn-link pull-right btn-xs">
-                    View on github
-                </a>
                 <h3 class="panel-title">
-                    Selected Pull Request
+                    New deployment
                 </h3>
             </div>
-            <div class="list-group">
-                <github-issue v-bind:issue="issue" class="list-group-item">
-                </github-issue>
-            </div>
-        </div>
-        <template v-if="!pullrequest || (pullrequest.mergeable || pullrequest.merged)">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h3 class="panel-title">
-                        New deployment
-                    </h3>
+            <div class="panel-body">
+                <div
+                    class="panel panel-success"
+                    v-if="issue && pullrequest"
+                    v-bind:class="{
+                        'panel-danger': !pullrequest.merged && !pullrequest.mergeable,
+                        'panel-warning' : pullrequest.mergeable && pullrequest.mergeable_state != 'clean'
+                    }"
+                >
+                    <div class="panel-heading">
+                        <a :href="pullrequest.html_url" target="_blank" class="btn btn-link pull-right btn-xs">
+                            View on github
+                        </a>
+                        <h3 class="panel-title">
+                            Pull Request
+                        </h3>
+                    </div>
+                    <div class="list-group">
+                        <github-issue v-bind:issue="issue" class="list-group-item">
+                        </github-issue>
+                    </div>
                 </div>
-                <div class="panel-body">
+                <div class="alert alert-danger" role="alert" v-if="!pullrequest.merged && !pullrequest.mergeable">
+                    <p>
+                        This Pull Request is not merged yet and is not mergeable.
+                        Please <a :href="pullrequest.html_url" target="_blank" class="alert-link">fix this</a>
+                        before creating a new deployment.
+                    </p>
+                </div>
+                <div class="alert alert-warning" role="alert" v-if="pullrequest.mergeable && pullrequest.mergeable_state != 'clean'">
+                    <p>
+                        This Pull Request is meargeable but is in an unstable state. You shlould consider
+                        <a :href="pullrequest.html_url" target="_blank" class="alert-link">fixing it</a>
+                        before starting a new deployment.
+                    </p>
+                </div>
+                <template v-if="!pullrequest || (pullrequest.mergeable || pullrequest.merged)">
                     <div class="form-group">
                         <label for="repositoryName">Repository</label>
                         <input class="form-control" id="repositoryName" v-model="repositoryName" disabled="disabled">
@@ -59,9 +59,9 @@
                         <button type="button" v-on:click="cancel" class="btn btn-default">Cancel</button>
                         <button type="button" class="btn btn-primary">New deployment</button>
                     </div>
-                </div>
+                </template>
             </div>
-        </template>
+        </div>
     </template>
     <loading-spinner v-else class="medium"></loading-spinner>
 </div>
