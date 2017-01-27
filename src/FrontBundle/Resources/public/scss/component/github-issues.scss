@@ -1,4 +1,8 @@
 .github-issues {
+    .pagination {
+        margin: 0;
+    }
+
     label.btn > input[type='radio'] {
       display: none;
     }

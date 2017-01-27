@@ -1,6 +1,5 @@
 var Vue       = require('vue');
 var UserStore = require('../store/user');
-var ApiClient = require('../lib/api-client');
 var jQuery    = require('jquery');
 
 module.exports = Vue.component('user-details', {

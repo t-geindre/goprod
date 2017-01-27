@@ -86,6 +86,14 @@
             </a>
         </div>
         <loading-spinner class="medium" v-else></loading-spinner>
+        <div class="panel-footer text-center">
+            <pagination
+                v-bind:pages="pagination.pages"
+                v-bind:page="pagination.page"
+                v-on:page="goToPage"
+            >
+            </pagination>
+        </div>
     </div>
 
 </div>

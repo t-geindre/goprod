@@ -1,4 +1,5 @@
 require('./loading-spinner');
+require('./pagination');
 
 var Vue          = require('vue');
 var GithubClient = require('../lib/github-client');
@@ -21,7 +22,12 @@ module.exports = Vue.component('github-issues', {
             open: true,
             iam: 'author',
             query: '',
-            loading: false
+            loading: false,
+            pagination: {
+                per_page: 20,
+                page: 1,
+                pages: 1
+            }
         }
     },
     mounted: function() {
@@ -31,15 +37,17 @@ module.exports = Vue.component('github-issues', {
     methods: {
         update: function() {
             this.loading = true;
-            var data = {
-                q: this.query,
+            GithubClient.searchIssues({
+                q: this.query + (this.queryAppend ? ' '+this.queryAppend : ''),
                 sort: this.sort,
-                order: this.order
-            };
-            if (this.queryAppend) {
-                data.q += ' ' + this.queryAppend;
-            }
-            GithubClient.searchIssues(data).then(function(response) {
+                order: this.order,
+                per_page: this.pagination.per_page,
+                page: this.pagination.page
+            })
+            .then(function(response) {
+                this.pagination.pages = Math.ceil(
+                    response.data.total_count / this.pagination.per_page
+                );
                 this.issues = response.data.items;
                 this.loading = false;
             }.bind(this));
@@ -74,6 +82,10 @@ module.exports = Vue.component('github-issues', {
             }
 
             return '#fff'
+        },
+        goToPage: function(page) {
+            this.pagination.page = page;
+            this.update();
         }
     },
     filters: {
@@ -87,7 +99,7 @@ module.exports = Vue.component('github-issues', {
                 ['is:closed', 'is:open'],
                 this.open ? 'is:open' : 'is:closed'
             );
-            this.update();
+            this.goToPage(1);
         },
         iam: function() {
             this.queryUpdate(
@@ -98,7 +110,7 @@ module.exports = Vue.component('github-issues', {
                 ],
                 this.iam+':'+this.user.login
             );
-            this.update();
+            this.goToPage(1);
         }
     }
 });
