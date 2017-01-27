@@ -1,5 +1,6 @@
 var gulp = require('gulp');
 var gulpif = require('gulp-if');
+var gutil = require('gulp-util');
 var uglify = require('gulp-uglify');
 var uglifycss = require('gulp-uglifycss');
 var sass = require('gulp-sass');
@@ -30,6 +31,7 @@ var path = {
 gulp.task('js', function () {
   browserify(path.js_entry)
     .bundle()
+        .on('error', gutil.log)
     .pipe(source('build.js'))
     .pipe(gulpif(env === 'prod', uglify()))
     .pipe(gulp.dest('web/js'));
