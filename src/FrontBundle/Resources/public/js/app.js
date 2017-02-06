@@ -45,6 +45,7 @@ var app = new Vue({
             UserStore.dispatch('login', redirect).catch(
                 function(response) {
                     app.authError = true;
+                    GithubClient.clearAuthCookie();
                 }
             );
         }

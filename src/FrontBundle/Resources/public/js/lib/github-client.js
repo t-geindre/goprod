@@ -110,6 +110,7 @@ var GithubClient = function()
     this.clearAuthCookie = function()
     {
         Cookies.set('github-auth', undefined, { expires: Infinity });
+        this.auth = {};
     }
 
     this.apiQuery = function(url, data = {})
