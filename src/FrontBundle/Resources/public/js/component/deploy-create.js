@@ -21,10 +21,7 @@ module.exports = Vue.component('deploy-create', {
         }
     },
     mounted: function() {
-        this.deploy = this.$router.currentRoute.params;
-        if (this.deploy.number) {
-            this.loadPullRequest(this.deploy);
-        }
+        this.update()
     },
     methods: {
         loadPullRequest: function(pr) {
@@ -46,6 +43,17 @@ module.exports = Vue.component('deploy-create', {
         },
         cancel: function() {
             this.$router.back('/');
+        },
+        update: function() {
+            this.deploy = this.$route.params;
+            if (this.deploy.number) {
+                this.loadPullRequest(this.deploy);
+            }
+        }
+    },
+    watch: {
+        $route: function() {
+            this.update();
         }
     }
 });

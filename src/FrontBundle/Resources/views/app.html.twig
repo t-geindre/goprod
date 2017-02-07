@@ -60,7 +60,9 @@
             <transition name="fade">
                 <loading-spinner v-if="authenticating" class="big center">
                 </loading-spinner>
-                <router-view v-if="authenticated"></router-view>
+                <keep-alive v-else>
+                    <router-view v-if="authenticated"></router-view>
+                </keep-alive>
             </transition>
         </div>
     </div>

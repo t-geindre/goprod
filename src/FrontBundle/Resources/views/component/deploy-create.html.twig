@@ -55,11 +55,13 @@
                         <label for="description">Description</label>
                         <input class="form-control" id="description" placeholder="Explain in a few words what you're about to deploy" v-model="description">
                     </div>
-                    <div class="pull-right">
-                        <button type="button" v-on:click="cancel" class="btn btn-default">Cancel</button>
-                        <button type="button" class="btn btn-primary">New deployment</button>
-                    </div>
                 </template>
+                <div class="pull-right">
+                    <button type="button" v-on:click="cancel" class="btn btn-default">Cancel</button>
+                    <template v-if="!pullrequest || (pullrequest.mergeable || pullrequest.merged)">
+                        <button type="button" class="btn btn-primary">New deployment</button>
+                    </template>
+                </div>
             </div>
         </div>
     </template>
