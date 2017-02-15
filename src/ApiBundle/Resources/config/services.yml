@@ -1,21 +1,21 @@
 services:
-    api_bundle.repository.user:
+    # Doctrine repositories
+    api_bundle.repository:
         class: Doctrine\ORM\EntityRepository
         factory: ["@doctrine.orm.entity_manager", getRepository]
+        abstract: true
+
+    api_bundle.repository.user:
+        parent: api_bundle.repository
         arguments:
             - "ApiBundle\\Entity\\User"
 
-    api_bundle.github_client:
-        class: "ApiBundle\\Service\\Github\\Client"
+    api_bundle.repository.deploy:
+        parent: api_bundle.repository
         arguments:
-            - "@buzz"
-            - "%api_bundle.github.urls.site%"
-            - "%api_bundle.github.urls.api%"
-            - "%api_bundle.github.client_id%"
-            - "%api_bundle.github.client_secret%"
-            - ~
-            - "@event_dispatcher"
+            - "ApiBundle\\Entity\\Deploy"
 
+    # Listeners
     api_bundle.listener.github.user.login:
         class: "ApiBundle\\Listener\\User\\UserLogin"
         arguments:
@@ -36,10 +36,25 @@ services:
                 name: "kernel.event_listener"
                 event: "kernel.view"
                 method: "onKernelView"
-            -
-                name: "kernel.event_listener"
-                event: "kernel.exception"
-                method: "onKernelException"
 
+    # Misc
     api_bundle.serializer.form.error:
-        class: "ApiBundle\\Form\\Serializer\\ErrorSerializer"
+        class: "ApiBundle\\Form\\Serializer\\ErrorsSerializer"
+
+    api_bundle.github_client:
+        class: "ApiBundle\\Service\\Github\\Client"
+        arguments:
+            - "@buzz"
+            - "%api_bundle.github.urls.site%"
+            - "%api_bundle.github.urls.api%"
+            - "%api_bundle.github.client_id%"
+            - "%api_bundle.github.client_secret%"
+            - ~
+            - "@event_dispatcher"
+
+    api_bundle.validator.uniqnotdonevalidator:
+        class: ApiBundle\Validator\Constraints\UniqNotDoneValidator
+        calls:
+            - ["setRepository", ["@api_bundle.repository.deploy"]]
+        tags:
+            - { name: validator.constraint_validator }

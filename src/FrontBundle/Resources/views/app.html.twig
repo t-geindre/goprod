@@ -29,18 +29,22 @@
                                     </router-link>
                                 </li>
                                 <li>
-                                    <a href="#project">
+                                    <router-link :to="{ name: 'deploy-by-project' }">
                                         <span class="glyphicon glyphicon-plus"></span>
                                         Project
-                                    </a>
+                                    </router-link>
                                 </li>
                             </ul>
                         </li>
                         <li>
-                            <a href="#deploys">
+                            <router-link :to="{ name: 'deploy-list' }">
                                 <span class="glyphicon glyphicon-time"></span>
                                 In progress
-                            </a>
+                                <span class="label label-warning" v-if="deploysCount > 0">
+                                    [[ deploysCount ]]
+                                </span>
+
+                            </router-link>
                         </li>
                     </ul>
                     <user-details></user-details>
@@ -72,6 +76,8 @@
 {{ source('@Front/component/user-details.html.twig') }}
 {{ source('@Front/component/deploy-pullrequest.html.twig') }}
 {{ source('@Front/component/deploy-create.html.twig') }}
+{{ source('@Front/component/deploy.html.twig') }}
+{{ source('@Front/component/user-deploys.html.twig') }}
 {{ source('@Front/component/github-issues.html.twig') }}
 {{ source('@Front/component/github-issue.html.twig') }}
 {{ source('@Front/component/loading-spinner.html.twig') }}

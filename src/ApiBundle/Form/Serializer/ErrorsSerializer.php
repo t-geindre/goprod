@@ -4,7 +4,7 @@ namespace ApiBundle\Form\Serializer;
 
 use Symfony\Component\Form\Form;
 
-class ErrorSerializer
+class ErrorsSerializer
 {
     public function serializeErrors(Form $form)
     {

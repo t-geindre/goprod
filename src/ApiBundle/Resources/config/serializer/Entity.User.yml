@@ -1,0 +1,19 @@
+ApiBundle\Entity\User:
+    exclusion_policy: ALL
+    properties:
+        id:
+            expose: true
+        login:
+            expose: true
+        name:
+            expose: true
+        goliveKey:
+            expose: true
+        hipchatName:
+            expose: true
+        accessToken:
+            expose: true
+        avatarUrl:
+            expose: true
+        createDate:
+            expose: true

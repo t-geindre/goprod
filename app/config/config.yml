@@ -14,9 +14,6 @@ framework:
         save_path:   "%kernel.root_dir%/../var/sessions/%kernel.environment%"
     php_errors:
         log: true
-    serializer:
-        enabled: true
-        name_converter: 'serializer.name_converter.camel_case_to_snake_case'
     validation:
         enabled: true
         enable_annotations: true
@@ -46,3 +43,7 @@ api:
             api:  "%github.urls.api%"
         client_id: "%github.client_id%"
         client_secret: "%github.client_secret%"
+
+jms_serializer:
+    metadata:
+        auto_detection: true

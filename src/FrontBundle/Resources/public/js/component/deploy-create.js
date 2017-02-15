@@ -1,4 +1,6 @@
-var Vue = require('vue');
+var Vue          = require('vue');
+var UserStore    = require('../store/user');
+var ApiClient    = require('../lib/api-client');
 var GithubClient = require('../lib/github-client');
 
 module.exports = Vue.component('deploy-create', {
@@ -6,18 +8,19 @@ module.exports = Vue.component('deploy-create', {
     data: function() {
         return {
             deploy: {
-                owner: '',
-                repo: ''
             },
-            description: '',
             loading: false,
             pullrequest: false,
-            issue: false
+            issue: false,
+            errors: {
+                fields: {},
+                global: []
+            }
         };
     },
     computed: {
         repositoryName: function() {
-            return this.deploy.owner + '/' + this.deploy.repo;
+            return this.deploy.owner + '/' + this.deploy.repository;
         }
     },
     mounted: function() {
@@ -33,7 +36,8 @@ module.exports = Vue.component('deploy-create', {
                 }.bind(this))
                 .then(function(response) {
                     this.pullrequest = response.data;
-                    this.description = this.pullrequest.title;
+                    this.deploy.description = this.pullrequest.title;
+                    this.pull
                     this.loading = false;
                 }.bind(this))
                 .catch(function(response) {
@@ -45,10 +49,24 @@ module.exports = Vue.component('deploy-create', {
             this.$router.back('/');
         },
         update: function() {
-            this.deploy = this.$route.params;
-            if (this.deploy.number) {
-                this.loadPullRequest(this.deploy);
+            this.deploy = {
+                owner: this.$route.params.owner,
+                repository: this.$route.params.repo,
+                description: '',
+                pullRequestId: this.$route.params.number ? this.$route.params.number : null
+            };
+            this.errors = { fields: {} };
+            if (this.$route.params.number) {
+                this.loadPullRequest(this.$route.params);
             }
+        },
+        create: function() {
+            this.loading = true;
+            UserStore.dispatch('addDeploy', this.deploy)
+                .catch(function(response) {
+                    this.loading = false;
+                    this.errors = response.data.errors;
+                }.bind(this));
         }
     },
     watch: {

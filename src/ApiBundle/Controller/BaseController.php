@@ -44,7 +44,7 @@ class BaseController extends Controller
         $result = ['entity' => $entity];
 
         if ($valid = $form->isValid()) {
-            $em = $this->get('doctrine')->getEntityManager();
+            $em = $this->get('doctrine')->getManager();
             $em->persist($entity);
             $em->flush();
         } else {

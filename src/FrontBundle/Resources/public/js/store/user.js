@@ -10,6 +10,7 @@ module.exports = new Vuex.Store({
         authenticated: false,
         authenticating: false,
         user: {},
+        deploys: [],
         complete: true
     },
     mutations: {
@@ -25,6 +26,12 @@ module.exports = new Vuex.Store({
         },
         complete: function(state, complete) {
             state.complete = complete;
+        },
+        addDeploy: function(state, deploy) {
+            state.deploys.push(deploy);
+        },
+        deploys: function(state, deploys) {
+            state.deploys = deploys;
         }
     },
     actions: {
@@ -47,7 +54,7 @@ module.exports = new Vuex.Store({
                 GithubClient.authenticate({redirect: redirect})
                     .then(function(data) {
                         if (data.authenticated) {
-                            return ApiClient.getUserProfile({
+                            return ApiClient.getUser({
                                 params: {
                                     access_token: data.auth.access_token,
                                     login: data.auth.login
@@ -71,7 +78,28 @@ module.exports = new Vuex.Store({
         logout: function(context) {
             context.commit('authenticated', false);
             context.commit('user', {});
+            context.commit('deploys', []);
             GithubClient.clearAuthCookie();
+        },
+        loadDeploys: function(context) {
+            return new Promise(function(resolve, reject) {
+                ApiClient.getDeploysByCurrentUser()
+                    .then(function(response) {
+                        context.commit('deploys', response.data);
+                        resolve(response);
+                    })
+                    .catch(reject);
+            });
+        },
+        addDeploy: function(context, deploy) {
+            return new Promise(function(resolve, reject) {
+                ApiClient.createDeploy(deploy)
+                    .then(function(response) {
+                        context.commit('addDeploy', response.data.entity);
+                        resolve(response);
+                    })
+                    .catch(reject);
+            });
         }
     }
 })

@@ -11,6 +11,10 @@
                 </h3>
             </div>
             <div class="panel-body">
+                <div class="alert alert-danger" role="alert" v-if="this.errors.global">
+                    <p v-for="error in this.errors.global">{{ error }}</p>
+                </div>
+
                 <div
                     class="panel panel-success"
                     v-if="issue && pullrequest"
@@ -51,15 +55,19 @@
                         <label for="repositoryName">Repository</label>
                         <input class="form-control" id="repositoryName" v-model="repositoryName" disabled="disabled">
                     </div>
-                    <div class="form-group">
+
+                    <div class="form-group" v-bind:class="{'has-error':this.errors.fields.description}">
                         <label for="description">Description</label>
-                        <input class="form-control" id="description" placeholder="Explain in a few words what you're about to deploy" v-model="description">
+                        <input class="form-control" id="description" placeholder="Explain in a few words what you're about to deploy" v-model="deploy.description">
+                        <span id="helpBlock" class="help-block" v-if="this.errors.fields.description">
+                            {{ this.errors.fields.description }}
+                        </span>
                     </div>
                 </template>
                 <div class="pull-right">
                     <button type="button" v-on:click="cancel" class="btn btn-default">Cancel</button>
                     <template v-if="!pullrequest || (pullrequest.mergeable || pullrequest.merged)">
-                        <button type="button" class="btn btn-primary">New deployment</button>
+                        <button type="button" class="btn btn-primary" v-on:click="create">New deployment</button>
                     </template>
                 </div>
             </div>

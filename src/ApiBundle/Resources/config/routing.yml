@@ -32,3 +32,18 @@ app_config:
         _controller: ApiBundle:Config:config
     options:
         expose: true
+
+deploy_create:
+    path: /deploys
+    methods:  [POST]
+    defaults:
+        _controller: ApiBundle:Deploy:create
+    options:
+        expose: true
+
+deploy_by_current_user:
+    path: /user/deploys
+    defaults:
+        _controller: ApiBundle:Deploy:getByCurrentUser
+    options:
+        expose: true

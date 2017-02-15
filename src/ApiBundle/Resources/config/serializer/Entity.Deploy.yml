@@ -1,0 +1,19 @@
+ApiBundle\Entity\Deploy:
+    exclusion_policy: ALL
+    properties:
+        id:
+            expose: true
+        owner:
+            expose: true
+        repository:
+            expose: true
+        description:
+            expose: true
+        pullRequestId:
+            expose: true
+        status:
+            expose: true
+        createDate:
+            expose: true
+        user:
+            expose: true

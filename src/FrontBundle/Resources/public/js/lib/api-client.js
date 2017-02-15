@@ -13,37 +13,56 @@ var ApiClient = function()
     this.credentials = {};
     this.routerConfigured = false;
 
-    this.getAppConfig = function(options) {
+    // App
+    this.getAppConfig = function(options = {}) {
         return this.query({ route: 'app_config' }, options);
     }
 
-    this.getUserProfile = function(options) {
+    // User
+    this.getUser = function(options = {}) {
         return this.query({ route: 'user_profile' }, options);
     }
 
-    this.checkProfile = function(options) {
-        return this.query({ route: 'user_chekprofile' }, options);
-    };
-
-    this.updateUser = function(user) {
-        return this.updateQuery(
+    this.updateUser = function(user, options = {}) {
+        return this.formQuery(
             { route: 'user_update' },
-            { method: 'post', body: user }
+            Object.assign(options, { body: user })
         );
     }
 
+    // Deploys
+    this.createDeploy = function(deploy, options = {}) {
+        return this.formQuery(
+            { route: 'deploy_create' },
+            Object.assign(options, { body: deploy })
+        );
+    }
+
+    this.getDeploysByCurrentUser = function(options = {}) {
+        return this.query({ route: 'deploy_by_current_user' }, options);
+    }
+
+    // Internals
     this.setCredentials = function(login, accessToken) {
         this.credentials = { login: login, access_token: accessToken };
     }
 
-    this.updateQuery = function(route, options = {}) {
+    this.formQuery = function(route, options = {}) {
         return new Promise(function(resolve, reject) {
-            client.query(route, options).then(function(response) {
-                if (response.data.errors) {
-                    return reject(response);
-                }
-                resolve(response);
-            });
+            client
+                .query(
+                    route,
+                    Object.assign({ method: 'post' }, options)
+                )
+                .then(
+                    function(response) {
+                        if (response.data.errors) {
+                            return reject(response);
+                        }
+                        resolve(response);
+                    },
+                    reject
+                );
         });
     }
 
@@ -59,10 +78,7 @@ var ApiClient = function()
             });
         }
 
-        options.params = Object.assign(
-            this.credentials,
-            options.params
-        );
+        options.params = Object.assign(this.credentials, options.params);
 
         return Vue.http(
             Object.assign(

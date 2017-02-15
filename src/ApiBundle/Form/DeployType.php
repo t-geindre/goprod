@@ -5,24 +5,24 @@ namespace ApiBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use ApiBundle\Entity\User;
+use ApiBundle\Entity\Deploy;
 
-class UserType extends AbstractType
+class DeployType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('goliveKey')
-            ->add('hipchatName')
+            ->add('owner')
+            ->add('repository')
+            ->add('description')
+            ->add('pullRequestId')
         ;
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => User::class,
-            'allow_extra_fields' => true,
-            'validation_groups' => 'complete_profile'
+            'data_class' => Deploy::class
         ]);
     }
 }

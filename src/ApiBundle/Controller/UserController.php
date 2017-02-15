@@ -27,17 +27,6 @@ class UserController extends BaseController
         }
     }
 
-    public function checkProfileAction()
-    {
-        return [
-            'complete' => count(
-                $this
-                    ->get('validator')
-                    ->validate($this->getUser(), null, ['complete_profile'])
-                ) == 0
-        ];
-    }
-
     public function profileAction()
     {
         return [

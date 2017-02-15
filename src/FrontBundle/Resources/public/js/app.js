@@ -25,6 +25,7 @@ var app = new Vue({
         authError: false
     },
     router: Router,
+    delimiters: ['[[', ']]'],
     computed: {
         authenticated: function() {
             return UserStore.state.authenticated;
@@ -35,6 +36,9 @@ var app = new Vue({
         },
         configured: function() {
             return ConfigStore.state.configured;
+        },
+        deploysCount: function() {
+            return UserStore.state.deploys.length;
         }
     },
     mounted: function() {
@@ -67,6 +71,7 @@ var app = new Vue({
                     UserStore.state.user.login,
                     UserStore.state.user.access_token
                 );
+                UserStore.dispatch('loadDeploys');
             }
         }
     }
