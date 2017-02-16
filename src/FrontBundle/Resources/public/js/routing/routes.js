@@ -2,7 +2,7 @@ module.exports = [
     {
         name: 'home',
         path: '/',
-        redirect: { name: 'deploy-by-pullrequest' }
+        redirect: { name: 'user-deploys' }
     },
     {
         name: 'deploy-by-pullrequest',
@@ -20,8 +20,13 @@ module.exports = [
         component: require('../component/deploy-pullrequest')
     },
     {
-        name: 'deploy-list',
-        path: '/deploys',
+        name: 'user-deploys',
+        path: '/deploys/mine',
         component: require('../component/user-deploys')
+    },
+    {
+        name: 'deploy-process',
+        path: '/deploys/:id',
+        component: require('../component/deploy-process')
     }
 ]

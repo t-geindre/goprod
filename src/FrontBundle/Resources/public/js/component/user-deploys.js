@@ -13,7 +13,10 @@ module.exports = Vue.component('user-deploys', {
     },
     methods: {
         goToDeploy: function(deploy) {
-
+            this.$router.push({
+                name: 'deploy-process',
+                params: { id: deploy.id }
+            });
         }
     }
 });

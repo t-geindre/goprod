@@ -40,6 +40,7 @@ gulp.task('js', function () {
 gulp.task('css', function () {
     return gulp.src(path.css)
         .pipe(gulpif(/[.]scss/, sass()))
+            .on('error', gutil.log)
         .pipe(concat('styles.css'))
         .pipe(gulpif(env === 'prod', uglifycss()))
         .pipe(sourcemaps.write('./'))

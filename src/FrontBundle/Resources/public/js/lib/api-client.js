@@ -42,6 +42,13 @@ var ApiClient = function()
         return this.query({ route: 'deploy_by_current_user' }, options);
     }
 
+    this.getDeploy = function(id, options = {}) {
+        return this.query(
+            { route: 'deploy_by_id', params: { id: id } },
+            options
+        );
+    }
+
     // Internals
     this.setCredentials = function(login, accessToken) {
         this.credentials = { login: login, access_token: accessToken };

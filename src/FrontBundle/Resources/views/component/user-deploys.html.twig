@@ -1,7 +1,7 @@
 <script type="text/template" id="user-deploys-template">
 <div>
     <div class="page-header">
-        <h1>My deployments</h1>
+        <h1>My deployments <small>in progress</small></h1>
     </div>
     <p v-if="deploys.length == 0">
         You have no active deployment. You can create a new one
@@ -9,8 +9,6 @@
         <router-link :to="{ name: 'deploy-by-project' }">by project</router-link>.
     </p>
     <div class="panel panel-default" v-else>
-        <div class="panel-heading">
-        </div>
         <div class="list-group">
             <deploy
                 v-for="deploy in deploys"
@@ -19,17 +17,6 @@
                 v-on:click="goToDeploy(deploy)"
             >
             </deploy>
-        </div>
-        <div class="panel-footer text-center">
-        <!--
-            <pagination
-                v-bind:pages="pagination.pages"
-                v-bind:page="pagination.page"
-                v-on:page="goToPage"
-                v-if="!loading"
-            >
-            </pagination>
-        -->
         </div>
     </div>
 </div>

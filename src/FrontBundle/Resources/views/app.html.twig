@@ -37,7 +37,7 @@
                             </ul>
                         </li>
                         <li>
-                            <router-link :to="{ name: 'deploy-list' }">
+                            <router-link :to="{ name: 'user-deploys' }">
                                 <span class="glyphicon glyphicon-time"></span>
                                 In progress
                                 <span class="label label-warning" v-if="deploysCount > 0">
@@ -77,6 +77,7 @@
 {{ source('@Front/component/deploy-pullrequest.html.twig') }}
 {{ source('@Front/component/deploy-create.html.twig') }}
 {{ source('@Front/component/deploy.html.twig') }}
+{{ source('@Front/component/deploy-process.html.twig') }}
 {{ source('@Front/component/user-deploys.html.twig') }}
 {{ source('@Front/component/github-issues.html.twig') }}
 {{ source('@Front/component/github-issue.html.twig') }}

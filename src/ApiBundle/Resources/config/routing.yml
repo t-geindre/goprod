@@ -47,3 +47,10 @@ deploy_by_current_user:
         _controller: ApiBundle:Deploy:getByCurrentUser
     options:
         expose: true
+
+deploy_by_id:
+    path: /deploys/{id}
+    defaults:
+        _controller: ApiBundle:Deploy:get
+    options:
+        expose: true

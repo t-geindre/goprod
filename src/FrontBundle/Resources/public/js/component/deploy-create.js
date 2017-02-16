@@ -37,7 +37,6 @@ module.exports = Vue.component('deploy-create', {
                 .then(function(response) {
                     this.pullrequest = response.data;
                     this.deploy.description = this.pullrequest.title;
-                    this.pull
                     this.loading = false;
                 }.bind(this))
                 .catch(function(response) {
@@ -63,6 +62,12 @@ module.exports = Vue.component('deploy-create', {
         create: function() {
             this.loading = true;
             UserStore.dispatch('addDeploy', this.deploy)
+                .then(function(response) {
+                    this.$router.push({
+                        name: 'deploy-process',
+                        params: { id: response.data.entity.id }
+                    });
+                }.bind(this))
                 .catch(function(response) {
                     this.loading = false;
                     this.errors = response.data.errors;

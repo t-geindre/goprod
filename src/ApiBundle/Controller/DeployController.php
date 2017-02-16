@@ -17,6 +17,15 @@ class DeployController extends BaseController
         );
     }
 
+    public function getAction($id)
+    {
+        if (is_null($deploy = $this->get('api_bundle.repository.deploy')->find($id))) {
+            throw $this->createNotFOundException('Deploy not found');
+        }
+
+        return $deploy;
+    }
+
     public function getByCurrentUserAction()
     {
         return $this->getUser()->getDeploys()

@@ -13,8 +13,8 @@
             v-else>
         </span>
         <p>
-            <strong>{{ deploy.owner }}/{{ deploy.repository}}</strong>
-            <small v-if="deploy.pull_request_id">PR #{{ deploy.pull_request_id }}</small>
+            <span class="repo">{{ deploy.owner }}/{{ deploy.repository}}</span>
+            <span class="description">{{ deploy.description }}</span>
         </p>
         <p class="infos">
             #{{ deploy.id }} opened on {{ deploy.create_date }} by {{ deploy.user.login }}
