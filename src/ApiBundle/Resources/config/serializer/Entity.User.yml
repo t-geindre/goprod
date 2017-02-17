@@ -11,8 +11,6 @@ ApiBundle\Entity\User:
             expose: true
         hipchatName:
             expose: true
-        accessToken:
-            expose: true
         avatarUrl:
             expose: true
         createDate:

@@ -117,6 +117,11 @@ class Client
         return $this->currentUser = $this->apiRequest('user');
     }
 
+    public function getPullRequest(string $owner, string $repo, int $number) : array
+    {
+        return $this->apiRequest(sprintf('repos/%s/%s/pulls/%d', $owner, $repo, $number));
+    }
+
     public function apiRequest($url, $method = RequestInterface::METHOD_GET, $content = '', $headers = []) : array
     {
         return $this->request($this->apiUrl.$url, $method, $content, $headers);

@@ -10,7 +10,7 @@ use ApiBundle\Validator\Constraints as ApiAssert;
  * Deploy
  *
  * @ORM\Table(name="deploy")
- * @ORM\Entity(repositoryClass="ApiBundle\Repository\DeployRepository")
+ * @ORM\Entity()
  * @ApiAssert\UniqNotDone
  */
 class Deploy

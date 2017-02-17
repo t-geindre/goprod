@@ -21,6 +21,7 @@ class BaseController extends Controller
                 ->findOneBy(['login' => $login, 'accessToken' => $accessToken]);
 
             if (!is_null($user)) {
+                $this->get('api_bundle.github_client')->setAccessToken($user->getAccessToken());
                 return $user;
             }
         }
@@ -33,7 +34,7 @@ class BaseController extends Controller
         return new BadRequestHttpException($message, $previous);
     }
 
-    protected function handleForm(Request $request, $type, $entity)
+    protected function handleForm(Request $request, $type, $entity, Callable $prePersist = null)
     {
         $form = $this->createForm($type, $entity);
 
@@ -45,6 +46,9 @@ class BaseController extends Controller
 
         if ($valid = $form->isValid()) {
             $em = $this->get('doctrine')->getManager();
+            if (!is_null($prePersist)) {
+                call_user_func($prePersist, $entity);
+            }
             $em->persist($entity);
             $em->flush();
         } else {

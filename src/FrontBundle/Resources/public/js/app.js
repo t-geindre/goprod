@@ -69,7 +69,7 @@ var app = new Vue({
             if (this.authenticated) {
                 ApiClient.setCredentials(
                     UserStore.state.user.login,
-                    UserStore.state.user.access_token
+                    GithubClient.auth.access_token
                 );
                 UserStore.dispatch('loadDeploys');
             }

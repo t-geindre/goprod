@@ -15,6 +15,13 @@ services:
         arguments:
             - "ApiBundle\\Entity\\Deploy"
 
+    # Entities managers
+    api_bundle.manager.deploy:
+        class: "ApiBundle\\Manager\\DeployManager"
+        arguments:
+            - "@api_bundle.repository.deploy"
+            - "@api_bundle.github_client"
+
     # Listeners
     api_bundle.listener.github.user.login:
         class: "ApiBundle\\Listener\\User\\UserLogin"
