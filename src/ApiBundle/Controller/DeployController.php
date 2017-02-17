@@ -3,8 +3,7 @@
 namespace ApiBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
-use Doctrine\Common\Collections\Criteria;
-use ApiBundle\Entity\Deploy;
+use ApiBundle\Criteria\Deploy\Active as ActiveDeploy;
 
 class DeployController extends BaseController
 {
@@ -29,11 +28,6 @@ class DeployController extends BaseController
     public function getByCurrentUserAction()
     {
         return $this->getUser()->getDeploys()
-            ->matching(
-                Criteria::create()
-                    ->where(Criteria::expr()->neq('status', Deploy::STATUS_DONE))
-                    ->andWhere(Criteria::expr()->neq('status', Deploy::STATUS_CANCELED))
-                    ->orderBy(['id' => 'ASC'])
-            );
+            ->matching((new ActiveDeploy)->build());
     }
 }
