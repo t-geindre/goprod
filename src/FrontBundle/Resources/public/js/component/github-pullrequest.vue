@@ -17,10 +17,10 @@ module.exports = {
                 repo: this.pullrequest.base.repo.name,
                 number: this.pullrequest.number
             })
-            .then(function(response) {
+            .then((response) => {
                 this.issue = response.data;
                 this.loading = false;
-            }.bind(this));
+            });
         }
     },
     mounted: function() {
@@ -45,7 +45,7 @@ module.exports = {
         >
             <div class="panel-heading">
                 <div class=" btn-group-xs pull-right">
-                    <a :href="pullrequest.html_url" target="_blank" class="btn btn-link">
+                    <a href="#" class="btn btn-link" v-on:click.prevent="$emit('refresh')">
                         <span class="glyphicon glyphicon-refresh"></span> Refresh
                     </a>
                     <a :href="pullrequest.html_url" target="_blank" class="btn btn-link">

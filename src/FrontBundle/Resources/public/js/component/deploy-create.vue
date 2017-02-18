@@ -27,14 +27,14 @@ module.exports = {
         loadPullRequest: function(pr) {
             this.loading = true;
             GithubClient.getPullRequest(pr)
-                .then(function(response) {
+                .then((response) => {
                     this.pullrequest = response.data;
                     this.deploy.description = this.pullrequest.title;
                     this.loading = false;
-                }.bind(this))
-                .catch(function(response) {
+                })
+                .catch((response) => {
                     this.$router.push({ name: 'deploy-by-pullrequest' });
-                }.bind(this))
+                })
             ;
         },
         update: function() {
@@ -52,16 +52,16 @@ module.exports = {
         create: function() {
             this.loading = true;
             DeploysStore.dispatch('create', this.deploy)
-                .then(function(response) {
+                .then((response) => {
                     this.$router.push({
                         name: 'deploy-process',
                         params: { id: response.data.entity.id }
                     });
-                }.bind(this))
-                .catch(function(response) {
+                })
+                .catch((response) => {
                     this.loading = false;
                     this.errors = response.data.errors;
-                }.bind(this));
+                });
         }
     },
     watch: {

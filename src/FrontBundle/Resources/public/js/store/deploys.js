@@ -1,23 +1,27 @@
-var Vuex         = require('vuex');
-var Vue          = require('vue');
-var ApiClient    = require('../lib/api-client');
+var Vuex      = require('vuex');
+var Vue       = require('vue');
+var ApiClient = require('../lib/api-client');
 
 Vue.use(Vuex);
 
 module.exports = new Vuex.Store({
     state: {
         deploys: {},
+        sortable: [],
         count: 0
     },
     mutations: {
         add: function(state, deploy) {
+            state.sortable.push(deploy);
             state.deploys[deploy.id] = deploy;
             state.count++;
         },
         deploys: function(state, deploys) {
             state.deploys = {};
+            state.sortable = [];
             state.count = 0;
             deploys.forEach(function(deploy) {
+                state.sortable.push(deploy);
                 state.deploys[deploy.id] = deploy;
                 state.count++;
             });

@@ -39,13 +39,13 @@ module.exports = {
                 per_page: this.pagination.per_page,
                 page: this.pagination.page
             })
-            .then(function(response) {
+            .then((response) => {
                 this.pagination.pages = Math.ceil(
                     response.data.total_count / this.pagination.per_page
                 );
                 this.issues = response.data.items;
                 this.loading = false;
-            }.bind(this));
+            });
         },
         setSort: function(type, order) {
             this.sort = type;

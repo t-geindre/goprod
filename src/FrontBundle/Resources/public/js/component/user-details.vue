@@ -1,6 +1,7 @@
 <script>
-var UserStore = require('../store/user.js');
-var jQuery    = require('jquery');
+var UserStore    = require('../store/user.js');
+var DeploysStore = require('../store/deploys.js');
+var jQuery       = require('jquery');
 
 module.exports = {
     data: function() {
@@ -28,6 +29,9 @@ module.exports = {
         },
         profileComplete: function() {
             return UserStore.state.complete;
+        },
+        deploysCount: function() {
+            return DeploysStore.state.count;
         }
     },
     methods: {
@@ -54,12 +58,8 @@ module.exports = {
         },
         updateProfile: function() {
             UserStore.dispatch('update', this.formData).then(
-                function(response) {
-                    this.hideProfile();
-                }.bind(this),
-                function(response) {
-                    this.formErrors = response.data.errors;
-                }.bind(this)
+                (response) => { this.hideProfile(); },
+                (response) => { this.formErrors = response.data.errors; }
             );
         }
     },
@@ -83,6 +83,14 @@ module.exports = {
                         <span class="caret"></span>
                 </a>
                 <ul class="dropdown-menu">
+                    <li>
+                        <router-link :to="{ name: 'user-deploys' }">
+                            <span class="label label-info">{{ deploysCount }}</span>
+                            My deployments
+
+                        </router-link>
+                    </li>
+                    <li role="separator" class="divider"></li>
                     <li>
                         <a href="#" v-on:click.prevent="displayProfile">
                             <span class="glyphicon glyphicon-user"></span>

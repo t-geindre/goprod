@@ -51,10 +51,10 @@ module.exports = {
                 owner: this.deploy.owner,
                 repo: this.deploy.repository,
                 number: this.deploy.pull_request_id
-            }).then(function(response) {
+            }).then((response) => {
                 this.pullrequest = response.data;
                 this.loading = false;
-            }.bind(this));
+            });
         },
         cancel: function(confirm) {
             if (!confirm) {
@@ -98,9 +98,18 @@ module.exports = {
                 </div>
                 <div class="panel-body">
                     <github-pullrequest
+                        v-on:refresh="update"
                         v-if="deploy.status == 'merge'"
                         v-bind:pullrequest="pullrequest"
                     ></github-pullrequest>
+                    <template v-if="deploy.status == 'waiting'">
+                        <div class="alert alert-warning" role="alert">
+                            <p>
+                                Before confirming your deployment is over, dont forget to
+                                <strong>check that the project is still working in production</strong>.
+                            </p>
+                        </div>
+                    </template>
                     <div class="pull-right">
                         <button type="button" class="btn btn-primary" v-if="actionButton">
                             {{ actionLabel }}

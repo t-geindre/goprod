@@ -2,9 +2,23 @@
 var DeploysStore = require('../store/deploys.js');
 
 module.exports = {
+    data: function() {
+        return {
+            sort: ['id', 'desc']
+        };
+    },
     computed: {
         deploys: function() {
-            return DeploysStore.state.deploys;
+            return DeploysStore.state.sortable
+                .sort((a, b) => {
+                    if (a[this.sort[0]] < b[this.sort[0]]) {
+                        return this.sort[1] == 'asc' ? -1 : 1;
+                    }
+                    if (a[this.sort[0]] > b[this.sort[0]]) {
+                        return this.sort[1] == 'asc' ? 1 : -1;
+                    }
+                    return 0;
+                });
         },
         count: function() {
             return DeploysStore.state.count;
@@ -16,6 +30,9 @@ module.exports = {
                 name: 'deploy-process',
                 params: { id: deploy.id }
             });
+        },
+        setSort: function(field, order) {
+            this.sort = [field, order];
         }
     },
     components: {
@@ -35,6 +52,18 @@ module.exports = {
             <router-link :to="{ name: 'deploy-by-project' }">by project</router-link>.
         </p>
         <div class="panel panel-default" v-else>
+            <div class="panel-heading clearfix">
+                <div class="dropdown pull-right">
+                    <button class="btn btn-xs btn-default dropdown-toggle" type="button" data-toggle="dropdown">
+                        Sort <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a href="#" v-on:click="setSort('id', 'desc')">Newest</a></li>
+                        <li><a href="#" v-on:click="setSort('id', 'asc')">Oldest</a></li>
+                    </ul>
+                </div>
+                <h3 class="panel-title">Active deployments</h3>
+            </div>
             <div class="list-group">
                 <deploy
                     v-for="deploy in deploys"
@@ -47,3 +76,9 @@ module.exports = {
         </div>
     </div>
 </template>
+
+<style scoped>
+    h3 {
+        padding-top: 3px;
+    }
+</style>

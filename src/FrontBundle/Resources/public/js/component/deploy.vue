@@ -1,6 +1,19 @@
 <script>
 module.exports = {
-    props: ['deploy']
+    props: ['deploy'],
+    computed: {
+        status: function() {
+            return {
+                'new': 'new',
+                'queued': 'queued',
+                'merge': 'waiting for pullrequest merge',
+                'deploy': 'waiting for deploy',
+                'waiting': 'waiting for user confirmation',
+                'done': 'done',
+                'canceled': 'canceled'
+            }[this.deploy.status];
+        }
+    }
 };
 </script>
 
@@ -23,7 +36,7 @@ module.exports = {
             <span class="description">{{ deploy.description }}</span>
         </p>
         <p class="infos">
-            #{{ deploy.id }} opened on {{ deploy.create_date }} by {{ deploy.user.login }}
+            #{{ deploy.id }} opened on {{ deploy.create_date }} by {{ deploy.user.login }}, {{ status }}
         </p>
     </a>
 </template>

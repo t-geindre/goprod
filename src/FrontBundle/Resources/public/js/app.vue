@@ -25,9 +25,6 @@ module.exports = {
         },
         configured: function() {
             return ConfigStore.state.configured;
-        },
-        deploysCount: function() {
-            return DeploysStore.state.count;
         }
     },
     mounted: function() {
@@ -37,7 +34,7 @@ module.exports = {
         login: function(redirect = true) {
             this.authenticating = true;
             UserStore.dispatch('login', redirect)
-                .then(function() {
+                .then(() => {
                     if (this.authenticated) {
                         ApiClient.setCredentials(
                             UserStore.state.user.login,
@@ -45,18 +42,17 @@ module.exports = {
                         );
                         return DeploysStore.dispatch('refresh');
                     }
-                    console.log(this);
                     this.authenticating = false;
-                }.bind(this))
-                .then(function() {
+                })
+                .then(() => {
                     this.registerDeploysRefresh();
                     this.authenticating = false;
-                }.bind(this))
-                .catch(function(response) {
+                })
+                .catch((response) => {
                     this.authenticating = false;
                     this.authError = true;
                     GithubClient.clearAuthCookie();
-                }.bind(this));
+                });
         },
         registerDeploysRefresh: function() {
             this.deploysRefresh = setInterval(function(){
@@ -99,39 +95,28 @@ module.exports = {
                     </a>
                 </div>
                 <div id="navbar" class="collapse navbar-collapse">
-                    <ul class="nav navbar-nav">
-                        <li class="dropdown active" v-if="authenticated">
+                    <user-details></user-details>
+                    <ul class="nav navbar-nav pull-right">
+                        <li class="dropdown pull-right" v-if="authenticated">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                                 <span class="glyphicon glyphicon-plus"></span>
-                                Deploy <span class="caret"></span>
+                                <span class="caret"></span>
                             </a>
                             <ul class="dropdown-menu">
+                                <li class="dropdown-header">New deployment by</li>
                                 <li>
                                     <router-link :to="{ name: 'deploy-by-pullrequest' }">
-                                        <span class="glyphicon glyphicon-plus"></span>
-                                        Pull request
+                                        Pullrequest
                                     </router-link>
                                 </li>
                                 <li>
                                     <router-link :to="{ name: 'deploy-by-project' }">
-                                        <span class="glyphicon glyphicon-plus"></span>
-                                        Project
+                                        Repository
                                     </router-link>
                                 </li>
                             </ul>
                         </li>
-                        <li>
-                            <router-link :to="{ name: 'user-deploys' }">
-                                <span class="glyphicon glyphicon-time"></span>
-                                In progress
-                                <span class="label label-warning" v-if="deploysCount > 0">
-                                    {{ deploysCount }}
-                                </span>
-
-                            </router-link>
-                        </li>
                     </ul>
-                    <user-details></user-details>
                 </div>
 
             </div>

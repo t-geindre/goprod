@@ -32,7 +32,8 @@ var GithubClient = function()
 
     this.getPullRequest = function(pullrequest) {
         return this.apiQuery(
-            'repos/'+pullrequest.owner+'/'+pullrequest.repo+'/pulls/'+pullrequest.number
+            'repos/'+pullrequest.owner+'/'+pullrequest.repo+'/pulls/'+pullrequest.number,
+            { avoidCache: (new Date()).getTime() }
         );
     }
 
