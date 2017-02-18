@@ -1,5 +1,8 @@
+require('./github-pullrequest');
+require('./loading-spinner');
+
 var Vue          = require('vue');
-var UserStore    = require('../store/user');
+var DeploysStore = require('../store/deploys');
 var ApiClient    = require('../lib/api-client');
 var GithubClient = require('../lib/github-client');
 
@@ -9,9 +12,8 @@ module.exports = Vue.component('deploy-create', {
         return {
             deploy: {
             },
-            loading: false,
+            loading: true,
             pullrequest: false,
-            issue: false,
             errors: {
                 fields: {},
                 global: []
@@ -29,11 +31,7 @@ module.exports = Vue.component('deploy-create', {
     methods: {
         loadPullRequest: function(pr) {
             this.loading = true;
-            GithubClient.getIssue(pr)
-                .then(function(response) {
-                    this.issue = response.data;
-                    return GithubClient.getPullRequest(pr);
-                }.bind(this))
+            GithubClient.getPullRequest(pr)
                 .then(function(response) {
                     this.pullrequest = response.data;
                     this.deploy.description = this.pullrequest.title;
@@ -43,9 +41,6 @@ module.exports = Vue.component('deploy-create', {
                     this.$router.push({ name: 'deploy-by-pullrequest' });
                 }.bind(this))
             ;
-        },
-        cancel: function() {
-            this.$router.back('/');
         },
         update: function() {
             this.deploy = {
@@ -61,7 +56,7 @@ module.exports = Vue.component('deploy-create', {
         },
         create: function() {
             this.loading = true;
-            UserStore.dispatch('addDeploy', this.deploy)
+            DeploysStore.dispatch('create', this.deploy)
                 .then(function(response) {
                     this.$router.push({
                         name: 'deploy-process',

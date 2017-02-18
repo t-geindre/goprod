@@ -1,16 +1,33 @@
 <script type="text/template" id="deploy-process-template">
     <div>
         <div class="page-header">
-            <h1>Deployment <small>in progress</small></h1>
+            <h1>
+                Deployment
+                <small>in progress</small>
+            </h1>
         </div>
         <template v-if="!loading">
-            <div class="pull-right" v-if="owned">
-                <button type="button" v-on:click="cancel(false)" class="btn btn-danger">
-                    Cancel deployment
-                </button>
-                <button type="button" class="btn btn-primary">
-                    Next step
-                </button>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <button type="button" v-on:click="cancel(false)" class="btn btn-xs btn-danger pull-right" v-if="cancelButton">
+                        <span class="glyphicon glyphicon-remove"></span>
+                    </button>
+                    <h3 class="panel-title">
+                        {{ deploy.description }}
+                    </h3>
+                </div>
+                <div class="panel-body">
+                    <github-pullrequest
+                        v-if="deploy.status == 'merge'"
+                        v-bind:pullrequest="pullrequest"
+                    ></github-pullrequest>
+                    <div class="pull-right">
+                        <button type="button" class="btn btn-primary" v-if="actionButton">
+                            {{ actionLabel }}
+                            <span class="glyphicon glyphicon-chevron-right"></span>
+                        </button>
+                    </div>
+                </div>
             </div>
         </template>
         <loading-spinner class="medium" v-else></loading-spinner>
@@ -26,7 +43,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-danger">Cancel deployment</button>
+                        <button type="button" v-on:click="cancel(true)" class="btn btn-danger">Cancel deployment</button>
                     </div>
                 </div>
             </div>

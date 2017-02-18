@@ -64,9 +64,9 @@
             <transition name="fade">
                 <loading-spinner v-if="authenticating" class="big center">
                 </loading-spinner>
-                <keep-alive v-else>
+                <template v-else>
                     <router-view v-if="authenticated"></router-view>
-                </keep-alive>
+                </template>
             </transition>
         </div>
     </div>
@@ -81,5 +81,6 @@
 {{ source('@Front/component/user-deploys.html.twig') }}
 {{ source('@Front/component/github-issues.html.twig') }}
 {{ source('@Front/component/github-issue.html.twig') }}
+{{ source('@Front/component/github-pullrequest.html.twig') }}
 {{ source('@Front/component/loading-spinner.html.twig') }}
 {{ source('@Front/component/pagination.html.twig') }}

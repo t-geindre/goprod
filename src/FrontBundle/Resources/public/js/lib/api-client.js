@@ -49,6 +49,12 @@ var ApiClient = function()
         );
     }
 
+    this.cancelDeploy = function(id, options = {}) {
+        return this.formQuery(
+            { route: 'deploy_cancel', params: { id: id } }
+        );
+    }
+
     // Internals
     this.setCredentials = function(login, accessToken) {
         this.credentials = { login: login, access_token: accessToken };

@@ -54,3 +54,11 @@ deploy_by_id:
         _controller: ApiBundle:Deploy:get
     options:
         expose: true
+
+deploy_cancel:
+    path: /deploys/{id}/cancel
+    methods:  [POST]
+    defaults:
+        _controller: ApiBundle:Deploy:cancel
+    options:
+        expose: true

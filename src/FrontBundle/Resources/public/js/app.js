@@ -12,6 +12,7 @@ var Router       = require('./routing/router');
 var GithubClient = require('./lib/github-client');
 var ApiClient    = require('./lib/api-client');
 var UserStore    = require('./store/user');
+var DeploysStore = require('./store/deploys');
 var ConfigStore  = require('./store/config');
 
 Vue.use(Vuex);
@@ -22,7 +23,9 @@ var app = new Vue({
     template: '#app-template',
     replace: false,
     data: {
-        authError: false
+        authError: false,
+        authenticating: false,
+        deploysRefresh: null
     },
     router: Router,
     delimiters: ['[[', ']]'],
@@ -30,15 +33,11 @@ var app = new Vue({
         authenticated: function() {
             return UserStore.state.authenticated;
         },
-        authenticating: function()
-        {
-            return UserStore.state.authenticating;
-        },
         configured: function() {
             return ConfigStore.state.configured;
         },
         deploysCount: function() {
-            return UserStore.state.deploys.length;
+            return DeploysStore.state.count;
         }
     },
     mounted: function() {
@@ -46,12 +45,33 @@ var app = new Vue({
     },
     methods: {
         login: function(redirect = true) {
-            UserStore.dispatch('login', redirect).catch(
-                function(response) {
+            this.authenticating = true;
+            UserStore.dispatch('login', redirect)
+                .then(function() {
+                    if (this.authenticated) {
+                        ApiClient.setCredentials(
+                            UserStore.state.user.login,
+                            GithubClient.auth.access_token
+                        );
+                        return DeploysStore.dispatch('refresh');
+                    }
+                    console.log(this);
+                    this.authenticating = false;
+                }.bind(this))
+                .then(function() {
+                    this.registerDeploysRefresh();
+                    this.authenticating = false;
+                }.bind(this))
+                .catch(function(response) {
+                    this.authenticating = false;
                     app.authError = true;
                     GithubClient.clearAuthCookie();
-                }
-            );
+                });
+        },
+        registerDeploysRefresh: function() {
+            this.deploysRefresh = setInterval(function(){
+                DeploysStore.dispatch('refresh');
+            }, 5000);
         }
     },
     watch: {
@@ -64,16 +84,10 @@ var app = new Vue({
                 });
                 this.login(false);
             }
-        },
-        authenticated: function() {
-            if (this.authenticated) {
-                ApiClient.setCredentials(
-                    UserStore.state.user.login,
-                    GithubClient.auth.access_token
-                );
-                UserStore.dispatch('loadDeploys');
-            }
         }
+    },
+    beforeDestroy: function() {
+        clearInterval(this.deploysRefresh);
     }
 });
 
