@@ -1,10 +1,8 @@
 <script>
-var Vue       = require('vue');
-var UserStore = require('../store/user');
+var UserStore = require('../store/user.js');
 var jQuery    = require('jquery');
 
-module.exports = Vue.component('user-details', {
-    template: '#user-details-template',
+module.exports = {
     data: function() {
         return {
             profileModal: null,
@@ -72,7 +70,7 @@ module.exports = Vue.component('user-details', {
             }
         }
     }
-});
+};
 </script>
 
 <template>
@@ -148,3 +146,23 @@ module.exports = Vue.component('user-details', {
         </div>
     </div>
 </template>
+
+<style type="text/css" scoped>
+    img {
+        width: 35px;
+        height: 35px;
+        border-radius: 5px;
+    }
+
+    .user-infos {
+        padding-top: 7px;
+        padding-bottom: 8px;
+    }
+</style>
+
+<style type="text/css">
+    /* modal fix, @todo */
+    .modal-backdrop {
+        z-index: 500;
+    }
+</style>

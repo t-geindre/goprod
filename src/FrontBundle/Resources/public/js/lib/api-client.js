@@ -3,29 +3,26 @@ var VueResource = require('vue-resource');
 
 Vue.use(VueResource);
 
-// Fos Router
-// @todo better solution to import and load routing
-require('../../../../../../vendor/friendsofsymfony/jsrouting-bundle/Resources/public/js/router.js')
-
 var client;
 var ApiClient = function()
 {
     this.credentials = {};
     this.routerConfigured = false;
+    this.baseUrl = 'api/';
 
     // App
     this.getAppConfig = function(options = {}) {
-        return this.query({ route: 'app_config' }, options);
+        return this.query('config', options);
     }
 
     // User
     this.getUser = function(options = {}) {
-        return this.query({ route: 'user_profile' }, options);
+        return this.query('user', options);
     }
 
     this.updateUser = function(user, options = {}) {
         return this.formQuery(
-            { route: 'user_update' },
+            'user',
             Object.assign(options, { body: user })
         );
     }
@@ -33,26 +30,21 @@ var ApiClient = function()
     // Deploys
     this.createDeploy = function(deploy, options = {}) {
         return this.formQuery(
-            { route: 'deploy_create' },
+            'deploys',
             Object.assign(options, { body: deploy })
         );
     }
 
     this.getDeploysByCurrentUser = function(options = {}) {
-        return this.query({ route: 'deploy_by_current_user' }, options);
+        return this.query('user/deploys', options);
     }
 
     this.getDeploy = function(id, options = {}) {
-        return this.query(
-            { route: 'deploy_by_id', params: { id: id } },
-            options
-        );
+        return this.query('deploys/' + id, options);
     }
 
     this.cancelDeploy = function(id, options = {}) {
-        return this.formQuery(
-            { route: 'deploy_cancel', params: { id: id } }
-        );
+        return this.formQuery('deploys/' + id + '/cancel');
     }
 
     // Internals
@@ -81,21 +73,11 @@ var ApiClient = function()
 
     this.query = function(route, options = {})
     {
-        if (!this.routerConfigured) {
-            return new Promise(function(resolve, reject) {
-                Vue.http.get('js/routing.json').then(function(response) {
-                    fos.Router.setData(response.data);
-                    client.routerConfigured = true;
-                    client.query(route, options).then(resolve, reject);
-                });
-            });
-        }
-
         options.params = Object.assign(this.credentials, options.params);
 
         return Vue.http(
             Object.assign(
-                { method: 'get', url: Routing.generate(route.route, route.params) },
+                { method: 'get', url: this.baseUrl + route },
                 options
             )
         );

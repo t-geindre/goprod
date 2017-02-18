@@ -1,13 +1,8 @@
-require('./loading-spinner');
-require('./pagination');
-require('./github-issue');
+<script>
+var GithubClient = require('../lib/github-client.js');
+var UserStore    = require('../store/user.js');
 
-var Vue          = require('vue');
-var GithubClient = require('../lib/github-client');
-var UserStore    = require('../store/user');
-
-module.exports = Vue.component('github-issues', {
-    template: '#github-issues-template',
+module.exports = {
     props: ['queryAppend'],
     computed: {
         user: function() {
@@ -60,6 +55,7 @@ module.exports = Vue.component('github-issues', {
         queryUpdate: function(remove, add) {
             var items = this.query.toLowerCase().split(' ');
             remove.forEach(function(remove) {
+                var index;
                 while ((index = items.indexOf(remove)) > -1) {
                     items.splice(index, 1);
                 }
@@ -91,5 +87,94 @@ module.exports = Vue.component('github-issues', {
             );
             this.goToPage(1);
         }
+    },
+    components: {
+        'pagination': require('./pagination.vue'),
+        'loading-spinner': require('./loading-spinner.vue'),
+        'github-issue': require('./github-issue.vue')
     }
-});
+};
+</script>
+
+<template>
+<div class="github-issues">
+    <div class="row form-group">
+        <div class="btn-group col-md-5">
+            <label class="btn btn-default" v-bind:class="{active:iam=='author'}">
+                <input type="radio" value="author" v-model="iam" name="iam"> Created
+            </label>
+            <label class="btn btn-default" v-bind:class="{active:iam=='assignee'}">
+                <input type="radio" value="assignee" v-model="iam" name="iam"> Assigned
+            </label>
+            <label class="btn btn-default" v-bind:class="{active:iam=='mentions'}">
+                <input type="radio" value="mentions" v-model="iam" name="iam"> Mentioned
+            </label>
+        </div>
+        <div class="col-md-7">
+            <div class="input-group">
+                <div class="input-group-addon">
+                    <span class="glyphicon glyphicon-search"></span>
+                </div>
+                <input type="text" class="form-control" id="query" v-model="query" v-on:keyup.enter="update" />
+            </div>
+        </div>
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <div class="btn-group btn-group-sm">
+                <label class="btn btn-default" v-bind:class="{active:open}">
+                    <input type="radio" name="open" v-model="open" v-bind:value="true">
+                    <span class="glyphicon glyphicon-ok"></span> Open
+                </label>
+                <label class="btn btn-default"  v-bind:class="{active:!open}">
+                    <input type="radio" name="open" v-model="open" v-bind:value="false">
+                    <span class="glyphicon glyphicon-remove"></span> Closed
+                </label>
+            </div>
+            <div class="dropdown pull-right">
+                <button class="btn btn-sm btn-default dropdown-toggle" type="button" data-toggle="dropdown">
+                    Sort <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a href="#" v-on:click="setSort('created', 'desc')">Newest</a></li>
+                    <li><a href="#" v-on:click="setSort('created', 'asc')">Oldest</a></li>
+                    <li><a href="#" v-on:click="setSort('comments', 'desc')">Most commented</a></li>
+                    <li><a href="#" v-on:click="setSort('comments', 'asc')">Least commented</a></li>
+                    <li><a href="#" v-on:click="setSort('updated', 'desc')">Recently updated</a></li>
+                    <li><a href="#" v-on:click="setSort('updated', 'asc')">Least recently updated</a></li>
+                </ul>
+            </div>
+        </div>
+        <div v-if="!loading" class="list-group">
+            <github-issue
+                v-for="issue in issues"
+                v-bind:issue="issue"
+                v-on:select-issue="$emit('select-issue', issue)"
+                class="list-group-item"
+            >
+            </github-issue>
+        </div>
+        <loading-spinner class="medium" v-else></loading-spinner>
+        <div class="panel-footer text-center">
+            <pagination
+                v-bind:pages="pagination.pages"
+                v-bind:page="pagination.page"
+                v-on:page="goToPage"
+                v-if="!loading"
+            >
+            </pagination>
+        </div>
+    </div>
+
+</div>
+</template>
+
+<style type="text/css" scoped>
+    .pagination {
+        margin: 0;
+    }
+
+    label.btn > input[type='radio'] {
+      display: none;
+    }
+</style>

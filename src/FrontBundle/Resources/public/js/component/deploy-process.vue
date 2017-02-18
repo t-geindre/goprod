@@ -1,11 +1,9 @@
-var Vue          = require('vue');
-var ApiClient    = require('../lib/api-client');
-var DeploysStore = require('../store/deploys');
-var GithubClient = require('../lib/github-client');
+<script>
+var DeploysStore = require('../store/deploys.js');
+var GithubClient = require('../lib/github-client.js');
 var jQuery       = require('jquery');
 
-module.exports = Vue.component('deploy-process', {
-    template: '#deploy-process-template',
+module.exports = {
     data: function() {
         return {
             pullrequest: {},
@@ -71,5 +69,64 @@ module.exports = Vue.component('deploy-process', {
         $route: function() {
             this.update();
         }
+    },
+    components: {
+        'loading-spinner': require('./loading-spinner.vue'),
+        'github-pullrequest': require('./github-pullrequest.vue'),
+        'deploy': require('./deploy.vue')
     }
-});
+};
+</script>
+
+<template>
+    <div>
+        <div class="page-header">
+            <h1>
+                Deployment
+                <small>in progress</small>
+            </h1>
+        </div>
+        <template v-if="!loading">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <button type="button" v-on:click="cancel(false)" class="btn btn-xs btn-danger pull-right" v-if="cancelButton">
+                        <span class="glyphicon glyphicon-remove"></span>
+                    </button>
+                    <h3 class="panel-title">
+                        {{ deploy.description }}
+                    </h3>
+                </div>
+                <div class="panel-body">
+                    <github-pullrequest
+                        v-if="deploy.status == 'merge'"
+                        v-bind:pullrequest="pullrequest"
+                    ></github-pullrequest>
+                    <div class="pull-right">
+                        <button type="button" class="btn btn-primary" v-if="actionButton">
+                            {{ actionLabel }}
+                            <span class="glyphicon glyphicon-chevron-right"></span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </template>
+        <loading-spinner class="medium" v-else></loading-spinner>
+        <div class="modal fade confirm-dialog">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">Confirm deployment cancelling</h4>
+                    </div>
+                    <div class="modal-body">
+                        <deploy v-bind:deploy="deploy"></deploy>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="button" v-on:click="cancel(true)" class="btn btn-danger">Cancel deployment</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>

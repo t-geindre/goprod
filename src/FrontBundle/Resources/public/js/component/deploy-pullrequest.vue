@@ -1,15 +1,5 @@
-require('./github-issues');
-
-var Vue = require('vue');
-var UserStore = require('../store/user');
-
-module.exports = Vue.component('deploy-pullrequest', {
-    template: '#deploy-pullrequest-template',
-    computed: {
-        user: function() {
-            return UserStore.state.user;
-        }
-    },
+<script>
+module.exports = {
     methods: {
         deploy: function(pr) {
             var repo = pr.repository_url.split('/');
@@ -22,5 +12,19 @@ module.exports = Vue.component('deploy-pullrequest', {
                 }
             });
         }
+    },
+    components: {
+        'github-issues': require('./github-issues.vue')
     }
-});
+};
+</script>
+
+<template>
+    <div>
+        <div class="page-header">
+            <h1>Let's go prod! <small>Select pull request</small></h1>
+        </div>
+        <github-issues query-append="is:pr" v-on:select-issue="deploy">
+        </github-issues>
+    </div>
+</template>

@@ -1,4 +1,88 @@
-<script type="text/template" id="app-template">
+<script>
+require('bootstrap');
+
+var GithubClient = require('./lib/github-client.js');
+var ApiClient    = require('./lib/api-client.js');
+var UserStore    = require('./store/user.js');
+var DeploysStore = require('./store/deploys.js');
+var ConfigStore  = require('./store/config.js');
+
+module.exports = {
+    components: {
+        'loading-spinner': require('./component/loading-spinner.vue'),
+        'user-details': require('./component/user-details.vue')
+    },
+    data: function() {
+        return {
+            authError: false,
+            authenticating: false,
+            deploysRefresh: null
+        }
+    },
+    computed: {
+        authenticated: function() {
+            return UserStore.state.authenticated;
+        },
+        configured: function() {
+            return ConfigStore.state.configured;
+        },
+        deploysCount: function() {
+            return DeploysStore.state.count;
+        }
+    },
+    mounted: function() {
+        ConfigStore.dispatch('loadConfig');
+    },
+    methods: {
+        login: function(redirect = true) {
+            this.authenticating = true;
+            UserStore.dispatch('login', redirect)
+                .then(function() {
+                    if (this.authenticated) {
+                        ApiClient.setCredentials(
+                            UserStore.state.user.login,
+                            GithubClient.auth.access_token
+                        );
+                        return DeploysStore.dispatch('refresh');
+                    }
+                    console.log(this);
+                    this.authenticating = false;
+                }.bind(this))
+                .then(function() {
+                    this.registerDeploysRefresh();
+                    this.authenticating = false;
+                }.bind(this))
+                .catch(function(response) {
+                    this.authenticating = false;
+                    this.authError = true;
+                    GithubClient.clearAuthCookie();
+                }.bind(this));
+        },
+        registerDeploysRefresh: function() {
+            this.deploysRefresh = setInterval(function(){
+                DeploysStore.dispatch('refresh');
+            }, 5000);
+        }
+    },
+    watch: {
+        configured: function() {
+            if (this.configured) {
+                GithubClient.setupUrls(ConfigStore.state.config.github.urls);
+                GithubClient.setupApp({
+                    client_id: ConfigStore.state.config.github.client_id,
+                    scope: 'repo'
+                });
+                this.login(false);
+            }
+        }
+    },
+    beforeDestroy: function() {
+        clearInterval(this.deploysRefresh);
+    }
+};
+</script>
+
+<template>
 <transition name="fade">
     <div v-if="configured">
         <nav class="navbar navbar-inverse navbar-fixed-top">
@@ -41,7 +125,7 @@
                                 <span class="glyphicon glyphicon-time"></span>
                                 In progress
                                 <span class="label label-warning" v-if="deploysCount > 0">
-                                    [[ deploysCount ]]
+                                    {{ deploysCount }}
                                 </span>
 
                             </router-link>
@@ -71,16 +155,35 @@
         </div>
     </div>
 </transition>
-</script>
+</template>
 
-{{ source('@Front/component/user-details.html.twig') }}
-{{ source('@Front/component/deploy-pullrequest.html.twig') }}
-{{ source('@Front/component/deploy-create.html.twig') }}
-{{ source('@Front/component/deploy.html.twig') }}
-{{ source('@Front/component/deploy-process.html.twig') }}
-{{ source('@Front/component/user-deploys.html.twig') }}
-{{ source('@Front/component/github-issues.html.twig') }}
-{{ source('@Front/component/github-issue.html.twig') }}
-{{ source('@Front/component/github-pullrequest.html.twig') }}
-{{ source('@Front/component/loading-spinner.html.twig') }}
-{{ source('@Front/component/pagination.html.twig') }}
+<style type="text/css" scoped>
+#container {
+    margin-top: 51px;
+    position: relative;
+}
+
+.tab-content {
+    padding-top: 20px;
+}
+
+.navbar-inverse .navbar-brand {
+    color:#19C9FF;
+}
+
+
+.fade-enter-active, .fade-leave-active {
+    transition: opacity .2s;
+    position: absolute;
+    width: 100%;
+    padding-right: 30px;
+}
+
+.fade-enter, .fade-leave-to {
+    opacity: 0;
+    position: absolute;
+    width: 100%;
+    padding-right: 30px;
+}
+</style>
+<style type="text/css" src="../../../../../node_modules/bootstrap/dist/css/bootstrap.min.css"></style>
