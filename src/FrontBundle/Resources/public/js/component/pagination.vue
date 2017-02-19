@@ -1,6 +1,19 @@
 <script>
 module.exports = {
     props: ['pages', 'page'],
+    computed: {
+        displayPages: function() {
+            var start = Math.max(1, this.page - 5);
+            var end = Math.min(this.page + 5, this.pages);
+            var pages = [];
+
+            for (var i = start; i <= end; i++) {
+                pages.push(i);
+            }
+
+            return pages;
+        }
+    },
     methods: {
         goToPage: function(page) {
             this.$emit('page', page);
@@ -16,7 +29,7 @@ module.exports = {
                 <span aria-hidden="true">&laquo;</span>
             </a>
         </li>
-        <li v-for="id in pages" v-bind:class="{ active: id == page }">
+        <li v-for="id in displayPages" v-bind:class="{ active: id == page }">
             <a href="#" v-on:click.prevent="goToPage(id)">{{ id }}</a>
         </li>
         <li v-if="page < pages">

@@ -63,6 +63,12 @@ module.exports = {
             this.deploysRefresh = setInterval(function(){
                 DeploysStore.dispatch('refresh');
             }, 5000);
+        },
+        clearDeploysRefresh: function() {
+            if (this.deploysRefresh) {
+                clearInterval(this.deploysRefresh);
+                this.deploysRefresh = false;
+            }
         }
     },
     watch: {
@@ -103,12 +109,15 @@ module.exports = {
                     this.queuedDeploys.push(id);
                 }
             }
+        },
+        authenticated: function() {
+            if (!this.authenticated) {
+                this.clearDeploysRefresh();
+            }
         }
     },
     beforeDestroy: function() {
-        if (this.deploysRefresh) {
-            clearInterval(this.deploysRefresh);
-        }
+        this.clearDeploysRefresh();
     }
 };
 </script>
@@ -126,10 +135,15 @@ module.exports = {
                         <span class="icon-bar"></span>
                     </button>
                     <a class="navbar-brand" href="#">
-                        <span class="glyphicon glyphicon-play-circle"></span>
+                        <span class="glyphicon glyphicon-refresh"></span>
                     </a>
                 </div>
                 <div id="navbar" class="collapse navbar-collapse">
+                    <ul class="nav navbar-nav" v-if="authenticated">
+                        <li>
+                            <router-link :to="{ name: 'deploys' }">Deployments</router-link>
+                        </li>
+                    </ul>
                     <user-details></user-details>
                     <ul class="nav navbar-nav pull-right">
                         <li class="dropdown pull-right" v-if="authenticated">
@@ -193,7 +207,7 @@ module.exports = {
 
 
 .fade-enter-active, .fade-leave-active {
-    transition: opacity .2s;
+    transition: opacity .05s;
     position: absolute;
     width: 100%;
     padding-right: 30px;

@@ -28,5 +28,10 @@ module.exports = [
         name: 'deploy-process',
         path: '/deploys/:id',
         component: require('../component/deploy-process.vue')
+    },
+    {
+        name: 'deploys',
+        path: '/deploys',
+        component: require('../component/deploys.vue')
     }
 ]

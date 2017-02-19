@@ -19,7 +19,7 @@ module.exports = {
             query: '',
             loading: false,
             pagination: {
-                per_page: 20,
+                per_page: 10,
                 page: 1,
                 pages: 1
             }

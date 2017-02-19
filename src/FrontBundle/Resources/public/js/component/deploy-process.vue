@@ -192,7 +192,7 @@ module.exports = {
             </div>
         </template>
         <loading-spinner class="medium" v-else></loading-spinner>
-        <div class="modal fade confirm-dialog">
+        <div class="modal confirm-dialog">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">

@@ -28,7 +28,7 @@ module.exports = {
             v-else-if="deploy.status == 'done'">
         </span>
         <span
-            class="glyphicon glyphicon-time done text-primary"
+            class="glyphicon glyphicon-time queued text-primary"
             v-else-if="deploy.status == 'queued'">
         </span>
         <span
@@ -72,5 +72,13 @@ module.exports = {
 
     .infos {
         font-size: 12px;
+    }
+
+    span.text-danger {
+        color: #d10202;
+    }
+
+    span.text-success {
+        color: #26ba01;
     }
 </style>

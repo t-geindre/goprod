@@ -57,3 +57,9 @@ deploy_by_repository:
     path: /{owner}/{repository}/deploys
     defaults:
         _controller: ApiBundle:Deploy:getByRepository
+
+deploy_list:
+    path: /deploys
+    methods:  [GET]
+    defaults:
+        _controller: ApiBundle:Deploy:getAll

@@ -5,6 +5,7 @@ namespace ApiBundle\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use ApiBundle\Criteria\Deploy\Active as ActiveDeploy;
 use ApiBundle\Criteria\Deploy\ActiveByRepository as ActiveDeployByRepository;
+use ApiBundle\Criteria\Deploy\SearchFilters as DeploySearchFilters;
 use ApiBundle\Entity\Deploy;
 
 class DeployController extends BaseController
@@ -85,5 +86,33 @@ class DeployController extends BaseController
                 ->build()
                 ->orderBy(['createDate' => 'asc'])
         )->toArray();
+    }
+
+    public function getAllAction(Request $request)
+    {
+        $repository = $this->get('api_bundle.repository.deploy');
+        $criteria = (new DeploySearchFilters(
+                $request->get('status'),
+                $request->get('owner'),
+                $request->get('repository'),
+                $request->query->has('user') ? $request->query->getInt('user') : null
+            ))
+            ->build()
+            ->orderBy([
+                ($request->get('sortBy') ?? 'id') => ($request->get('sortOrder') ?? 'desc')
+            ])
+            ->setFirstResult($request->query->getInt('offset'))
+            ->setMaxResults(
+                $request->query->has('offset') ? $request->query->getInt('limit') : 10
+            );
+
+        try {
+            return [
+                'total' => $repository->matching($criteria)->count(),
+                'items' => $repository->matching($criteria)->toArray()
+            ];
+        } catch (\InvalidArgumentException $e) {
+            throw $this->createBadRequestException($e->getMessage());
+        }
     }
 }

@@ -58,6 +58,10 @@ var ApiClient = function()
         );
     }
 
+    this.getDeploys = function(options = {}) {
+        return this.get('deploys', options);
+    }
+
     // Internals
     this.setCredentials = function(login, accessToken) {
         this.credentials = { login: login, access_token: accessToken };
