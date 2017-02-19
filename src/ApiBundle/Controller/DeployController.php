@@ -4,6 +4,7 @@ namespace ApiBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
 use ApiBundle\Criteria\Deploy\Active as ActiveDeploy;
+use ApiBundle\Criteria\Deploy\ActiveByRepository as ActiveDeployByRepository;
 use ApiBundle\Entity\Deploy;
 
 class DeployController extends BaseController
@@ -34,23 +35,39 @@ class DeployController extends BaseController
     public function getAction(int $id)
     {
         $deploy = $this->getDeploy($id);
+        $manager = $this->get('api_bundle.manager.deploy');
 
-        $em = $this->get('doctrine')->getManager();
-        $this->get('api_bundle.manager.deploy')->updateStatus($deploy);
-        $em->persist($deploy);
-        $em->flush();
+        $manager
+            ->updateStatus($deploy)
+            ->save($deploy);
 
         return $deploy;
     }
 
     public function cancelAction(int $id)
     {
-        $deploy = $this->getDeploy($id)
-            ->setStatus(Deploy::STATUS_CANCELED);
+        $this->get('api_bundle.manager.deploy')->save(
+            $deploy = $this->getDeploy($id)
+                ->setStatus(Deploy::STATUS_CANCELED)
+        );
 
-        $em = $this->get('doctrine')->getManager();
-        $em->persist($deploy);
-        $em->flush();
+        return $deploy;
+    }
+
+    public function confirmAction(int $id)
+    {
+        $deploy = $this->getDeploy($id);
+
+        if ($deploy->getStatus() != Deploy::STATUS_WAITING) {
+            throw $this->createBadRequestException(
+                'Cannot confirm deployment which is not in waiting status.'
+            );
+        }
+
+        $this->get('api_bundle.manager.deploy')->save(
+            $deploy = $this->getDeploy($id)
+                ->setStatus(Deploy::STATUS_DONE)
+        );
 
         return $deploy;
     }
@@ -59,5 +76,14 @@ class DeployController extends BaseController
     {
         return $this->getUser()->getDeploys()
             ->matching((new ActiveDeploy)->build());
+    }
+
+    public function getByRepositoryAction(string $owner, string $repository)
+    {
+        return $this->get('api_bundle.repository.deploy')->matching(
+            (new ActiveDeployByRepository($owner, $repository))
+                ->build()
+                ->orderBy(['createDate' => 'asc'])
+        )->toArray();
     }
 }

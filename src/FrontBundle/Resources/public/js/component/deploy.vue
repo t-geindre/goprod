@@ -28,6 +28,10 @@ module.exports = {
             v-else-if="deploy.status == 'done'">
         </span>
         <span
+            class="glyphicon glyphicon-time done text-primary"
+            v-else-if="deploy.status == 'queued'">
+        </span>
+        <span
             class="glyphicon glyphicon-refresh active text-primary"
             v-else>
         </span>

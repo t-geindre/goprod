@@ -92,7 +92,7 @@ module.exports = {
                     <div class="alert alert-danger" role="alert" v-if="this.errors.global && this.errors.global.length > 0">
                         <p v-for="error in this.errors.global">{{ error }}</p>
                     </div>
-                    <github-pullrequest v-bind:pullrequest="pullrequest"></github-pullrequest>
+                    <github-pullrequest v-bind:pullrequest="pullrequest" v-on:refresh="update"></github-pullrequest>
                     <template v-if="!pullrequest || (pullrequest.mergeable || pullrequest.merged)">
                         <div class="form-group">
                             <label for="repositoryName">Repository</label>

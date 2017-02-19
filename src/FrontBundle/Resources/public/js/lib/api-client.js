@@ -12,16 +12,16 @@ var ApiClient = function()
 
     // App
     this.getAppConfig = function(options = {}) {
-        return this.query('config', options);
+        return this.get('config', options);
     }
 
     // User
     this.getUser = function(options = {}) {
-        return this.query('user', options);
+        return this.get('user', options);
     }
 
     this.updateUser = function(user, options = {}) {
-        return this.formQuery(
+        return this.post(
             'user',
             Object.assign(options, { body: user })
         );
@@ -29,22 +29,33 @@ var ApiClient = function()
 
     // Deploys
     this.createDeploy = function(deploy, options = {}) {
-        return this.formQuery(
+        return this.post(
             'deploys',
             Object.assign(options, { body: deploy })
         );
     }
 
     this.getDeploysByCurrentUser = function(options = {}) {
-        return this.query('user/deploys', options);
+        return this.get('user/deploys', options);
     }
 
     this.getDeploy = function(id, options = {}) {
-        return this.query('deploys/' + id, options);
+        return this.get('deploys/' + id, options);
     }
 
     this.cancelDeploy = function(id, options = {}) {
-        return this.formQuery('deploys/' + id + '/cancel');
+        return this.post('deploys/' + id + '/cancel');
+    }
+
+    this.confirmDeploy = function(id, options = {}) {
+        return this.post('deploys/' + id + '/confirm');
+    }
+
+    this.getDeploysByRepository = function(repository, options = {}) {
+        return this.get(
+            repository.owner + '/' + repository.repository + '/deploys',
+            options
+        );
     }
 
     // Internals
@@ -52,10 +63,10 @@ var ApiClient = function()
         this.credentials = { login: login, access_token: accessToken };
     }
 
-    this.formQuery = function(route, options = {}) {
+    this.post = function(route, options = {}) {
         return new Promise(function(resolve, reject) {
             client
-                .query(
+                .get(
                     route,
                     Object.assign({ method: 'post' }, options)
                 )
@@ -71,7 +82,7 @@ var ApiClient = function()
         });
     }
 
-    this.query = function(route, options = {})
+    this.get = function(route, options = {})
     {
         options.params = Object.assign(this.credentials, options.params);
 

@@ -8,57 +8,52 @@ user_profile:
     methods:  [GET]
     defaults:
         _controller: ApiBundle:User:profile
-    options:
-        expose: true
 
 user_update:
     path: /user
     methods:  [POST]
     defaults:
         _controller: ApiBundle:User:update
-    options:
-        expose: true
 
 user_chekprofile:
     path: /user/profile/complete
     defaults:
         _controller: ApiBundle:User:checkProfile
-    options:
-        expose: true
 
 app_config:
     path: /config
     defaults:
         _controller: ApiBundle:Config:config
-    options:
-        expose: true
 
 deploy_create:
     path: /deploys
     methods:  [POST]
     defaults:
         _controller: ApiBundle:Deploy:create
-    options:
-        expose: true
 
 deploy_by_current_user:
     path: /user/deploys
     defaults:
         _controller: ApiBundle:Deploy:getByCurrentUser
-    options:
-        expose: true
 
 deploy_by_id:
     path: /deploys/{id}
     defaults:
         _controller: ApiBundle:Deploy:get
-    options:
-        expose: true
 
 deploy_cancel:
     path: /deploys/{id}/cancel
     methods:  [POST]
     defaults:
         _controller: ApiBundle:Deploy:cancel
-    options:
-        expose: true
+
+deploy_confirm:
+    path: /deploys/{id}/confirm
+    methods:  [POST]
+    defaults:
+        _controller: ApiBundle:Deploy:confirm
+
+deploy_by_repository:
+    path: /{owner}/{repository}/deploys
+    defaults:
+        _controller: ApiBundle:Deploy:getByRepository

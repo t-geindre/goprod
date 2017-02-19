@@ -6,19 +6,25 @@ use ApiBundle\Entity\Deploy;
 use ApiBundle\Criteria\Deploy\ActiveByRepository;
 use ApiBundle\Service\Github\Client;
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\EntityManager;
 
 class DeployManager
 {
     protected $github;
     protected $repository;
+    protected $entityManager;
 
     /**
      * @param EntityRepository $repository [description]
      */
-    public function __construct(EntityRepository $repository, Client $github)
-    {
+    public function __construct(
+        EntityRepository $repository,
+        Client $github,
+        EntityManager $entityManager
+    ) {
         $this->repository = $repository;
         $this->github = $github;
+        $this->entityManager = $entityManager;
     }
 
     /**
@@ -63,6 +69,8 @@ class DeployManager
             $deploy->setStatus($newStatus);
             $this->updateStatus($deploy);
         }
+
+        return $this;
     }
 
 
@@ -72,24 +80,14 @@ class DeployManager
             return false;
         }
 
-        if ($this->repository
-            ->matching(
-                (new ActiveByRepository(
-                    $deploy->getOwner(),
-                    $deploy->getRepository()
-                ))->build()
-            )
-            ->isEmpty()
-        ) {
-            $deploys = $this->repository->findBy(['status' => Deploy::STATUS_QUEUED], ['createDate' => 'ASC'], 1, 0);
-            if (count($deploys) == 0
-                || (
-                    count($deploys) == 1
-                    && array_pop($deploys)->getId() == $deploy->getId()
-                )
-            ) {
-                return true;
-            }
+        $deploys = $this->getActiveDeploys($deploy->getOwner(), $deploy->getRepository(), 1, 0);
+
+        if ($deploys->isEmpty()) {
+            return true;
+        }
+
+        if ($deploys->first()->getId() == $deploy->getId()) {
+            return true;
         }
 
         return false;
@@ -114,5 +112,40 @@ class DeployManager
     {
         return true;
         // has golive config
+    }
+
+    public function save(Deploy $deploy)
+    {
+        $this->entityManager->persist($deploy);
+        $this->entityManager->flush();
+
+        return $this;
+    }
+
+    public function updateQueue(string $owner, string $repository)
+    {
+        $deploys = $this->getActiveDeploys($owner, $repository, 1, 0);
+        if (!$deploys->isEmpty()
+            && ($deploy = $deploys->first())->getStatus() == Deploy::STATUS_QUEUED
+        ) {
+            $deploy->setStatus(Deploy::STATUS_MERGE);
+            $this->updateStatus($deploy);
+            $this->save($deploy);
+        }
+    }
+
+    protected function getActiveDeploys(
+        string $owner,
+        string $repository,
+        int $limit = null,
+        int $offset = null
+    ) {
+        return $this->repository->matching(
+            (new ActiveByRepository($owner, $repository))
+                ->build()
+                ->orderBy(['createDate' => 'asc'])
+                ->setFirstResult($offset)
+                ->setMaxResults($limit)
+        );
     }
 }

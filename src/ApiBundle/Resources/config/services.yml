@@ -21,6 +21,7 @@ services:
         arguments:
             - "@api_bundle.repository.deploy"
             - "@api_bundle.github_client"
+            - "@doctrine.orm.entity_manager"
 
     # Listeners
     api_bundle.listener.github.user.login:
@@ -43,6 +44,19 @@ services:
                 name: "kernel.event_listener"
                 event: "kernel.view"
                 method: "onKernelView"
+
+    api_bundle.listener.doctrine.deploy:
+        class: "ApiBundle\\Listener\\Doctrine\\Deploy"
+        # Inject container to avaid circular dependency with EM
+        arguments: [ "@service_container"]
+        tags:
+            -
+                name: "doctrine.event_listener"
+                event: "preUpdate"
+            -
+                name: "kernel.event_listener"
+                event: "kernel.terminate"
+                method: "updateQueues"
 
     # Misc
     api_bundle.serializer.form.error:

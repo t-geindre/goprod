@@ -8,7 +8,8 @@ module.exports = {
         return {
             profileModal: null,
             formData: {},
-            formErrors: { fields: {} }
+            formErrors: { fields: {} },
+            loading: false
         }
     },
     mounted: function() {
@@ -57,9 +58,16 @@ module.exports = {
             this.profileModal.modal('hide');
         },
         updateProfile: function() {
+            this.loading = true;
             UserStore.dispatch('update', this.formData).then(
-                (response) => { this.hideProfile(); },
-                (response) => { this.formErrors = response.data.errors; }
+                (response) => {
+                    this.hideProfile();
+                    this.loading = false;
+                },
+                (response) => {
+                    this.formErrors = response.data.errors;
+                    this.loading = false;
+                }
             );
         }
     },
@@ -69,6 +77,9 @@ module.exports = {
                 this.displayProfile();
             }
         }
+    },
+    components: {
+        'loading-spinner': require('./loading-spinner.vue')
     }
 };
 </script>
@@ -145,7 +156,8 @@ module.exports = {
                         <button type="button" class="btn btn-default" data-dismiss="modal" v-if="profileComplete">
                             Cancel
                         </button>
-                        <button type="button" class="btn btn-primary" v-on:click="updateProfile">
+                        <button type="button" class="btn btn-primary" v-on:click="updateProfile" v-bind:disabled="loading">
+                            <loading-spinner class="inline" v-if="loading"></loading-spinner>
                             Save changes
                         </button>
                     </div>

@@ -3,6 +3,7 @@ require('bootstrap');
 
 var GithubClient = require('./lib/github-client.js');
 var ApiClient    = require('./lib/api-client.js');
+var Notify       = require('./lib/notify.js');
 var UserStore    = require('./store/user.js');
 var DeploysStore = require('./store/deploys.js');
 var ConfigStore  = require('./store/config.js');
@@ -16,7 +17,8 @@ module.exports = {
         return {
             authError: false,
             authenticating: false,
-            deploysRefresh: null
+            deploysRefresh: null,
+            queuedDeploys: []
         }
     },
     computed: {
@@ -25,6 +27,9 @@ module.exports = {
         },
         configured: function() {
             return ConfigStore.state.configured;
+        },
+        deploys: function() {
+            return DeploysStore.state.deploys;
         }
     },
     mounted: function() {
@@ -70,10 +75,40 @@ module.exports = {
                 });
                 this.login(false);
             }
+        },
+        deploys: function() {
+            if (this.queuedDeploys.length > 0) {
+                this.queuedDeploys.forEach((id) => {
+                    if (this.deploys[id] && this.deploys[id].status != 'queued') {
+                        Notify(
+                            this.deploys[id].owner + '/'
+                            + this.deploys[id].repository + '\n' +
+                            'Deployment started!',
+                            {
+                                icon: '/img/deploy-icon.png',
+                                click: () => {
+                                    this.$router.push({
+                                        name: 'deploy-process',
+                                        params: { id: id }
+                                    });
+                                }
+                            }
+                        );
+                    }
+                });
+            }
+            this.queuedDeploys = [];
+            for (var id in this.deploys) {
+                if (this.deploys[id].status == 'queued') {
+                    this.queuedDeploys.push(id);
+                }
+            }
         }
     },
     beforeDestroy: function() {
-        clearInterval(this.deploysRefresh);
+        if (this.deploysRefresh) {
+            clearInterval(this.deploysRefresh);
+        }
     }
 };
 </script>

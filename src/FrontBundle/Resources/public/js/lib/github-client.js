@@ -22,23 +22,33 @@ var GithubClient = function()
 
     this.getCurrentUser = function()
     {
-        return this.apiQuery('user');
+        return this.get('user');
     }
 
     this.searchIssues = function(terms)
     {
-        return this.apiQuery('search/issues', terms);
+        return this.get(
+            'search/issues',
+            { params: terms, avoidCache: (new Date()).getTime() }
+        );
     }
 
     this.getPullRequest = function(pullrequest) {
-        return this.apiQuery(
+        return this.get(
             'repos/'+pullrequest.owner+'/'+pullrequest.repo+'/pulls/'+pullrequest.number,
-            { avoidCache: (new Date()).getTime() }
+            { params: { avoidCache: (new Date()).getTime() }}
+        );
+    }
+
+    this.mergePullRequest = function(pullrequest, sha) {
+        return this.put(
+            'repos/'+pullrequest.owner+'/'+pullrequest.repo+'/pulls/'+pullrequest.number+'/merge',
+            { body: { sha: sha } }
         );
     }
 
     this.getIssue = function(issues) {
-        return this.apiQuery(
+        return this.get(
             'repos/'+issues.owner+'/'+issues.repo+'/issues/'+issues.number
         );
     }
@@ -114,18 +124,24 @@ var GithubClient = function()
         this.auth = {};
     }
 
-    this.apiQuery = function(url, data = {})
+    this.get = function(url, options = {})
     {
         if (this.auth.access_token) {
-            data = Object.assign(
+            options.params = Object.assign(
                 { access_token: this.auth.access_token },
-                data
+                options.params
             );
         }
 
-        return Vue.http.get(
-            this.urls.api + url, { params: data }
-        );
+        return Vue.http(Object.assign(
+            { url:this.urls.api + url, method: 'get'},
+            options
+        ));
+    }
+
+    this.put = function(url, options = {}) {
+        options.method = 'put';
+        return this.get(url, options);
     }
 }
 

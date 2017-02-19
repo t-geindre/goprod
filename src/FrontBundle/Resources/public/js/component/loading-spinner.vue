@@ -34,4 +34,10 @@ module.exports = {};
     .loading-spinner.medium {
         font-size:30px;
     }
+
+    .loading-spinner.inline {
+        display: inline-block;
+        padding:0;
+        margin:0;
+    }
 </style>
