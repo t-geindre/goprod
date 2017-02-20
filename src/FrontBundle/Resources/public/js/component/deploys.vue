@@ -119,6 +119,9 @@ module.exports = {
         'pagination': require('./pagination.vue'),
         'deploy': require('./deploy.vue'),
         'typeahead': require('./typeahead.vue')
+    },
+    beforeDestroy: function() {
+        this.clearDeploysRefresh();
     }
 };
 </script>
