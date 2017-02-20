@@ -136,12 +136,12 @@ module.exports = {
                     Sort <span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu">
-                    <li><a href="#" v-on:click="setSort('created', 'desc')">Newest</a></li>
-                    <li><a href="#" v-on:click="setSort('created', 'asc')">Oldest</a></li>
-                    <li><a href="#" v-on:click="setSort('comments', 'desc')">Most commented</a></li>
-                    <li><a href="#" v-on:click="setSort('comments', 'asc')">Least commented</a></li>
-                    <li><a href="#" v-on:click="setSort('updated', 'desc')">Recently updated</a></li>
-                    <li><a href="#" v-on:click="setSort('updated', 'asc')">Least recently updated</a></li>
+                    <li><a href="#" v-on:click.prevent="setSort('created', 'desc')">Newest</a></li>
+                    <li><a href="#" v-on:click.prevent="setSort('created', 'asc')">Oldest</a></li>
+                    <li><a href="#" v-on:click.prevent="setSort('comments', 'desc')">Most commented</a></li>
+                    <li><a href="#" v-on:click.prevent="setSort('comments', 'asc')">Least commented</a></li>
+                    <li><a href="#" v-on:click.prevent="setSort('updated', 'desc')">Recently updated</a></li>
+                    <li><a href="#" v-on:click.prevent="setSort('updated', 'asc')">Least recently updated</a></li>
                 </ul>
             </div>
         </div>

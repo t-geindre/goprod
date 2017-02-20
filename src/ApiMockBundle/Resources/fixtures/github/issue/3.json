@@ -1,0 +1,57 @@
+{
+  "url": "https://github.m6web.fr/api/v3/repos/Replay/site-6play-bo/issues/328",
+  "repository_url": "https://github.m6web.fr/api/v3/repos/Replay/site-6play-bo",
+  "labels_url": "https://github.m6web.fr/api/v3/repos/Replay/site-6play-bo/issues/328/labels{/name}",
+  "comments_url": "https://github.m6web.fr/api/v3/repos/Replay/site-6play-bo/issues/328/comments",
+  "events_url": "https://github.m6web.fr/api/v3/repos/Replay/site-6play-bo/issues/328/events",
+  "html_url": "https://github.m6web.fr/Replay/site-6play-bo/pull/328",
+  "id": 34238,
+  "number": 328,
+  "title": "Version avec repository par défaut",
+  "user": {
+    "login": "t-geindre",
+    "id": 72,
+    "avatar_url": "https://github.m6web.fr/avatars/u/72?",
+    "gravatar_id": "",
+    "url": "https://github.m6web.fr/api/v3/users/t-geindre",
+    "html_url": "https://github.m6web.fr/t-geindre",
+    "followers_url": "https://github.m6web.fr/api/v3/users/t-geindre/followers",
+    "following_url": "https://github.m6web.fr/api/v3/users/t-geindre/following{/other_user}",
+    "gists_url": "https://github.m6web.fr/api/v3/users/t-geindre/gists{/gist_id}",
+    "starred_url": "https://github.m6web.fr/api/v3/users/t-geindre/starred{/owner}{/repo}",
+    "subscriptions_url": "https://github.m6web.fr/api/v3/users/t-geindre/subscriptions",
+    "organizations_url": "https://github.m6web.fr/api/v3/users/t-geindre/orgs",
+    "repos_url": "https://github.m6web.fr/api/v3/users/t-geindre/repos",
+    "events_url": "https://github.m6web.fr/api/v3/users/t-geindre/events{/privacy}",
+    "received_events_url": "https://github.m6web.fr/api/v3/users/t-geindre/received_events",
+    "type": "User",
+    "site_admin": false,
+    "ldap_dn": "uid=t_geindre,ou=Users,dc=m6web,dc=fr"
+  },
+  "labels": [
+    {
+      "url": "https://github.m6web.fr/api/v3/repos/Replay/site-6play-bo/labels/Ready%20for%20review",
+      "name": "Ready for review",
+      "color": "fbca04"
+    }
+  ],
+  "state": "open",
+  "locked": false,
+  "assignee": null,
+  "assignees": [
+
+  ],
+  "milestone": null,
+  "comments": 1,
+  "created_at": "2016-12-19T13:54:21Z",
+  "updated_at": "2017-01-04T13:37:31Z",
+  "closed_at": null,
+  "pull_request": {
+    "url": "https://github.m6web.fr/api/v3/repos/Replay/site-6play-bo/pulls/328",
+    "html_url": "https://github.m6web.fr/Replay/site-6play-bo/pull/328",
+    "diff_url": "https://github.m6web.fr/Replay/site-6play-bo/pull/328.diff",
+    "patch_url": "https://github.m6web.fr/Replay/site-6play-bo/pull/328.patch"
+  },
+  "body": "En lien avec https://github.m6web.fr/Replay/bundle-6play-entities/issues/166 et https://github.m6web.fr/Replay/bundle-6play-entities/pull/167.\r\n\r\nJuste un POC démontrant que les projets peuvent très bien fonctionner en retirant tout les repository vides.",
+  "score": 1.0
+}

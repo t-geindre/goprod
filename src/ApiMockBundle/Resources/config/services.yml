@@ -1,0 +1,11 @@
+services:
+    api_mock.fixtures.loader:
+        class: "ApiMockBundle\\Fixtures\\Loader"
+        arguments:
+            - "@doctrine.orm.default_entity_manager"
+
+    api_mock.repository.mock:
+        class: Doctrine\ORM\EntityRepository
+        factory: ["@doctrine.orm.entity_manager", getRepository]
+        arguments:
+            - "ApiMockBundle:Mock"

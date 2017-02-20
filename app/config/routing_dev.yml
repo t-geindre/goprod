@@ -12,3 +12,7 @@ _errors:
 
 _main:
     resource: routing.yml
+
+api_mock:
+    resource: "@ApiMockBundle/Resources/config/routing/main.yml"
+    prefix:   /mock

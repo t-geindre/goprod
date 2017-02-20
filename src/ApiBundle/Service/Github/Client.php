@@ -122,12 +122,12 @@ class Client
         return $this->apiRequest(sprintf('repos/%s/%s/pulls/%d', $owner, $repo, $number));
     }
 
-    public function apiRequest($url, $method = RequestInterface::METHOD_GET, $content = '', $headers = []) : array
+    public function apiRequest($url, $method = RequestInterface::METHOD_GET, $content = '', $headers = [])
     {
         return $this->request($this->apiUrl.$url, $method, $content, $headers);
     }
 
-    public function request($url, $method = RequestInterface::METHOD_GET, $content = '', $headers = []) : array
+    public function request($url, $method = RequestInterface::METHOD_GET, $content = '', $headers = [])
     {
         if (!is_null($this->accessToken)) {
             $url .= (parse_url($url, PHP_URL_QUERY) ? '&' : '?').'access_token='.$this->accessToken;

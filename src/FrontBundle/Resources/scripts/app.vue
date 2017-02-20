@@ -91,7 +91,7 @@ module.exports = {
                             + this.deploys[id].repository + '\n' +
                             'Deployment started!',
                             {
-                                icon: '/img/deploy-icon.png',
+                                icon: '/bundles/front/img/deploy-icon.png',
                                 click: () => {
                                     this.$router.push({
                                         name: 'deploy-process',
@@ -220,4 +220,4 @@ module.exports = {
     padding-right: 30px;
 }
 </style>
-<style type="text/css" src="../../../../../node_modules/bootstrap/dist/css/bootstrap.min.css"></style>
+<style type="text/css" src="../../../../node_modules/bootstrap/dist/css/bootstrap.min.css"></style>

@@ -1,0 +1,57 @@
+{
+  "url": "https://github.m6web.fr/api/v3/repos/Replay/service-backstage-contributor/issues/20",
+  "repository_url": "https://github.m6web.fr/api/v3/repos/Replay/service-backstage-contributor",
+  "labels_url": "https://github.m6web.fr/api/v3/repos/Replay/service-backstage-contributor/issues/20/labels{/name}",
+  "comments_url": "https://github.m6web.fr/api/v3/repos/Replay/service-backstage-contributor/issues/20/comments",
+  "events_url": "https://github.m6web.fr/api/v3/repos/Replay/service-backstage-contributor/issues/20/events",
+  "html_url": "https://github.m6web.fr/Replay/service-backstage-contributor/pull/20",
+  "id": 36231,
+  "number": 20,
+  "title": "Plusieurs types sur les routes des pivots",
+  "user": {
+    "login": "t-geindre",
+    "id": 72,
+    "avatar_url": "https://github.m6web.fr/avatars/u/72?",
+    "gravatar_id": "",
+    "url": "https://github.m6web.fr/api/v3/users/t-geindre",
+    "html_url": "https://github.m6web.fr/t-geindre",
+    "followers_url": "https://github.m6web.fr/api/v3/users/t-geindre/followers",
+    "following_url": "https://github.m6web.fr/api/v3/users/t-geindre/following{/other_user}",
+    "gists_url": "https://github.m6web.fr/api/v3/users/t-geindre/gists{/gist_id}",
+    "starred_url": "https://github.m6web.fr/api/v3/users/t-geindre/starred{/owner}{/repo}",
+    "subscriptions_url": "https://github.m6web.fr/api/v3/users/t-geindre/subscriptions",
+    "organizations_url": "https://github.m6web.fr/api/v3/users/t-geindre/orgs",
+    "repos_url": "https://github.m6web.fr/api/v3/users/t-geindre/repos",
+    "events_url": "https://github.m6web.fr/api/v3/users/t-geindre/events{/privacy}",
+    "received_events_url": "https://github.m6web.fr/api/v3/users/t-geindre/received_events",
+    "type": "User",
+    "site_admin": false,
+    "ldap_dn": "uid=t_geindre,ou=Users,dc=m6web,dc=fr"
+  },
+  "labels": [
+    {
+      "url": "https://github.m6web.fr/api/v3/repos/Replay/service-backstage-contributor/labels/Ready%20For%20Review",
+      "name": "Ready For Review",
+      "color": "fbca04"
+    }
+  ],
+  "state": "open",
+  "locked": false,
+  "assignee": null,
+  "assignees": [
+
+  ],
+  "milestone": null,
+  "comments": 1,
+  "created_at": "2017-02-16T14:26:46Z",
+  "updated_at": "2017-02-17T07:05:39Z",
+  "closed_at": null,
+  "pull_request": {
+    "url": "https://github.m6web.fr/api/v3/repos/Replay/service-backstage-contributor/pulls/20",
+    "html_url": "https://github.m6web.fr/Replay/service-backstage-contributor/pull/20",
+    "diff_url": "https://github.m6web.fr/Replay/service-backstage-contributor/pull/20.diff",
+    "patch_url": "https://github.m6web.fr/Replay/service-backstage-contributor/pull/20.patch"
+  },
+  "body": "## Pourquoi ?\r\nJe sais pas.\r\n\r\n## Comment ?\r\nDans la route listant les pivots d'un asset, on accepte une liste de différents types.\r\n\r\n## US\r\nhttps://m6web.tpondemand.com/entity/34701\r\n\r\n## Recette\r\nhttp://ci-feature-asset-pivot-multiple-types.recette.bo.contributor-backstage-video.m6web.fr/assetmanager/v1/assets/7825428/pivots?sort=desc&type=audio,video,watermark,video-bo-contributor,video-bo-editor\r\n\r\n## MEP\r\nAjouter les types de pivots `video-bo-contributor` et `video-bo-editor` sur l'[applaunch de prod](http://applaunch.m6web.fr/app/service-backstage-contributor/pivots.suffixes/1.0.0/edit) :\r\n```json\r\n{\r\n\t\"video-bo-contributor\": [\r\n\t\t\"_sd1\",\r\n\t\t\"_400k\",\r\n\t\t\"_sd2\",\r\n\t\t\"_sd3\",\r\n\t\t\"_600k\",\r\n\t\t\"_800k\",\r\n\t\t\"_1200k\",\r\n\t\t\"_1500k\",\r\n\t\t\"_hq1\",\r\n\t\t\"_hq2\",\r\n\t\t\"_hd\",\r\n\t\t\"_watermark\"\r\n\t],\r\n\t\"video-bo-editor\": [\r\n\t\t\"_sd1\",\r\n\t\t\"_400k\",\r\n\t\t\"_sd2\",\r\n\t\t\"_sd3\",\r\n\t\t\"_600k\",\r\n\t\t\"_800k\",\r\n\t\t\"_1200k\",\r\n\t\t\"_1500k\",\r\n\t\t\"_hq1\",\r\n\t\t\"_hq2\",\r\n\t\t\"_hd\"\r\n\t]\r\n}",
+  "score": 1.0
+}

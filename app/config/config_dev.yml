@@ -1,5 +1,6 @@
 imports:
     - { resource: config.yml }
+    - { resource: "@ApiMockBundle/Resources/config/services.yml" }
 
 framework:
     router:
@@ -11,6 +12,14 @@ web_profiler:
     toolbar: true
     intercept_redirects: false
 
+api:
+    github:
+        urls:
+            site: "http://goprod.local/app_dev.php/mock/github/"
+            api:  "http://goprod.local/app_dev.php/mock/github/"
+        client_id: "random-id"
+        client_secret: "this-is-not-secret"
+
 monolog:
     handlers:
         main:
@@ -21,3 +30,4 @@ monolog:
         console:
             type:   console
             channels: [!event, !doctrine]
+

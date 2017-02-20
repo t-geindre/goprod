@@ -1,0 +1,57 @@
+{
+  "url": "https://github.m6web.fr/api/v3/repos/Replay/continuous-integration/issues/14",
+  "repository_url": "https://github.m6web.fr/api/v3/repos/Replay/continuous-integration",
+  "labels_url": "https://github.m6web.fr/api/v3/repos/Replay/continuous-integration/issues/14/labels{/name}",
+  "comments_url": "https://github.m6web.fr/api/v3/repos/Replay/continuous-integration/issues/14/comments",
+  "events_url": "https://github.m6web.fr/api/v3/repos/Replay/continuous-integration/issues/14/events",
+  "html_url": "https://github.m6web.fr/Replay/continuous-integration/pull/14",
+  "id": 23250,
+  "number": 14,
+  "title": "Build Jenkins pour les tests d'intégration",
+  "user": {
+    "login": "t-geindre",
+    "id": 72,
+    "avatar_url": "https://github.m6web.fr/avatars/u/72?",
+    "gravatar_id": "",
+    "url": "https://github.m6web.fr/api/v3/users/t-geindre",
+    "html_url": "https://github.m6web.fr/t-geindre",
+    "followers_url": "https://github.m6web.fr/api/v3/users/t-geindre/followers",
+    "following_url": "https://github.m6web.fr/api/v3/users/t-geindre/following{/other_user}",
+    "gists_url": "https://github.m6web.fr/api/v3/users/t-geindre/gists{/gist_id}",
+    "starred_url": "https://github.m6web.fr/api/v3/users/t-geindre/starred{/owner}{/repo}",
+    "subscriptions_url": "https://github.m6web.fr/api/v3/users/t-geindre/subscriptions",
+    "organizations_url": "https://github.m6web.fr/api/v3/users/t-geindre/orgs",
+    "repos_url": "https://github.m6web.fr/api/v3/users/t-geindre/repos",
+    "events_url": "https://github.m6web.fr/api/v3/users/t-geindre/events{/privacy}",
+    "received_events_url": "https://github.m6web.fr/api/v3/users/t-geindre/received_events",
+    "type": "User",
+    "site_admin": false,
+    "ldap_dn": "uid=t_geindre,ou=Users,dc=m6web,dc=fr"
+  },
+  "labels": [
+    {
+      "url": "https://github.m6web.fr/api/v3/repos/Replay/continuous-integration/labels/In%20progress",
+      "name": "In progress",
+      "color": "e11d21"
+    }
+  ],
+  "state": "open",
+  "locked": false,
+  "assignee": null,
+  "assignees": [
+
+  ],
+  "milestone": null,
+  "comments": 0,
+  "created_at": "2016-01-11T13:56:42Z",
+  "updated_at": "2016-02-01T09:32:46Z",
+  "closed_at": null,
+  "pull_request": {
+    "url": "https://github.m6web.fr/api/v3/repos/Replay/continuous-integration/pulls/14",
+    "html_url": "https://github.m6web.fr/Replay/continuous-integration/pull/14",
+    "diff_url": "https://github.m6web.fr/Replay/continuous-integration/pull/14.diff",
+    "patch_url": "https://github.m6web.fr/Replay/continuous-integration/pull/14.patch"
+  },
+  "body": "## Ajout d'un build Jenkins pour initialiser tout l'environnement d'intégration puis lancer les tests\r\n\r\n### Étapes du build (_n'est plus à jour_) :\r\n* _clean-up_ : Nettoyage fichiers résiduels.\r\n* _init_ : Configuration et installation des dépendances.\r\n* _deploy-projects_ : Déploiement des projets en env intégration avec les références git en paramètres.\r\n* _init-and-populate-database_ : Vidage de la DB et installation des fixtures.\r\n* _init-behat_ : Installation des dépendances Behat.\r\n* _behat-tests_ : Tests Behat.\r\n\r\n### Reste à faire (en toutes lettres sinon on comprend mal) :\r\n * [x] Configuration de la bonne BDD dans le [parameters.yml](https://github.m6web.fr/Replay/continuous-integration/blob/feature/jenkins-build/build-tools/jenkins/parameters.yml) pour Jenkins (en attente de l'exploit).\r\n * [x] Merge des PR pour les données sur la DB (au moins #11, #12, #13 et peut être +)\r\n * [x] Environnement d’intégration unique et non pas une instance par référence git déployée. Et mettre a jour les URLs.\r\n * [x] Encore divers soucis sur les environnements d'intégration à régler.\r\n * [x] Config integration pour ES : https://github.m6web.fr/Replay/service-6play-elasticsearch/pull/157\r\n * [ ] Des données sur ES ? Et voir comment on peut lancer l'indexation depuis le build Jenkins. En attente de l'exploit pour l'instance ES.\r\n * [ ] Correction des tests Behat ? Ou voir pourquoi ils foirent (peut être attendre d'avoir les bonnes données). Cf. [build 15](https://jenkins.m6web.fr/job/continuous-integration-full/15/) par exemple.\r\n * [ ] Nouveau système de fixtures : https://github.m6web.fr/Replay/continuous-integration/pull/17",
+  "score": 1.0
+}

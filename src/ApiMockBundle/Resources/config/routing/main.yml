@@ -1,0 +1,3 @@
+api_mock_github:
+    resource: "@ApiMockBundle/Resources/config/routing/github.yml"
+    prefix:   /github
