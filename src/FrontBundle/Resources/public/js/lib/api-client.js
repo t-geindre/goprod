@@ -27,6 +27,13 @@ var ApiClient = function()
         );
     }
 
+    this.searchUser = function(q, options = {}) {
+        return this.get(
+            'users',
+            Object.assign(options, { params: { q: q} })
+        );
+    }
+
     // Deploys
     this.createDeploy = function(deploy, options = {}) {
         return this.post(

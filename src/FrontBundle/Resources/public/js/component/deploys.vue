@@ -17,6 +17,7 @@ module.exports = {
             sortBy: 'id',
             sortOrder: 'desc',
             fullscreen: false,
+            userDisplay: ''
 
         }
     },
@@ -47,6 +48,7 @@ module.exports = {
                 .then((response) => {
                     this.deploys = response.data.items;
                     this.total = response.data.total;
+                    this.computePages();
                     this.loading = false;
                 });
         },
@@ -82,13 +84,26 @@ module.exports = {
                 clearInterval(this.deploysRefresh);
                 this.deploysRefresh = false;
             }
+        },
+        searchUser: function(q) {
+            return ApiClient.searchUser(q);
+        },
+        selectUser: function(user) {
+            if (user == undefined) {
+                this.userId = '';
+                this.update();
+                return;
+            }
+            this.userDisplay = user.name;
+            this.userId = user.id;
+            this.update();
+        },
+        computePages: function() {
+            this.pages = this.total == 0 ? 1 : Math.ceil(this.total/this.limit);
+            this.page = this.page > this.pages ? this.pages : this.page;
         }
     },
     watch: {
-        total: function() {
-            this.pages = this.total == 0 ? 1 : Math.ceil(this.total/this.limit);
-            this.page = this.page > this.pages ? this.pages : this.page;
-        },
         status: function() {
             this.update();
         },
@@ -102,7 +117,8 @@ module.exports = {
     components: {
         'loading-spinner': require('./loading-spinner.vue'),
         'pagination': require('./pagination.vue'),
-        'deploy': require('./deploy.vue')
+        'deploy': require('./deploy.vue'),
+        'typeahead': require('./typeahead.vue')
     }
 };
 </script>
@@ -132,19 +148,23 @@ module.exports = {
             </label>
         </div>
         <div class="col-md-3">
+        <!--
             <div class="input-group">
                 <div class="input-group-addon">
                     <span class="glyphicon glyphicon-tasks"></span>
                 </div>
-                <input type="text" class="form-control" id="query" v-model="repository" v-on:keyup.enter="update" />
+                <typeahead target-element="#deploysRepository" :data="searchUser" display-field="name"></typeahead>
+                <input type="text" class="form-control" id="deploysRepository" placeholder="repository" v-model="userDisplay" />
             </div>
+        -->
         </div>
         <div class="col-md-3">
             <div class="input-group">
                 <div class="input-group-addon">
                     <span class="glyphicon glyphicon-user"></span>
                 </div>
-                <input type="text" class="form-control" id="query" v-model="userId" v-on:keyup.enter="update" />
+                <typeahead target-element="#deploysUser" :data="searchUser" display-field="name" v-on:select="selectUser"></typeahead>
+                <input id="deploysUser" type="text" class="form-control" placeholder="user" v-model="userDisplay" autocomplete="off" />
             </div>
         </div>
     </div>

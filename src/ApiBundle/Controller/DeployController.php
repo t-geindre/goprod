@@ -90,12 +90,19 @@ class DeployController extends BaseController
 
     public function getAllAction(Request $request)
     {
+        $user = null;
+        if ($request->query->has('user')) {
+            $user = $this->get('api_bundle.repository.user')->find(
+                $request->query->getInt('user')
+            );
+        }
+
         $repository = $this->get('api_bundle.repository.deploy');
         $criteria = (new DeploySearchFilters(
                 $request->get('status'),
                 $request->get('owner'),
                 $request->get('repository'),
-                $request->query->has('user') ? $request->query->getInt('user') : null
+                $user
             ))
             ->build()
             ->orderBy([

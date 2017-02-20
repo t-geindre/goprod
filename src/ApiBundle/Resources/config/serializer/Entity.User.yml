@@ -7,8 +7,6 @@ ApiBundle\Entity\User:
             expose: true
         name:
             expose: true
-        goliveKey:
-            expose: true
         hipchatName:
             expose: true
         avatarUrl:

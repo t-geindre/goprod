@@ -20,6 +20,11 @@ user_chekprofile:
     defaults:
         _controller: ApiBundle:User:checkProfile
 
+user_search:
+    path: /users
+    defaults:
+        _controller: ApiBundle:User:search
+
 app_config:
     path: /config
     defaults:

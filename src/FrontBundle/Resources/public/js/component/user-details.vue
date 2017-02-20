@@ -13,7 +13,7 @@ module.exports = {
         }
     },
     mounted: function() {
-        this.profileModal = jQuery('#profile-modal');
+        this.profileModal = jQuery('.profile-modal', this.$el);
     },
     computed: {
         user: function()
@@ -122,7 +122,7 @@ module.exports = {
             <span class="glyphicon glyphicon glyphicon-off"></span>
             Login
         </button>
-        <div class="modal" id="profile-modal" role="dialog">
+        <div class="modal profile-modal" role="dialog">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">

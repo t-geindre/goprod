@@ -3,6 +3,7 @@
 namespace ApiBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
+use Doctrine\Common\Collections\Criteria;
 
 class UserController extends BaseController
 {
@@ -46,5 +47,14 @@ class UserController extends BaseController
             \ApiBundle\Form\UserType::class,
             $this->getUser()
         );
+    }
+
+    public function searchAction(Request $request)
+    {
+        return $this->get('api_bundle.repository.user')->matching(
+            Criteria::create()
+                ->where(Criteria::expr()->contains('login', $request->get('q')))
+                ->orWhere(Criteria::expr()->contains('name', $request->get('q')))
+        )->toArray();
     }
 }

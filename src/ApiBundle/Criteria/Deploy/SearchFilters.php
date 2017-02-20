@@ -4,6 +4,7 @@ namespace ApiBundle\Criteria\Deploy;
 
 use ApiBundle\Criteria\AbstractCriteria;
 use ApiBundle\Entity\Deploy;
+use ApiBundle\Entity\User;
 use Doctrine\Common\Collections\Criteria;
 use ApiBundle\Criteria\Deploy\Active;
 
@@ -16,7 +17,7 @@ class SearchFilters extends AbstractCriteria
         string $status = null,
         string $owner = null,
         string $repository = null,
-        int $user = null)
+        User $user = null)
     {
         $this->status = $status;
         $this->fields = [
