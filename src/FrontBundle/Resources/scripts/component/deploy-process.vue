@@ -166,7 +166,7 @@ module.exports = {
                             since you loaded this page.
                         </p>
                         <p>
-                            You should<a href="#" v-on:click.prevent="update" class="alert-link">refresh this pullrequest</a>
+                            You should <a href="#" v-on:click.prevent="update" class="alert-link">refresh this pullrequest</a>
                             before trying to merge it again.
                         </p>
                     </div>

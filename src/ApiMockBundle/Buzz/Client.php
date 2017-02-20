@@ -36,8 +36,7 @@ class Client extends Curl
     {
         $localResponse = $this->httpKernel->handle(
             Request::create(
-                $request->getHost().
-                preg_replace('#^/[a-z_]+\.php#i', '', $request->getResource()),
+                $request->getHost().$request->getResource(),
                 $request->getMethod(),
                 $request->getContent()
             )

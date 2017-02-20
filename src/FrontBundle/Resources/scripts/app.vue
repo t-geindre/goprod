@@ -45,12 +45,12 @@ module.exports = {
                             UserStore.state.user.login,
                             GithubClient.auth.access_token
                         );
+                        this.registerDeploysRefresh();
                         return DeploysStore.dispatch('refresh');
                     }
                     this.authenticating = false;
                 })
                 .then(() => {
-                    this.registerDeploysRefresh();
                     this.authenticating = false;
                 })
                 .catch((response) => {

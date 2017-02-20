@@ -18,8 +18,8 @@ parameters:
 api:
     github:
         urls:
-            site: "%hosts.local%/app_dev.php/mock/github/"
-            api:  "%hosts.local%/app_dev.php/mock/github/"
+            site: "%hosts.local%/mock/github/"
+            api:  "%hosts.local%/mock/github/"
         client_id: "random-id"
         client_secret: "this-is-not-secret"
 
