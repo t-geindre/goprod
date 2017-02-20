@@ -63,7 +63,6 @@ module.exports = {
             this.previousStatus = this.deploy.status;
             if (
                 !this.deploy.pull_request_id
-                || this.deploy.status != 'merge'
                 || this.processing
             ) {
                 this.loading = false;
