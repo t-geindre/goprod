@@ -12,13 +12,21 @@ web_profiler:
     toolbar: true
     intercept_redirects: false
 
+parameters:
+    hosts.local: http://localhost:8000
+
 api:
     github:
         urls:
-            site: "http://goprod.local/app_dev.php/mock/github/"
-            api:  "http://goprod.local/app_dev.php/mock/github/"
+            site: "%hosts.local%/app_dev.php/mock/github/"
+            api:  "%hosts.local%/app_dev.php/mock/github/"
         client_id: "random-id"
         client_secret: "this-is-not-secret"
+
+api_mock:
+    buzz:
+        localforward:
+            localhost: "%hosts.local%"
 
 monolog:
     handlers:

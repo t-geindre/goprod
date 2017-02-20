@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Mock
  *
  * @ORM\Table(name="mock")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="ApiMockBundle\Repository\MockRepository")
  */
 class Mock
 {

@@ -99,7 +99,7 @@ module.exports = {
                     this.up();
                     this.down();
                 });
-            }, 300);
+            }, 200);
         }
     }
 };
