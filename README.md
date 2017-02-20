@@ -12,4 +12,4 @@ $ bin/console apimock:fixtures:load
 $ npm run dev
 ```
 
-Navigate to http://localhost:8000/app_dev.php/
+Navigate to http://localhost:8000
