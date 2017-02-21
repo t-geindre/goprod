@@ -1,6 +1,6 @@
 <script>
 module.exports = {
-    props: ['displayField', 'source', 'minLength'],
+    props: ['displayField', 'source', 'minLength', 'placeholder'],
     data: function() {
         return {
             items: [],
@@ -111,6 +111,7 @@ module.exports = {
             v-on:focus="focus"
             v-on:keyup="search"
             v-on:keydown.enter="select"
+            v-bind:placeholder="placeholder"
         />
         <ul class="dropdown-menu" v-if="items.length > 0">
             <li

@@ -123,7 +123,7 @@ module.exports = {
         <h1>Deployments <small>search history</small></h1>
     </div>
     <div class="row form-group">
-        <div class="btn-group col-md-6">
+        <div class="btn-group col-md-9">
             <label class="btn btn-default" v-bind:class="{active:status==''}">
                 <span class="glyphicon glyphicon-asterisk"></span>
                 <input type="radio" value="" v-model="status"> All
@@ -142,24 +142,15 @@ module.exports = {
             </label>
         </div>
         <div class="col-md-3">
-        <!--
-            <div class="input-group">
-                <div class="input-group-addon">
-                    <span class="glyphicon glyphicon-tasks"></span>
-                </div>
-                <typeahead target-element="#deploysRepository" :data="searchUser" display-field="name"></typeahead>
-                <input type="text" class="form-control" id="deploysRepository" placeholder="repository" v-model="userDisplay" />
-            </div>
-        -->
-        </div>
-        <div class="col-md-3">
             <div class="input-group">
                 <div class="input-group-addon">
                     <span class="glyphicon glyphicon-user"></span>
                 </div>
-                <typeahead-users display-field="name" class="form-control" min-length="2" v-on:select="selectUser" v-on:clear="selectUser(false)">
+                <typeahead-users
+                    display-field="name" class="form-control" min-length="2"
+                    v-on:select="selectUser" v-on:clear="selectUser(false)" placeholder="user"
+                >
                 </typeahead-users>
-                <!-- <input id="deploysUser" type="text" class="form-control" placeholder="user" v-model="userDisplay" autocomplete="off" /> -->
             </div>
         </div>
     </div>
