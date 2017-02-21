@@ -85,17 +85,8 @@ module.exports = {
                 this.deploysRefresh = false;
             }
         },
-        searchUser: function(q) {
-            return ApiClient.searchUser(q);
-        },
         selectUser: function(user) {
-            if (user == undefined) {
-                this.userId = '';
-                this.update();
-                return;
-            }
-            this.userDisplay = user.name;
-            this.userId = user.id;
+            this.userId = user ? user.id : '';
             this.update();
         },
         computePages: function() {
@@ -118,7 +109,7 @@ module.exports = {
         'loading-spinner': require('./loading-spinner.vue'),
         'pagination': require('./pagination.vue'),
         'deploy': require('./deploy.vue'),
-        'typeahead': require('./typeahead.vue')
+        'typeahead-users': require('./typeahead/users.vue')
     },
     beforeDestroy: function() {
         this.clearDeploysRefresh();
@@ -166,8 +157,9 @@ module.exports = {
                 <div class="input-group-addon">
                     <span class="glyphicon glyphicon-user"></span>
                 </div>
-                <typeahead target-element="#deploysUser" :data="searchUser" display-field="name" v-on:select="selectUser"></typeahead>
-                <input id="deploysUser" type="text" class="form-control" placeholder="user" v-model="userDisplay" autocomplete="off" />
+                <typeahead-users display-field="name" class="form-control" min-length="2" v-on:select="selectUser" v-on:clear="selectUser(false)">
+                </typeahead-users>
+                <!-- <input id="deploysUser" type="text" class="form-control" placeholder="user" v-model="userDisplay" autocomplete="off" /> -->
             </div>
         </div>
     </div>

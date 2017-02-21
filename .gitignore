@@ -14,8 +14,6 @@
 !var/SymfonyRequirements.php
 /vendor/
 /web/bundles/
-/web/js/
-/web/css/
-/web/img/
+/web/build.js
 /node_modules/
 npm-debug.log
