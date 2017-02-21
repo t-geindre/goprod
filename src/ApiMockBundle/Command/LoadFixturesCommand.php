@@ -14,6 +14,6 @@ class LoadFixturesCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->getContainer()->get('api_mock.fixtures.loader')->load();
+        $this->getContainer()->get('api_mock.fixtures.loader.issue')->load();
     }
 }

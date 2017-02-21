@@ -1,9 +1,17 @@
 services:
+    # Fixtures loaders
     api_mock.fixtures.loader:
-        class: "ApiMockBundle\\Fixtures\\Loader"
+        class: "ApiMockBundle\\Fixtures\\AbstractLoader"
         arguments:
             - "@doctrine.orm.default_entity_manager"
+            - "@logger"
+        abstract: true
 
+    api_mock.fixtures.loader.issue:
+        class: "ApiMockBundle\\Fixtures\\IssueLoader"
+        parent: "api_mock.fixtures.loader"
+
+    # Repositories
     api_mock.repository.mock:
         class: Doctrine\ORM\EntityRepository
         factory: ["@doctrine.orm.entity_manager", getRepository]
