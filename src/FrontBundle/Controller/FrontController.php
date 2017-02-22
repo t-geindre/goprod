@@ -2,12 +2,20 @@
 
 namespace FrontBundle\Controller;
 
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * Front controller
+ */
 class FrontController extends Controller
 {
-    public function indexAction()
+    /**
+     * index
+     *
+     * @return Response
+     */
+    public function indexAction() : Response
     {
         return $this->render('FrontBundle::index.html.twig');
     }

@@ -6,8 +6,14 @@ use Symfony\Component\Validator\ConstraintValidator;
 use ApiBundle\Criteria\Deploy\ActiveByRepository;
 use ApiBundle\Entity\Deploy;
 
+/**
+ * Unique active deploy
+ */
 class UniqNotDoneValidator extends ConstraintValidator
 {
+    /**
+     * {@inheritdoc}
+     */
     public function validate($deploy, Constraint $constraint)
     {
         if (!$deploy instanceof Deploy) {

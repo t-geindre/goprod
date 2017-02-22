@@ -2,7 +2,15 @@
 
 namespace ApiBundle\Criteria;
 
+use Doctrine\Common\Collections\Criteria;
+
+/**
+ * Base criteria
+ */
 abstract class AbstractCriteria
 {
-    abstract protected function build();
+    /**
+     * @return Criteria
+     */
+    abstract protected function build() : Criteria;
 }

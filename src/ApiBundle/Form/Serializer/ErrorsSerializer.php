@@ -4,9 +4,17 @@ namespace ApiBundle\Form\Serializer;
 
 use Symfony\Component\Form\Form;
 
+/**
+ * Form errors serializer
+ */
 class ErrorsSerializer
 {
-    public function serializeErrors(Form $form)
+    /**
+     * @param Form $form
+     *
+     * @return array
+     */
+    public function serializeErrors(Form $form) : array
     {
         $errors = [
             'global' => [],
@@ -22,12 +30,16 @@ class ErrorsSerializer
         return $errors;
     }
 
-    private function serialize(\Symfony\Component\Form\Form $form)
+    /**
+     * @param \Symfony\Component\Form\Form $form
+     *
+     * @return array
+     */
+    protected function serialize(\Symfony\Component\Form\Form $form) : array
     {
         $errors = [];
         foreach ($form->getIterator() as $key => $child) {
-
-            foreach ($child->getErrors() as $error){
+            foreach ($child->getErrors() as $error) {
                 $errors[$key] = $error->getMessage();
             }
 

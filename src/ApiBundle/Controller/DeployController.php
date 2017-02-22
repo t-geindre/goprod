@@ -8,32 +8,32 @@ use ApiBundle\Criteria\Deploy\ActiveByRepository as ActiveDeployByRepository;
 use ApiBundle\Criteria\Deploy\SearchFilters as DeploySearchFilters;
 use ApiBundle\Entity\Deploy;
 
+/**
+ * Deploy controller
+ */
 class DeployController extends BaseController
 {
-    protected function getDeploy(int $id)
-    {
-        if (is_null($deploy = $this->get('api_bundle.repository.deploy')->find($id))) {
-            throw $this->createNotFoundException('Deploy not found');
-        }
-
-        if ($deploy->getUser() != $this->getUser()) {
-            throw $this->createBadRequestException('Bad credentials');
-        }
-
-        return $deploy;
-    }
-
-    public function createAction(Request $request)
+    /**
+     * @param Request $request
+     *
+     * @return array
+     */
+    public function createAction(Request $request) : array
     {
         return $this->handleForm(
             $request,
             \ApiBundle\Form\DeployType::class,
-            (new \ApiBundle\Entity\Deploy)->setUser($this->getUser()),
+            (new \ApiBundle\Entity\Deploy())->setUser($this->getUser()),
             [$this->get('api_bundle.manager.deploy'), 'updateStatus']
         );
     }
 
-    public function getAction(int $id)
+    /**
+     * @param int $id
+     *
+     * @return Deploy
+     */
+    public function getAction(int $id) : Deploy
     {
         $deploy = $this->getDeploy($id);
         $manager = $this->get('api_bundle.manager.deploy');
@@ -45,7 +45,12 @@ class DeployController extends BaseController
         return $deploy;
     }
 
-    public function cancelAction(int $id)
+    /**
+     * @param int $id
+     *
+     * @return Deploy
+     */
+    public function cancelAction(int $id) : Deploy
     {
         $this->get('api_bundle.manager.deploy')->save(
             $deploy = $this->getDeploy($id)
@@ -55,7 +60,12 @@ class DeployController extends BaseController
         return $deploy;
     }
 
-    public function confirmAction(int $id)
+    /**
+     * @param int $id
+     *
+     * @return Deploy
+     */
+    public function confirmAction(int $id) : Deploy
     {
         $deploy = $this->getDeploy($id);
 
@@ -73,13 +83,23 @@ class DeployController extends BaseController
         return $deploy;
     }
 
-    public function getByCurrentUserAction()
+    /**
+     * @return array
+     */
+    public function getByCurrentUserAction() : array
     {
         return $this->getUser()->getDeploys()
-            ->matching((new ActiveDeploy)->build());
+            ->matching((new ActiveDeploy())->build())
+            ->toArray();
     }
 
-    public function getByRepositoryAction(string $owner, string $repository)
+    /**
+     * @param string $owner
+     * @param string $repository
+     *
+     * @return array
+     */
+    public function getByRepositoryAction(string $owner, string $repository) : array
     {
         return $this->get('api_bundle.repository.deploy')->matching(
             (new ActiveDeployByRepository($owner, $repository))
@@ -88,7 +108,12 @@ class DeployController extends BaseController
         )->toArray();
     }
 
-    public function getAllAction(Request $request)
+    /**
+     * @param Request $request
+     *
+     * @return array
+     */
+    public function getAllAction(Request $request) : array
     {
         $user = null;
         if ($request->query->has('user')) {
@@ -99,14 +124,14 @@ class DeployController extends BaseController
 
         $repository = $this->get('api_bundle.repository.deploy');
         $criteria = (new DeploySearchFilters(
-                $request->get('status'),
-                $request->get('owner'),
-                $request->get('repository'),
-                $user
-            ))
+            $request->get('status'),
+            $request->get('owner'),
+            $request->get('repository'),
+            $user
+        ))
             ->build()
             ->orderBy([
-                ($request->get('sortBy') ?? 'id') => ($request->get('sortOrder') ?? 'desc')
+                ($request->get('sortBy') ?? 'id') => ($request->get('sortOrder') ?? 'desc'),
             ])
             ->setFirstResult($request->query->getInt('offset'))
             ->setMaxResults(
@@ -116,10 +141,28 @@ class DeployController extends BaseController
         try {
             return [
                 'total' => $repository->matching($criteria)->count(),
-                'items' => $repository->matching($criteria)->toArray()
+                'items' => $repository->matching($criteria)->toArray(),
             ];
         } catch (\InvalidArgumentException $e) {
             throw $this->createBadRequestException($e->getMessage());
         }
+    }
+
+    /**
+     * @param int $id
+     *
+     * @return Deploy
+     */
+    protected function getDeploy(int $id) : Deploy
+    {
+        if (is_null($deploy = $this->get('api_bundle.repository.deploy')->find($id))) {
+            throw $this->createNotFoundException('Deploy not found');
+        }
+
+        if ($deploy->getUser() != $this->getUser()) {
+            throw $this->createBadRequestException('Bad credentials');
+        }
+
+        return $deploy;
     }
 }

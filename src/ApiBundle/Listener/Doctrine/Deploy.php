@@ -4,18 +4,39 @@ namespace ApiBundle\Listener\Doctrine;
 use ApiBundle\Entity\Deploy as Entity;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
+use ApiBundle\Manager\DeployManager;
 
+/**
+ * Deploy listener
+ */
 class Deploy
 {
+    /**
+     * @var array
+     */
     protected $queuesToUpdate = [];
+
+    /**
+     * @var DeployManager
+     */
     protected $deployManager;
+
+    /**
+     * @var ContainerInterface
+     */
     protected $container;
 
+    /**
+     * @param ContainerInterface $container
+     */
     public function __construct(ContainerInterface $container)
     {
         $this->container = $container;
     }
 
+    /**
+     * @param PreUpdateEventArgs $event
+     */
     public function preUpdate(PreUpdateEventArgs $event)
     {
         $deploy = $event->getEntity();
@@ -32,6 +53,9 @@ class Deploy
         }
     }
 
+    /**
+     * Update deploys queues
+     */
     public function updateQueues()
     {
         foreach ($this->queuesToUpdate as $queue) {
@@ -39,12 +63,20 @@ class Deploy
         }
     }
 
-    protected function isSupported($entity)
+    /**
+     * @param object $entity
+     *
+     * @return boolean
+     */
+    protected function isSupported($entity) : bool
     {
         return $entity instanceof Entity;
     }
 
-    protected function getManager()
+    /**
+     * @return DeployManager
+     */
+    protected function getManager() : DeployManager
     {
         if (is_null($this->deployManager)) {
             $this->deployManager = $this->container->get('api_bundle.manager.deploy');

@@ -6,11 +6,17 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 
+/**
+ * Extension class
+ */
 class ApiExtension extends Extension
 {
+    /**
+     * {@inheritDoc}
+     */
     public function load(array $configs, ContainerBuilder $container)
     {
-        $loader = new YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
+        $loader = new YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
 
         $configuration = $this->getConfiguration($configs, $container);
@@ -19,7 +25,12 @@ class ApiExtension extends Extension
         $this->flatten($config, 'api_bundle', $container);
     }
 
-    protected function flatten(array $arr, $parentKey, ContainerBuilder $container)
+    /**
+     * @param array            $arr
+     * @param string           $parentKey
+     * @param ContainerBuilder $container
+     */
+    protected function flatten(array $arr, string $parentKey, ContainerBuilder $container)
     {
         foreach ($arr as $key => $value) {
             $key = $parentKey.'.'.$key;

@@ -7,8 +7,14 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use ApiBundle\Entity\User;
 
+/**
+ * User form
+ */
 class UserType extends AbstractType
 {
+    /**
+     * {@inheritDoc}
+     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
@@ -17,12 +23,15 @@ class UserType extends AbstractType
         ;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
             'data_class' => User::class,
             'allow_extra_fields' => true,
-            'validation_groups' => 'complete_profile'
+            'validation_groups' => 'complete_profile',
         ]);
     }
 }

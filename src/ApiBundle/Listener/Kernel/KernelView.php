@@ -9,15 +9,27 @@ use JMS\Serializer\SerializerInterface;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 use ApiBundle\Controller\BaseController as ApiController;
 
+/**
+ * Serialize view
+ */
 class KernelView
 {
+    /**
+     * @var SerializerInterface
+     */
     protected $serializer;
 
+    /**
+     * @param SerializerInterface $serializer
+     */
     public function __construct(SerializerInterface $serializer)
     {
         $this->serializer = $serializer;
     }
 
+    /**
+     * @param GetResponseForControllerResultEvent $event
+     */
     public function onKernelView(GetResponseForControllerResultEvent $event)
     {
         if (!($result = $event->getControllerResult()) instanceof Response && !is_null($result)) {
@@ -25,7 +37,13 @@ class KernelView
         }
     }
 
-    protected function getResponse($content, $code = 200)
+    /**
+     * @param string  $content
+     * @param integer $code
+     *
+     * @return Response
+     */
+    protected function getResponse($content, $code = 200) : Response
     {
         return new Response(
             $this->serializer->serialize($content, 'json'),

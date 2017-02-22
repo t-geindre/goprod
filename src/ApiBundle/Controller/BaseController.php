@@ -5,10 +5,20 @@ namespace ApiBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use ApiBundle\Entity\User;
 
+/**
+ * Api base controller
+ */
 class BaseController extends Controller
 {
-    protected function getUser($accessToken = null, $login = null)
+    /**
+     * @param string|null $accessToken
+     * @param string|null $login
+     *
+     * @return User
+     */
+    protected function getUser(string $accessToken = null, string $login = null) : User
     {
         $request = $this->get('request_stack')->getMasterRequest();
         $accessToken = $accessToken ?? $request->get('access_token');
@@ -22,6 +32,7 @@ class BaseController extends Controller
 
             if (!is_null($user)) {
                 $this->get('api_bundle.github_client')->setAccessToken($user->getAccessToken());
+
                 return $user;
             }
         }
@@ -29,12 +40,24 @@ class BaseController extends Controller
         throw $this->createBadRequestException('Bad credentials');
     }
 
+    /**
+     * @param string          $message
+     * @param \Exception|null $previous
+     */
     protected function createBadRequestException($message = 'Bad request', \Exception $previous = null)
     {
         return new BadRequestHttpException($message, $previous);
     }
 
-    protected function handleForm(Request $request, $type, $entity, Callable $prePersist = null)
+    /**
+     * @param Request       $request
+     * @param object        $type
+     * @param object        $entity
+     * @param Callable|null $prePersist
+     *
+     * @return array
+     */
+    protected function handleForm(Request $request, $type, $entity, callable $prePersist = null) : array
     {
         $form = $this->createForm($type, $entity);
 

@@ -87,7 +87,7 @@ class User
     public function __construct()
     {
         $this->deploys = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->createDate = new \DateTime;
+        $this->createDate = new \DateTime();
     }
 
     /**

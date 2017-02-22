@@ -90,7 +90,7 @@ class Deploy
     public function __construct()
     {
         $this->status = self::STATUS_NEW;
-        $this->createDate = new \DateTime;
+        $this->createDate = new \DateTime();
     }
 
     /**

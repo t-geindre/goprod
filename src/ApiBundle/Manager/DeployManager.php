@@ -7,15 +7,32 @@ use ApiBundle\Criteria\Deploy\ActiveByRepository;
 use ApiBundle\Service\Github\Client;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\EntityManager;
+use Doctrine\Common\Collections\Collection;
 
+/**
+ * Manage deploys
+ */
 class DeployManager
 {
+    /**
+     * @var Client
+     */
     protected $github;
+
+    /**
+     * @var EntityRepository
+     */
     protected $repository;
+
+    /**
+     * @var EntityManager
+     */
     protected $entityManager;
 
     /**
-     * @param EntityRepository $repository [description]
+     * @param EntityRepository $repository
+     * @param Client           $github
+     * @param EntityManager    $entityManager
      */
     public function __construct(
         EntityRepository $repository,
@@ -31,8 +48,10 @@ class DeployManager
      * Update deploy status to the next available status if possible
      *
      * @param Deploy $deploy
+     *
+     * @return DeployManager
      */
-    public function updateStatus(Deploy $deploy)
+    public function updateStatus(Deploy $deploy) : DeployManager
     {
         $newStatus = $deploy->getStatus();
 
@@ -58,11 +77,6 @@ class DeployManager
                     $newStatus = Deploy::STATUS_WAITING;
                 }
                 break;
-
-            case Deploy::STATUS_WAITING:
-
-            default:
-                return;
         }
 
         if ($newStatus != $deploy->getStatus()) {
@@ -73,8 +87,12 @@ class DeployManager
         return $this;
     }
 
-
-    public function canStart(Deploy $deploy)
+    /**
+     * @param Deploy $deploy
+     *
+     * @return bool
+     */
+    public function canStart(Deploy $deploy) : bool
     {
         if ($deploy->getStatus() != Deploy::STATUS_QUEUED) {
             return false;
@@ -93,7 +111,12 @@ class DeployManager
         return false;
     }
 
-    public function isMerged(Deploy $deploy)
+    /**
+     * @param Deploy $deploy
+     *
+     * @return bool
+     */
+    public function isMerged(Deploy $deploy) : bool
     {
         if (is_null($deploy->getPullRequestId())
             || $this->github->getPullRequest(
@@ -108,13 +131,23 @@ class DeployManager
         return false;
     }
 
-    public function isDeployed(Deploy $deploy)
+    /**
+     * @param Deploy $deploy
+     *
+     * @return bool
+     */
+    public function isDeployed(Deploy $deploy) : bool
     {
         return true;
         // has golive config
     }
 
-    public function save(Deploy $deploy)
+    /**
+     * @param Deploy $deploy
+     *
+     * @return DeployManager
+     */
+    public function save(Deploy $deploy) : DeployManager
     {
         $this->entityManager->persist($deploy);
         $this->entityManager->flush();
@@ -122,7 +155,13 @@ class DeployManager
         return $this;
     }
 
-    public function updateQueue(string $owner, string $repository)
+    /**
+     * @param string $owner
+     * @param string $repository
+     *
+     * @return DeployManager
+     */
+    public function updateQueue(string $owner, string $repository) : DeployManager
     {
         $deploys = $this->getActiveDeploys($owner, $repository, 1, 0);
         if (!$deploys->isEmpty()
@@ -132,14 +171,24 @@ class DeployManager
             $this->updateStatus($deploy);
             $this->save($deploy);
         }
+
+        return $this;
     }
 
+    /**
+     * @param string   $owner
+     * @param string   $repository
+     * @param int|null $limit
+     * @param int|null $offset
+     *
+     * @return Collection
+     */
     protected function getActiveDeploys(
         string $owner,
         string $repository,
         int $limit = null,
         int $offset = null
-    ) {
+    ) : Collection {
         return $this->repository->matching(
             (new ActiveByRepository($owner, $repository))
                 ->build()

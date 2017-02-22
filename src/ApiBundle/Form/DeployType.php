@@ -7,8 +7,14 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use ApiBundle\Entity\Deploy;
 
+/**
+ * Deploy form
+ */
 class DeployType extends AbstractType
 {
+    /**
+     * {@inheritDoc}
+     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
@@ -19,10 +25,13 @@ class DeployType extends AbstractType
         ;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => Deploy::class
+            'data_class' => Deploy::class,
         ]);
     }
 }

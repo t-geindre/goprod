@@ -8,17 +8,33 @@ use ApiBundle\Entity\User;
 use Doctrine\Common\Collections\Criteria;
 use ApiBundle\Criteria\Deploy\Active;
 
+/**
+ * Deploys search filters
+ */
 class SearchFilters extends AbstractCriteria
 {
+    /**
+     * @var string
+     */
     protected $status = null;
+
+    /**
+     * @var array
+     */
     protected $fields = [];
 
+    /**
+     * @param string|null $status
+     * @param string|null $owner
+     * @param string|null $repository
+     * @param User|null   $user
+     */
     public function __construct(
         string $status = null,
         string $owner = null,
         string $repository = null,
-        User $user = null)
-    {
+        User $user = null
+    ) {
         $this->status = $status;
         $this->fields = [
             'owner' => $owner,
@@ -27,10 +43,13 @@ class SearchFilters extends AbstractCriteria
         ];
     }
 
-    public function build()
+    /**
+     * {@inheritDoc}
+     */
+    public function build() : Criteria
     {
         if ($this->status == 'active') {
-            $criteria = (new Active)->build();
+            $criteria = (new Active())->build();
         } else {
             $criteria = Criteria::create();
             if (!empty($this->status)
@@ -46,7 +65,7 @@ class SearchFilters extends AbstractCriteria
             }
         }
 
-        foreach($this->fields as $field => $val) {
+        foreach ($this->fields as $field => $val) {
             if (!empty($val)) {
                 $criteria->andWhere(Criteria::expr()->eq($field, $val));
             }

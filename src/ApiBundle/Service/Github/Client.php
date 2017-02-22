@@ -5,6 +5,9 @@ namespace ApiBundle\Service\Github;
 use Buzz\Message\RequestInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
+/**
+ * Github client
+ */
 class Client
 {
     /**
@@ -48,15 +51,21 @@ class Client
     protected $currentUser = null;
 
     /**
-     * @param Buzz\Browser $client
+     * @param \Buzz\Browser                 $client
+     * @param string                        $siteUrl
+     * @param string                        $apiUrl
+     * @param string                        $clientId
+     * @param string                        $clientSecret
+     * @param string|null                   $accessToken
+     * @param EventDispatcherInterface|null $eventDispatcher
      */
     public function __construct(
         \Buzz\Browser $client,
-        $siteUrl,
-        $apiUrl,
-        $clientId,
-        $clientSecret,
-        $accessToken = null,
+        string $siteUrl,
+        string $apiUrl,
+        string $clientId,
+        string $clientSecret,
+        string $accessToken = null,
         EventDispatcherInterface $eventDispatcher = null
     ) {
         $this->client = $client;
@@ -68,7 +77,12 @@ class Client
         $this->eventDispatcher = $eventDispatcher;
     }
 
-    public function setAccessToken($token) : Client
+    /**
+     * @param string $token
+     *
+     * @return Client
+     */
+    public function setAccessToken(string $token) : Client
     {
         $this->accessToken = $token;
         $this->currentUser = null;
@@ -76,7 +90,12 @@ class Client
         return $this;
     }
 
-    public function authUser($code) : array
+    /**
+     * @param string $code
+     *
+     * @return array
+     */
+    public function authUser(string $code) : array
     {
         $authResponse = $this->request(
             $this->siteUrl.'login/oauth/access_token',
@@ -84,7 +103,7 @@ class Client
             [
                 'client_id' => $this->clientId,
                 'client_secret' => $this->clientSecret,
-                'code' => $code
+                'code' => $code,
             ]
         );
 
@@ -108,6 +127,9 @@ class Client
         return $authResponse;
     }
 
+    /**
+     * @return array
+     */
     public function getCurrentUser() : array
     {
         if (!is_null($this->currentUser)) {
@@ -117,18 +139,49 @@ class Client
         return $this->currentUser = $this->apiRequest('user');
     }
 
+    /**
+     * @param string $owner
+     * @param string $repo
+     * @param int    $number
+     *
+     * @return array
+     */
     public function getPullRequest(string $owner, string $repo, int $number) : array
     {
         return $this->apiRequest(sprintf('repos/%s/%s/pulls/%d', $owner, $repo, $number));
     }
 
-    public function apiRequest($url, $method = RequestInterface::METHOD_GET, $content = '', $headers = [])
-    {
+    /**
+     * @param string $url
+     * @param string $method
+     * @param string $content
+     * @param array  $headers
+     *
+     * @return array
+     */
+    public function apiRequest(
+        string $url,
+        string $method = RequestInterface::METHOD_GET,
+        $content = '',
+        array $headers = []
+    ) : array {
         return $this->request($this->apiUrl.$url, $method, $content, $headers);
     }
 
-    public function request($url, $method = RequestInterface::METHOD_GET, $content = '', $headers = [])
-    {
+    /**
+     * @param string $url
+     * @param string $method
+     * @param string $content
+     * @param array  $headers
+     *
+     * @return array
+     */
+    public function request(
+        string $url,
+        string $method = RequestInterface::METHOD_GET,
+        $content = '',
+        array $headers = []
+    ) : array {
         if (!is_null($this->accessToken)) {
             $url .= (parse_url($url, PHP_URL_QUERY) ? '&' : '?').'access_token='.$this->accessToken;
         }

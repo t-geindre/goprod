@@ -5,6 +5,9 @@ namespace ApiBundle\Service\Github\Event;
 use Symfony\Component\EventDispatcher\Event;
 use ApiBundle\Service\Github\Client;
 
+/**
+ * Use login event
+ */
 class UserLogin extends Event
 {
     const NAME = 'github.client.user.login';
@@ -20,7 +23,8 @@ class UserLogin extends Event
     protected $response;
 
     /**
-     * @param Client $github
+     * @param Client $client
+     * @param array  $response
      */
     public function __construct(Client $client, array $response)
     {

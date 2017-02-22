@@ -5,9 +5,17 @@ namespace ApiBundle\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\Common\Collections\Criteria;
 
+/**
+ * User controller
+ */
 class UserController extends BaseController
 {
-    public function authAction(Request $request)
+    /**
+     * @param Request $request
+     *
+     * @return array
+     */
+    public function authAction(Request $request) : array
     {
         if (is_null($code = $request->query->get('code'))) {
             throw $this->createBadRequestException(
@@ -20,15 +28,17 @@ class UserController extends BaseController
 
             return [
                 'access_token' => $github->authUser($code)['access_token'],
-                'login' => $github->getCurrentUser()['login']
+                'login' => $github->getCurrentUser()['login'],
             ];
-
         } catch (\ApiBundle\Service\Github\Exception\Exception $e) {
             throw $this->createBadRequestException($e->getMessage(), $e);
         }
     }
 
-    public function profileAction()
+    /**
+     * @return array
+     */
+    public function profileAction() : array
     {
         return [
             'user' => $this->getUser(),
@@ -36,11 +46,16 @@ class UserController extends BaseController
                 $this
                     ->get('validator')
                     ->validate($this->getUser(), null, ['complete_profile'])
-                ) == 0
+            ) == 0,
         ];
     }
 
-    public function updateAction(Request $request)
+    /**
+     * @param Request $request
+     *
+     * @return array
+     */
+    public function updateAction(Request $request) : array
     {
         return $this->handleForm(
             $request,
@@ -49,6 +64,11 @@ class UserController extends BaseController
         );
     }
 
+    /**
+     * @param Request $request
+     *
+     * @return array
+     */
     public function searchAction(Request $request)
     {
         return $this->get('api_bundle.repository.user')->matching(

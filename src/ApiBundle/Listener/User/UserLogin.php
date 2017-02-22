@@ -6,23 +6,37 @@ use ApiBundle\Service\Github\Event\UserLogin as Event;
 use Doctrine\ORM\EntityRepository;
 use ApiBundle\Entity\User;
 use Doctrine\ORM\EntityManager;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
 
+/**
+ * Create user on github login
+ */
 class UserLogin
 {
+    /**
+     * @var EntityRepository
+     */
     protected $repository;
-    protected $em;
-    protected $validator;
 
+    /**
+     * @var EntityManager
+     */
+    protected $em;
+
+    /**
+     * @param EntityRepository $repository
+     * @param EntityManager    $em
+     */
     public function __construct(
         EntityRepository $repository,
         EntityManager $em
-    )
-    {
+    ) {
         $this->repository = $repository;
         $this->em = $em;
     }
 
+    /**
+     * @param Event $event
+     */
     public function onUserLogin(Event $event)
     {
         $githubUser = $event->getClient()->getCurrentUser();

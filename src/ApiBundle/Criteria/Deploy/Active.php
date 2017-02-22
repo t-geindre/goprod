@@ -6,9 +6,15 @@ use ApiBundle\Criteria\AbstractCriteria;
 use ApiBundle\Entity\Deploy;
 use Doctrine\Common\Collections\Criteria;
 
+/**
+ * Active deploys
+ */
 class Active extends AbstractCriteria
 {
-    public function build()
+    /**
+     * {@inheritDoc}
+     */
+    public function build() : Criteria
     {
         return Criteria::create()
             ->where(Criteria::expr()->neq('status', Deploy::STATUS_DONE))
