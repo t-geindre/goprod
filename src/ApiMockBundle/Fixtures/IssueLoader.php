@@ -45,7 +45,7 @@ class IssueLoader extends AbstractLoader
         $class = $this->getEntityClass();
         $userDone = $payload['user']['login'];
         $this->localPopulateEntity($entity, $payload);
-        $count = 0;
+        $count = 1;
 
         foreach ($this->getUsers() as $user) {
             if ($user->getPayload()['login'] == $userDone) {
