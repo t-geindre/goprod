@@ -8,21 +8,40 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * Intercepor client
+ */
 class Client extends Curl
 {
+    /**
+     * @var array
+     */
     protected $interceptHosts = [];
+
+    /**
+     * @var HttpKernel
+     */
     protected $httpKernel;
 
-    public function intercept($host)
+    /**
+     * @param string $host
+     */
+    public function intercept(string $host)
     {
         $this->interceptHosts[] = $host;
     }
 
+    /**
+     * @param HttpKernelInterface $httpKernel
+     */
     public function setHttpKernel(HttpKernelInterface $httpKernel)
     {
         $this->httpKernel = $httpKernel;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function send(RequestInterface $request, MessageInterface $response, array $options = [])
     {
         if (in_array($request->getHost(), $this->interceptHosts)) {

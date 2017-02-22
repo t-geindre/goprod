@@ -187,4 +187,3 @@ class Issue extends AbstractEntity
         return $this->open;
     }
 }
-

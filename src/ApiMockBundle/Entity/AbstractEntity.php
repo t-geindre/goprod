@@ -21,13 +21,13 @@ abstract class AbstractEntity
     /**
      * Set payload
      *
-     * @param string $payload
+     * @param array $payload
      *
      * @return Mock
      */
-    public function setPayload($payload)
+    public function setPayload(array $payload)
     {
-        $this->payload = $payload;
+        $this->payload = json_encode($payload);
 
         return $this;
     }
@@ -35,11 +35,10 @@ abstract class AbstractEntity
     /**
      * Get payload
      *
-     * @return string
+     * @return array
      */
     public function getPayload()
     {
-        return $this->payload;
+        return json_decode($this->payload, true);
     }
 }
-

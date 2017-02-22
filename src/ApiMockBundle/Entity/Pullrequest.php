@@ -187,4 +187,3 @@ class Pullrequest extends AbstractEntity
         return $this->open;
     }
 }
-

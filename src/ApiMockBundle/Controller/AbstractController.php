@@ -3,38 +3,50 @@
 namespace ApiMockBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use ApiMockBundle\Entity\Mock;
+use ApiMockBundle\Entity\AbstractEntity;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
-class AbstractController extends Controller
+/**
+ * Base mock controller
+ */
+abstract class AbstractController extends Controller
 {
-    protected function response(
-        string $api,
-        string $type,
-        callable $filter = null,
-        int $status = 200
-    ) {
-        $data = $this->getData($api, $type);
+    /**
+     * @param array $entities
+     *
+     * @return array
+     */
+    protected function getPayloads(array $entities)
+    {
+        return array_map(
+            function (AbstractEntity $entity) {
+                return $entity->getPayload();
+            },
+            $entities
+        );
+    }
 
-        if (!is_null($filter)) {
-            $data = call_user_func($filter, $data);
-        }
-
+    /**
+     * @param array $data
+     * @param int   $status
+     *
+     * @return Response
+     */
+    protected function response(array $data, int $status = 200)
+    {
         $response = new Response(json_encode($data), $status);
         $response->headers->add(['Content-type' => 'application/json']);
 
         return $response;
     }
 
-    protected function getData(string $api, string $type)
+    /**
+     * @param string          $message
+     * @param \Exception|null $previous
+     */
+    protected function createBadRequestException($message = 'Bad request', \Exception $previous = null)
     {
-        return array_map(
-            function($mock) {
-                return json_decode($mock->getPayload(), true);
-            },
-            $this
-                ->get('api_mock.repository.mock')
-                ->findBy(['api' => $api, 'type' => $type])
-        );
+        return new BadRequestHttpException($message, $previous);
     }
 }

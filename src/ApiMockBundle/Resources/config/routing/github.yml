@@ -6,12 +6,12 @@ mock_github_user_oauth:
 mock_github_user_access_token:
     path: /login/oauth/access_token
     defaults:
-        _controller: ApiMockBundle:Github:accessToken
+        _controller: ApiMockBundle:Github:getUser
 
 mock_github_user:
     path: /user
     defaults:
-        _controller: ApiMockBundle:Github:getCurrentUser
+        _controller: ApiMockBundle:Github:getUser
 
 mock_github_issue_search:
     path: /search/issues
@@ -22,6 +22,12 @@ mock_github_pullrequest:
     path: /repos/{owner}/{repo}/pulls/{number}
     defaults:
         _controller: ApiMockBundle:Github:getPullRequest
+
+mock_github_pullrequest_merge:
+    path: /repos/{owner}/{repo}/pulls/{number}/merge
+    methods:  [PUT]
+    defaults:
+        _controller: ApiMockBundle:Github:mergePullRequest
 
 mock_github_issue:
     path: /repos/{owner}/{repo}/issues/{number}

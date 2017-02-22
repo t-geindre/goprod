@@ -11,9 +11,40 @@ services:
         class: "ApiMockBundle\\Fixtures\\IssueLoader"
         parent: "api_mock.fixtures.loader"
 
+    api_mock.fixtures.loader.pullrequest:
+        class: "ApiMockBundle\\Fixtures\\PullrequestLoader"
+        parent: "api_mock.fixtures.loader"
+
+    api_mock.fixtures.loader.user:
+        class: "ApiMockBundle\\Fixtures\\UserLoader"
+        parent: "api_mock.fixtures.loader"
+
+    api_mock.fixtures.command:
+        class: "ApiMockBundle\\Command\\LoadFixturesCommand"
+        tags:
+            - { name: console.command }
+        calls:
+            - [ "addFixturesLoader", [ "@api_mock.fixtures.loader.user" ]] # first
+            - [ "addFixturesLoader", [ "@api_mock.fixtures.loader.issue" ]] # depends on user
+            - [ "addFixturesLoader", [ "@api_mock.fixtures.loader.pullrequest" ]] # depends on user
+
     # Repositories
-    api_mock.repository.mock:
+    api_mock.repository:
         class: Doctrine\ORM\EntityRepository
         factory: ["@doctrine.orm.entity_manager", getRepository]
+        abstract: true
+
+    api_mock.repository.issue:
+        parent: api_mock.repository
         arguments:
-            - "ApiMockBundle:Mock"
+            - "ApiMockBundle\\Entity\\Issue"
+
+    api_mock.repository.pullrequest:
+        parent: api_mock.repository
+        arguments:
+            - "ApiMockBundle\\Entity\\Pullrequest"
+
+    api_mock.repository.user:
+        parent: api_mock.repository
+        arguments:
+            - "ApiMockBundle\\Entity\\User"
