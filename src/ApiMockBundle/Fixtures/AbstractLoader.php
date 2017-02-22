@@ -112,15 +112,17 @@ abstract class AbstractLoader
     }
 
     /**
-     * @return string
-     */
-    abstract protected function getEntityClass() : string;
-
-    /**
      * Populate entity
      *
      * @param object $entity
      * @param array  $payload
      */
-    abstract protected function populateEntity($entity, array $payload);
+    protected function populateEntity($entity, array $payload)
+    {
+    }
+
+    /**
+     * @return string
+     */
+    abstract protected function getEntityClass() : string;
 }

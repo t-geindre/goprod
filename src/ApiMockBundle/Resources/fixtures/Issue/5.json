@@ -1,10 +1,10 @@
 {
-  "url": "https://github.m6web.fr/api/v3/repos/Replay/continuous-integration/issues/17",
-  "repository_url": "https://github.m6web.fr/api/v3/repos/Replay/continuous-integration",
-  "labels_url": "https://github.m6web.fr/api/v3/repos/Replay/continuous-integration/issues/17/labels{/name}",
-  "comments_url": "https://github.m6web.fr/api/v3/repos/Replay/continuous-integration/issues/17/comments",
-  "events_url": "https://github.m6web.fr/api/v3/repos/Replay/continuous-integration/issues/17/events",
-  "html_url": "https://github.m6web.fr/Replay/continuous-integration/pull/17",
+  "url": "https://github.m6web.fr/api/v3/repos/OL/continuous-integration/issues/17",
+  "repository_url": "https://github.m6web.fr/api/v3/repos/OL/continuous-integration",
+  "labels_url": "https://github.m6web.fr/api/v3/repos/OL/continuous-integration/issues/17/labels{/name}",
+  "comments_url": "https://github.m6web.fr/api/v3/repos/OL/continuous-integration/issues/17/comments",
+  "events_url": "https://github.m6web.fr/api/v3/repos/OL/continuous-integration/issues/17/events",
+  "html_url": "https://github.m6web.fr/OL/continuous-integration/pull/17",
   "id": 23887,
   "number": 100000,
   "title": "Nouveau système de fixtures",
@@ -30,7 +30,7 @@
   },
   "labels": [
     {
-      "url": "https://github.m6web.fr/api/v3/repos/Replay/continuous-integration/labels/In%20progress",
+      "url": "https://github.m6web.fr/api/v3/repos/OL/continuous-integration/labels/In%20progress",
       "name": "In progress",
       "color": "e11d21"
     }
@@ -47,10 +47,10 @@
   "updated_at": "2016-12-02T17:25:01Z",
   "closed_at": null,
   "pull_request": {
-    "url": "https://github.m6web.fr/api/v3/repos/Replay/continuous-integration/pulls/17",
-    "html_url": "https://github.m6web.fr/Replay/continuous-integration/pull/17",
-    "diff_url": "https://github.m6web.fr/Replay/continuous-integration/pull/17.diff",
-    "patch_url": "https://github.m6web.fr/Replay/continuous-integration/pull/17.patch"
+    "url": "https://github.m6web.fr/api/v3/repos/OL/continuous-integration/pulls/17",
+    "html_url": "https://github.m6web.fr/OL/continuous-integration/pull/17",
+    "diff_url": "https://github.m6web.fr/OL/continuous-integration/pull/17.diff",
+    "patch_url": "https://github.m6web.fr/OL/continuous-integration/pull/17.patch"
   },
   "body": "* Suppression de l'ancien système de fixtures\r\n* Intégration de `Nelmio/Alice`\r\n* Fixtures pour les services et plateformes (et entités liées)",
   "score": 1.0

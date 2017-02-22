@@ -71,7 +71,8 @@ module.exports = {
     },
     components: {
         'loading-spinner': require('./loading-spinner.vue'),
-        'github-pullrequest': require('./github-pullrequest.vue')
+        'github-pullrequest': require('./github/pullrequest.vue'),
+        'repository-selector': require('./github/repository-selector.vue')
     }
 };
 </script>
@@ -93,24 +94,27 @@ module.exports = {
                         <p v-for="error in this.errors.global">{{ error }}</p>
                     </div>
                     <github-pullrequest v-bind:pullrequest="pullrequest" v-on:refresh="update"></github-pullrequest>
-                    <template v-if="!pullrequest || (pullrequest.mergeable || pullrequest.merged)">
-                        <div class="form-group">
-                            <label for="repositoryName">Repository</label>
-                            <input class="form-control" id="repositoryName" v-model="repositoryName" disabled="disabled">
-                        </div>
+                    <div class="form-group">
+                        <label for="repositoryName">Repository</label>
+                        <repository-selector v-bind:owner="deploy.owner" v-bind:repo="deploy.repository" v-bind:disabled="pullrequest"></repository-selector>
+                    </div>
 
-                        <div class="form-group" v-bind:class="{'has-error':this.errors.fields.description}">
-                            <label for="description">Description</label>
-                            <input class="form-control" id="description" placeholder="Explain in a few words what you're about to deploy" v-model="deploy.description">
-                            <span id="helpBlock" class="help-block" v-if="this.errors.fields.description">
-                                {{ this.errors.fields.description }}
-                            </span>
-                        </div>
-                    </template>
+                    <div class="form-group" v-bind:class="{'has-error':this.errors.fields.description}">
+                        <label for="description">Description</label>
+                        <input class="form-control" id="description" placeholder="Explain in a few words what you're about to deploy" v-model="deploy.description">
+                        <span id="helpBlock" class="help-block" v-if="this.errors.fields.description">
+                            {{ this.errors.fields.description }}
+                        </span>
+                    </div>
                     <div class="pull-right">
                         <template v-if="!pullrequest || (pullrequest.mergeable || pullrequest.merged)">
-                            <button type="button" class="btn btn-primary" v-on:click="create">New deployment</button>
                         </template>
+                            <button
+                                type="button" class="btn btn-primary" v-on:click="create"
+                                v-bind:disabled="pullrequest && (!pullrequest.mergeable && !pullrequest.merged)"
+                            >
+                                New deployment
+                            </button>
                     </div>
                 </div>
             </div>

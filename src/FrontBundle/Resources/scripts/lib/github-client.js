@@ -20,11 +20,13 @@ var GithubClient = function()
         scope: ''
     };
 
+    // User
     this.getCurrentUser = function()
     {
         return this.get('user');
     }
 
+    // Issues
     this.searchIssues = function(terms)
     {
         return this.get(
@@ -33,6 +35,13 @@ var GithubClient = function()
         );
     }
 
+    this.getIssue = function(issues) {
+        return this.get(
+            'repos/'+issues.owner+'/'+issues.repo+'/issues/'+issues.number
+        );
+    }
+
+    // Pullrequest
     this.getPullRequest = function(pullrequest) {
         return this.get(
             'repos/'+pullrequest.owner+'/'+pullrequest.repo+'/pulls/'+pullrequest.number,
@@ -47,12 +56,12 @@ var GithubClient = function()
         );
     }
 
-    this.getIssue = function(issues) {
-        return this.get(
-            'repos/'+issues.owner+'/'+issues.repo+'/issues/'+issues.number
-        );
+    // Organizations
+    this.getOrganizations = function() {
+        return this.get('organizations');
     }
 
+    // Internals
     this.setupUrls = function(urls) {
         this.urls = urls;
     }

@@ -129,7 +129,7 @@ module.exports = {
     },
     components: {
         'loading-spinner': require('./loading-spinner.vue'),
-        'github-pullrequest': require('./github-pullrequest.vue'),
+        'github-pullrequest': require('./github/pullrequest.vue'),
         'deploy': require('./deploy.vue'),
         'deploy-queue': require('./deploy-queue.vue')
     }

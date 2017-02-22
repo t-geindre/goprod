@@ -1,6 +1,6 @@
 <script>
-var GithubClient = require('../lib/github-client.js');
-var UserStore    = require('../store/user.js');
+var GithubClient = require('../../lib/github-client.js');
+var UserStore    = require('../../store/user.js');
 
 module.exports = {
     props: ['queryAppend'],
@@ -89,9 +89,9 @@ module.exports = {
         }
     },
     components: {
-        'pagination': require('./pagination.vue'),
-        'loading-spinner': require('./loading-spinner.vue'),
-        'github-issue': require('./github-issue.vue')
+        'pagination': require('../pagination.vue'),
+        'loading-spinner': require('../loading-spinner.vue'),
+        'github-issue': require('./issue.vue')
     }
 };
 </script>

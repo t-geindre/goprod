@@ -1,10 +1,10 @@
 {
-  "url": "https://github.m6web.fr/api/v3/repos/Replay/bundle-6play-entities/issues/167",
-  "repository_url": "https://github.m6web.fr/api/v3/repos/Replay/bundle-6play-entities",
-  "labels_url": "https://github.m6web.fr/api/v3/repos/Replay/bundle-6play-entities/issues/167/labels{/name}",
-  "comments_url": "https://github.m6web.fr/api/v3/repos/Replay/bundle-6play-entities/issues/167/comments",
-  "events_url": "https://github.m6web.fr/api/v3/repos/Replay/bundle-6play-entities/issues/167/events",
-  "html_url": "https://github.m6web.fr/Replay/bundle-6play-entities/pull/167",
+  "url": "https://github.m6web.fr/api/v3/repos/ASSE/bundle-6play-entities/issues/167",
+  "repository_url": "https://github.m6web.fr/api/v3/repos/ASSE/bundle-6play-entities",
+  "labels_url": "https://github.m6web.fr/api/v3/repos/ASSE/bundle-6play-entities/issues/167/labels{/name}",
+  "comments_url": "https://github.m6web.fr/api/v3/repos/ASSE/bundle-6play-entities/issues/167/comments",
+  "events_url": "https://github.m6web.fr/api/v3/repos/ASSE/bundle-6play-entities/issues/167/events",
+  "html_url": "https://github.m6web.fr/ASSE/bundle-6play-entities/pull/167",
   "id": 34224,
   "number": 10000,
   "title": "Nettoyage des repository inutiles ",
@@ -30,7 +30,7 @@
   },
   "labels": [
     {
-      "url": "https://github.m6web.fr/api/v3/repos/Replay/bundle-6play-entities/labels/Ready%20for%20review",
+      "url": "https://github.m6web.fr/api/v3/repos/ASSE/bundle-6play-entities/labels/Ready%20for%20review",
       "name": "Ready for review",
       "color": "fbca04"
     }
@@ -47,10 +47,10 @@
   "updated_at": "2017-01-26T09:31:34Z",
   "closed_at": null,
   "pull_request": {
-    "url": "https://github.m6web.fr/api/v3/repos/Replay/bundle-6play-entities/pulls/167",
-    "html_url": "https://github.m6web.fr/Replay/bundle-6play-entities/pull/167",
-    "diff_url": "https://github.m6web.fr/Replay/bundle-6play-entities/pull/167.diff",
-    "patch_url": "https://github.m6web.fr/Replay/bundle-6play-entities/pull/167.patch"
+    "url": "https://github.m6web.fr/api/v3/repos/ASSE/bundle-6play-entities/pulls/167",
+    "html_url": "https://github.m6web.fr/ASSE/bundle-6play-entities/pull/167",
+    "diff_url": "https://github.m6web.fr/ASSE/bundle-6play-entities/pull/167.diff",
+    "patch_url": "https://github.m6web.fr/ASSE/bundle-6play-entities/pull/167.patch"
   },
   "body": "En lien avec #166, je propose ici de supprimer les Repository vides. En fait, si on ne définit pas de repository pour une entité donnée, doctrine retournera le repository par défaut. A noter qu'il est tout à fait possible de [spécifier la classe de ce repository par défaut](http://docs.doctrine-project.org/projects/doctrine-orm/en/latest/reference/advanced-configuration.html#default-repository-optional).\r\n\r\nPourquoi :\r\n * ils ne servent à rien,\r\n * certains n'étaient même pas référencé dans le mapping de leur entité, donc encore plus inutiles,\r\n * en utilisant la config de doctrine pour la classe par défaut, on sait que tout les repository qu'on utilise sont bien du bon type. Ce n'était jusqu'ici pas le cas.\r\n\r\nJe vais tester tout ça sur un vrai projet, mais si vous êtes pour ou contre, n'hésitez pas à commenter.\r\n\r\nclose #166",
   "score": 1.0

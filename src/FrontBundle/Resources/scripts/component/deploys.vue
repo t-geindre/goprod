@@ -17,7 +17,8 @@ module.exports = {
             sortBy: 'id',
             sortOrder: 'desc',
             fullscreen: false,
-            userDisplay: ''
+            userDisplay: '',
+            organization: {}
 
         }
     },
@@ -32,7 +33,8 @@ module.exports = {
                 limit: this.limit,
                 offset: (this.page - 1) * this.limit,
                 sortBy: this.sortBy,
-                sortOrder: this.sortOrder
+                sortOrder: this.sortOrder,
+                owner: this.organization.login
             }
         },
         user: function() {
@@ -89,6 +91,10 @@ module.exports = {
             this.userId = user ? user.id : '';
             this.update();
         },
+        selectOrganization: function(organization) {
+            this.organization = organization;
+            this.update();
+        },
         computePages: function() {
             this.pages = this.total == 0 ? 1 : Math.ceil(this.total/this.limit);
             this.page = this.page > this.pages ? this.pages : this.page;
@@ -109,7 +115,8 @@ module.exports = {
         'loading-spinner': require('./loading-spinner.vue'),
         'pagination': require('./pagination.vue'),
         'deploy': require('./deploy.vue'),
-        'typeahead-users': require('./typeahead/users.vue')
+        'typeahead-users': require('./typeahead/users.vue'),
+        'repository-selector': require('./github/repository-selector.vue')
     },
     beforeDestroy: function() {
         this.clearDeploysRefresh();
@@ -123,7 +130,7 @@ module.exports = {
         <h1>Deployments <small>search history</small></h1>
     </div>
     <div class="row form-group">
-        <div class="btn-group col-md-9">
+        <div class="btn-group col-md-5">
             <label class="btn btn-default" v-bind:class="{active:status==''}">
                 <span class="glyphicon glyphicon-asterisk"></span>
                 <input type="radio" value="" v-model="status"> All
@@ -140,6 +147,9 @@ module.exports = {
                 <span class="glyphicon glyphicon-ok"></span>
                 <input type="radio" value="done" v-model="status"> Done
             </label>
+        </div>
+        <div class="col-md-4">
+            <repository-selector v-on:organization="selectOrganization"></repository-selector>
         </div>
         <div class="col-md-3">
             <div class="input-group">

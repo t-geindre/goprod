@@ -1,6 +1,6 @@
 <script>
 module.exports = {
-    props: ['displayField', 'source', 'minLength', 'placeholder'],
+    props: ['displayField', 'source', 'minLength', 'placeholder', 'disabled', 'defaultValue'],
     data: function() {
         return {
             items: [],
@@ -13,6 +13,9 @@ module.exports = {
             sourceFunc: false
         }
     },
+    mounted: function() {
+        this.updateDefaultValue();
+    },
     methods: {
         current: function(index) {
             this.currentItem = index;
@@ -23,10 +26,7 @@ module.exports = {
         down: function() {
             this.currentItem++;
         },
-        search: function(event = {}) {
-            if (event.key == 'Enter' || this.query == this.lastSelected) {
-                return;
-            }
+        search: function() {
             if (this.throttle) {
                 clearTimeout(this.throttle);
             }
@@ -83,6 +83,12 @@ module.exports = {
             if (this.currentItem < 0) {
                 this.currentItem = this.items.length - 1;
             }
+        },
+        updateDefaultValue: function() {
+            if (this.defaultValue) {
+                this.lastSelected = this.defaultValue;
+                this.query = this.defaultValue;
+            }
         }
     },
     watch: {
@@ -91,6 +97,15 @@ module.exports = {
         },
         items: function() {
             this.checkCurrent();
+        },
+        query: function() {
+            if (this.lastSelected == this.query) {
+                return;
+            }
+            this.search();
+        },
+        defaultValue: function() {
+            this.updateDefaultValue();
         }
     },
     components: {
@@ -109,9 +124,9 @@ module.exports = {
             v-model="query"
             v-on:blur="blur"
             v-on:focus="focus"
-            v-on:keyup="search"
             v-on:keydown.enter="select"
             v-bind:placeholder="placeholder"
+            v-bind:disabled="disabled"
         />
         <ul class="dropdown-menu" v-if="items.length > 0">
             <li
@@ -142,6 +157,10 @@ module.exports = {
     }
     li.active a {
         background-color:#3e95e0;
+    }
+    span > input[disabled] {
+        cursor: not-allowed;
+        background-color: transparent;
     }
 </style>
 

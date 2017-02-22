@@ -1,5 +1,5 @@
 <script>
-var GithubClient = require('../lib/github-client.js');
+var GithubClient = require('../../lib/github-client.js');
 
 module.exports = {
     props: ['pullrequest'],
@@ -27,8 +27,8 @@ module.exports = {
         this.update();
     },
     components: {
-        'loading-spinner': require('./loading-spinner.vue'),
-        'github-issue': require('./github-issue.vue')
+        'loading-spinner': require('../loading-spinner.vue'),
+        'github-issue': require('./issue.vue')
     }
 };
 </script>

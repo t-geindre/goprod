@@ -33,3 +33,8 @@ mock_github_issue:
     path: /repos/{owner}/{repo}/issues/{number}
     defaults:
         _controller: ApiMockBundle:Github:getIssue
+
+mock_organizations:
+    path: /organizations
+    defaults:
+        _controller: ApiMockBundle:Github:getOrganizations

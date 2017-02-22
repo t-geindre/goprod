@@ -157,4 +157,18 @@ class GithubController extends AbstractController
 
         return $this->response([]);
     }
+
+    /**
+     * @return Response
+     */
+    public function getOrganizationsAction()
+    {
+        return $this->response(
+            $this->getPayloads(
+                $this
+                    ->get('api_mock.repository.organization')
+                    ->findAll()
+            )
+        );
+    }
 }
