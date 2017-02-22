@@ -45,9 +45,11 @@ module.exports = {
                 pullRequestId: this.$route.params.number ? this.$route.params.number : null
             };
             this.errors = { fields: {} };
-            if (this.$route.params.number) {
+            if (this.deploy.pullRequestId) {
                 this.loadPullRequest(this.$route.params);
+                return;
             }
+            this.loading = false;
         },
         create: function() {
             this.loading = true;
@@ -62,6 +64,9 @@ module.exports = {
                     this.loading = false;
                     this.errors = response.data.errors;
                 });
+        },
+        selectOrganization: function(organization) {
+            this.deploy.owner = organization.login;
         }
     },
     watch: {
@@ -93,10 +98,16 @@ module.exports = {
                     <div class="alert alert-danger" role="alert" v-if="this.errors.global && this.errors.global.length > 0">
                         <p v-for="error in this.errors.global">{{ error }}</p>
                     </div>
-                    <github-pullrequest v-bind:pullrequest="pullrequest" v-on:refresh="update"></github-pullrequest>
-                    <div class="form-group">
+                    <github-pullrequest v-bind:pullrequest="pullrequest" v-on:refresh="update" v-if="pullrequest"></github-pullrequest>
+                    <div class="form-group" v-bind:class="{'has-error':this.errors.fields.repository}">
                         <label for="repositoryName">Repository</label>
-                        <repository-selector v-bind:owner="deploy.owner" v-bind:repo="deploy.repository" v-bind:disabled="pullrequest"></repository-selector>
+                        <repository-selector
+                            v-bind:owner="deploy.owner" v-bind:repo="deploy.repository" v-bind:disabled="pullrequest"
+                            v-on:organization="selectOrganization"
+                        ></repository-selector>
+                        <span id="helpBlock" class="help-block" v-if="this.errors.fields.repository">
+                            {{ this.errors.fields.repository }}
+                        </span>
                     </div>
 
                     <div class="form-group" v-bind:class="{'has-error':this.errors.fields.description}">

@@ -6,18 +6,18 @@ module.exports = [
     },
     {
         name: 'deploy-by-pullrequest',
-        path: '/new/by-pullrequest',
+        path: '/deploys/new/by-pullrequest',
         component: require('../component/deploy-pullrequest.vue')
     },
     {
         name: 'deploy-create-by-pullrequest',
-        path: '/new/by-pullrequest/:owner/:repo/:number',
+        path: '/deploys/new/by-pullrequest/:owner/:repo/:number',
         component: require('../component/deploy-create.vue')
     },
     {
         name: 'deploy-by-project',
-        path: '/new/by-project',
-        component: require('../component/deploy-pullrequest.vue')
+        path: '/new/by-repository',
+        component: require('../component/deploy-create.vue')
     },
     {
         name: 'user-deploys',

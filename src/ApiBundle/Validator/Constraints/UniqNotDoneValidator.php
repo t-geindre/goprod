@@ -14,6 +14,10 @@ class UniqNotDoneValidator extends ConstraintValidator
             throw new \RuntimeException(sprintf('%s only support deploy entity', get_class($this)));
         }
 
+        if (!$deploy->getOwner() || !$deploy->getRepository()) {
+            return;
+        }
+
         if (!$deploy
                 ->getUser()
                 ->getDeploys()
