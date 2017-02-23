@@ -1,5 +1,6 @@
 <script>
 var GithubClient = require('../../lib/github-client.js');
+var UserStore    = require('../../store/user.js');
 
 module.exports = {
     props: ['owner', 'repo', 'disabled'],
@@ -10,6 +11,11 @@ module.exports = {
             repository: ''
         }
     },
+    computed: {
+        user: function() {
+            return UserStore.state.user;
+        }
+    },
     mounted: function() {
         GithubClient.getOrganizations().then((response)=> {
             this.organizations = response.data;
@@ -17,11 +23,30 @@ module.exports = {
         });
     },
     methods: {
-        selectRepository: function() {
+        selectRepository: function(repository) {
+            if (repository) {
+                this.organization = repository.owner;
+                this.repository = repository;
+                this.$emit('repo', this.repository.name);
+                this.$emit('owner', this.organization.login);
+                return;
+            }
+            this.$emit('repo', '');
+        },
+        searchRepositories: function(q) {
+            return new Promise((resolve, reject) => {
+                return GithubClient.searchRepositories({
+                    q: q + (this.organization.login ? ' user:'+this.organization.login : '')
+                })
+                .then((response) => {
+                    resolve(response.data.items);
+                })
+                .catch(reject);
+            });
         },
         selectOrganization: function(organization) {
             this.organization = organization;
-            this.$emit('organization', organization);
+            this.$emit('owner', this.organization.login);
         },
         updateDefaults: function() {
             if (this.owner) {
@@ -32,7 +57,7 @@ module.exports = {
                 });
             }
             if (this.repo) {
-                this.repository = this.repo;
+                this.repository = { name: this.repo };
             }
         }
     },
@@ -64,6 +89,12 @@ module.exports = {
                 <span class="caret"></span>
             </button>
             <ul class="dropdown-menu">
+                <li>
+                    <a href="#" v-on:click.prevent="selectOrganization(user)">
+                        <img v-bind:src="user.avatar_url" />
+                        {{ user.login }}
+                    </a>
+                </li>
                 <li v-for="organization in organizations">
                     <a href="#" v-on:click.prevent="selectOrganization(organization)">
                         <img v-bind:src="organization.avatar_url" />
@@ -82,7 +113,8 @@ module.exports = {
         <typeahead-repositories
             display-field="name" class="form-control" min-length="2"
             v-on:select="selectRepository" v-on:clear="selectRepository(false)"
-            placeholder="repository" v-bind:disabled="disabled" v-bind:default-value="repository"
+            placeholder="repository" v-bind:disabled="disabled" v-bind:default-value="repository.name"
+            v-bind:source="searchRepositories"
         >
         </typeahead-repositories>
     </div>

@@ -61,6 +61,11 @@ var GithubClient = function()
         return this.get('organizations');
     }
 
+    // Repositories
+    this.searchRepositories = function(terms = {}) {
+        return this.get('search/repositories', { params: terms });
+    }
+
     // Internals
     this.setupUrls = function(urls) {
         this.urls = urls;

@@ -65,8 +65,11 @@ module.exports = {
                     this.errors = response.data.errors;
                 });
         },
-        selectOrganization: function(organization) {
-            this.deploy.owner = organization.login;
+        selectOwner: function(owner) {
+            this.deploy.owner = owner;
+        },
+        selectRepo: function (repo) {
+            this.deploy.repository = repo;
         }
     },
     watch: {
@@ -103,7 +106,7 @@ module.exports = {
                         <label for="repositoryName">Repository</label>
                         <repository-selector
                             v-bind:owner="deploy.owner" v-bind:repo="deploy.repository" v-bind:disabled="pullrequest"
-                            v-on:organization="selectOrganization"
+                            v-on:owner="selectOwner" v-on:repo="selectRepo"
                         ></repository-selector>
                         <span id="helpBlock" class="help-block" v-if="this.errors.fields.repository">
                             {{ this.errors.fields.repository }}
@@ -112,7 +115,10 @@ module.exports = {
 
                     <div class="form-group" v-bind:class="{'has-error':this.errors.fields.description}">
                         <label for="description">Description</label>
-                        <input class="form-control" id="description" placeholder="Explain in a few words what you're about to deploy" v-model="deploy.description">
+                        <input
+                            class="form-control" id="description" v-on:keydown.enter="create"
+                            placeholder="Explain in a few words what you're about to deploy" v-model="deploy.description"
+                        >
                         <span id="helpBlock" class="help-block" v-if="this.errors.fields.description">
                             {{ this.errors.fields.description }}
                         </span>

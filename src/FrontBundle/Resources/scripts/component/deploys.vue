@@ -18,8 +18,8 @@ module.exports = {
             sortOrder: 'desc',
             fullscreen: false,
             userDisplay: '',
-            organization: {}
-
+            owner: null,
+            repository: null
         }
     },
     mounted: function() {
@@ -34,7 +34,8 @@ module.exports = {
                 offset: (this.page - 1) * this.limit,
                 sortBy: this.sortBy,
                 sortOrder: this.sortOrder,
-                owner: this.organization.login
+                owner: this.owner,
+                repository: this.repository
             }
         },
         user: function() {
@@ -91,8 +92,12 @@ module.exports = {
             this.userId = user ? user.id : '';
             this.update();
         },
-        selectOrganization: function(organization) {
-            this.organization = organization;
+        selectOwner: function(owner) {
+            this.owner = owner;
+            this.update();
+        },
+        selectRepository(repo) {
+            this.repository = repo;
             this.update();
         },
         computePages: function() {
@@ -149,7 +154,7 @@ module.exports = {
             </label>
         </div>
         <div class="col-md-4">
-            <repository-selector v-on:organization="selectOrganization"></repository-selector>
+            <repository-selector v-on:owner="selectOwner" v-on:repo="selectRepository"></repository-selector>
         </div>
         <div class="col-md-3">
             <div class="input-group">
