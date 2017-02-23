@@ -44,8 +44,7 @@ module.exports = {
         },
         displayProfile: function() {
             this.formData = {
-                goliveKey: this.user.golive_key,
-                hipchatName: this.user.hipchat_name
+                goliveKey: this.user.golive_key
             };
             this.formErrors = { fields: {} };
             this.profileModal.modal({
@@ -141,13 +140,6 @@ module.exports = {
                                 <input type="password" name="goliveKey" class="form-control" id="goliveApiKey" placeholder="fds54fds98sd8ds897vd8s7" v-model="formData.goliveKey" />
                                 <span id="helpBlock" class="help-block" v-if="this.formErrors.fields.goliveKey">
                                     A valid API key is required
-                                </span>
-                            </div>
-                            <div class="form-group" v-bind:class="{'has-error':this.formErrors.fields.hipchatName}">
-                                <label for="hipchatName">Hipchat name:</label>
-                                <input type="text" name="hipchatName" class="form-control" id="hipchatName" placeholder="John Doe" v-model="formData.hipchatName" />
-                                <span id="helpBlock" class="help-block" v-if="this.formErrors.fields.hipchatName">
-                                    Required to send you notifications about your deployments
                                 </span>
                             </div>
                         </form>

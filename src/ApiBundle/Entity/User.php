@@ -49,14 +49,6 @@ class User
     /**
      * @var string
      *
-     * @ORM\Column(name="hipchat_name", type="string", length=255, nullable=true)
-     * @Assert\NotBlank(groups={"complete_profile"})
-     */
-    protected $hipchatName;
-
-    /**
-     * @var string
-     *
      * @ORM\Column(name="access_token", type="string", length=255)
      * @Assert\NotBlank()
      */

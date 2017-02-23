@@ -19,7 +19,6 @@ class UserType extends AbstractType
     {
         $builder
             ->add('goliveKey')
-            ->add('hipchatName')
         ;
     }
 

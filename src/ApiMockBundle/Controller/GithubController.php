@@ -75,7 +75,7 @@ class GithubController extends AbstractController
                 if ($key == 'is' && in_array($value, ['open', 'closed'])) {
                     $criteria->andWhere($criteria->expr()->eq('open', $value == 'open'));
                 }
-                if ($key == 'author') {
+                if (in_array($key, ['author', 'assignee', 'mentions'])) {
                     $criteria->andWhere($criteria->expr()->eq('author', $value));
                 }
             }
