@@ -23,6 +23,10 @@ services:
         class: "ApiMockBundle\\Fixtures\\OrganizationLoader"
         parent: "api_mock.fixtures.loader"
 
+    api_mock.fixtures.loader.repository:
+        class: "ApiMockBundle\\Fixtures\\RepositoryLoader"
+        parent: "api_mock.fixtures.loader"
+
     api_mock.fixtures.command:
         class: "ApiMockBundle\\Command\\LoadFixturesCommand"
         tags:
@@ -32,6 +36,7 @@ services:
             - [ "addFixturesLoader", [ "@api_mock.fixtures.loader.issue" ]] # depends on user
             - [ "addFixturesLoader", [ "@api_mock.fixtures.loader.pullrequest" ]] # depends on user
             - [ "addFixturesLoader", [ "@api_mock.fixtures.loader.organization" ]]
+            - [ "addFixturesLoader", [ "@api_mock.fixtures.loader.repository" ]]
 
     # Repositories
     api_mock.repository:
@@ -58,3 +63,8 @@ services:
         parent: api_mock.repository
         arguments:
             - "ApiMockBundle\\Entity\\Organization"
+
+    api_mock.repository.repository:
+        parent: api_mock.repository
+        arguments:
+            - "ApiMockBundle\\Entity\\Repository"

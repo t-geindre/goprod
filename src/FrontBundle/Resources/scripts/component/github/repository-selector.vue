@@ -45,8 +45,12 @@ module.exports = {
             });
         },
         selectOrganization: function(organization) {
-            this.organization = organization;
-            this.$emit('owner', this.organization.login);
+            if (organization != this.organization) {
+                this.organization = organization;
+                this.repository = '';
+                this.$emit('owner', this.organization.login);
+                this.$emit('repo', '');
+            }
         },
         updateDefaults: function() {
             if (this.owner) {

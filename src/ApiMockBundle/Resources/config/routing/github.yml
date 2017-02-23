@@ -34,7 +34,12 @@ mock_github_issue:
     defaults:
         _controller: ApiMockBundle:Github:getIssue
 
-mock_organizations:
+mock_github_organizations:
     path: /organizations
     defaults:
         _controller: ApiMockBundle:Github:getOrganizations
+
+mock_gitub_search_repositories:
+    path: /search/repositories
+    defaults:
+        _controller: ApiMockBundle:Github:searchRepositories

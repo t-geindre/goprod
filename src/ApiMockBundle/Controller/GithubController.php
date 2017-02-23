@@ -4,6 +4,7 @@ namespace ApiMockBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\Common\Collections\Criteria;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Github controller
@@ -13,7 +14,7 @@ class GithubController extends AbstractController
     /**
      * @return Response
      */
-    public function oauthAction()
+    public function oauthAction() : Response
     {
         return $this->render(
             'ApiMockBundle:github:users.html.twig',
@@ -30,7 +31,7 @@ class GithubController extends AbstractController
      *
      * @return Response
      */
-    public function getUserAction(Request $request)
+    public function getUserAction(Request $request) : Response
     {
         if (count($criteria = array_filter([
             'oauthCode' => $code = $request->get('code'),
@@ -55,7 +56,7 @@ class GithubController extends AbstractController
      *
      * @return Response
      */
-    public function searchIssuesAction(Request $request)
+    public function searchIssuesAction(Request $request) : Response
     {
         $criteria = Criteria::create()
             ->orderBy(['id' => $request->get('order', 'desc')])
@@ -95,7 +96,7 @@ class GithubController extends AbstractController
      *
      * @return Response
      */
-    public function getIssueAction(string $owner, string $repo, int $number)
+    public function getIssueAction(string $owner, string $repo, int $number) : Response
     {
         if (is_null($issue = $this->get('api_mock.repository.issue')->findOneBy([
             'owner' => $owner, 'repo' => $repo, 'number' => $number,
@@ -113,7 +114,7 @@ class GithubController extends AbstractController
      *
      * @return Response
      */
-    public function getPullRequestAction(string $owner, string $repo, int $number)
+    public function getPullRequestAction(string $owner, string $repo, int $number) : Response
     {
         if (is_null($pullrequest = $this->get('api_mock.repository.pullrequest')->findOneBy([
             'owner' => $owner, 'repo' => $repo, 'number' => $number,
@@ -131,7 +132,7 @@ class GithubController extends AbstractController
      *
      * @return Response
      */
-    public function mergePullRequestAction(string $owner, string $repo, int $number)
+    public function mergePullRequestAction(string $owner, string $repo, int $number) : Response
     {
         $em = $this->get('doctrine')->getManager();
         foreach (['pullrequest', 'issue'] as $type) {
@@ -161,7 +162,7 @@ class GithubController extends AbstractController
     /**
      * @return Response
      */
-    public function getOrganizationsAction()
+    public function getOrganizationsAction() : Response
     {
         return $this->response(
             $this->getPayloads(
@@ -170,5 +171,47 @@ class GithubController extends AbstractController
                     ->findAll()
             )
         );
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function searchRepositoriesAction(Request $request) : Response
+    {
+        $criteria = Criteria::create()->orderBy(['name' => 'asc']);
+
+        if (!is_null($q = $request->get('q'))) {
+            $parts = explode(' ', $q);
+            foreach ($parts as $part) {
+                $field = explode(':', $part);
+                if (count($field) !== 2) {
+                    continue;
+                }
+                list($key, $value) = $field;
+                if ($key == 'user') {
+                    $criteria->andWhere($criteria->expr()->eq('owner', $value));
+                }
+                $q = str_replace($part, '', $q);
+            }
+        }
+
+        $q = trim($q);
+        if (!empty($q)) {
+            $criteria->andWhere(
+                $criteria->expr()->orX(
+                    $criteria->expr()->contains('name', $q),
+                    $criteria->expr()->contains('owner', $q)
+                )
+            );
+        }
+
+        $repositories = $this->get('api_mock.repository.repository')->matching($criteria);
+
+        return $this->response([
+            'total_count' => $repositories->count(),
+            'items' => $this->getPayloads($repositories->toArray()),
+        ]);
     }
 }

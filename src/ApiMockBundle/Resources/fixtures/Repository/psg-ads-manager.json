@@ -1,0 +1,10 @@
+{
+  "id": 7,
+  "name": "ads-manager",
+  "full_name": "PSG/ads-manager",
+  "owner": {
+    "login": "PSG",
+    "id": 3,
+    "avatar_url": "/bundles/apimock/img/organizations/psg.jpg"
+  }
+}

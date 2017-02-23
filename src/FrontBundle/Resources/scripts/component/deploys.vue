@@ -43,8 +43,7 @@ module.exports = {
         },
     },
     methods: {
-        update: function(page = 1, loading = true) {
-            this.page = page;
+        update: function(loading = true) {
             this.loading = loading;
             ApiClient
                 .getDeploys({ params: this.filters })
@@ -58,7 +57,6 @@ module.exports = {
         sort: function(field, order) {
             this.sortBy = field;
             this.sortOrder = order;
-            this.update();
         },
         goToDeploy: function(deploy) {
             if (deploy.user.id == this.user.id
@@ -75,11 +73,10 @@ module.exports = {
         },
         display: function(items) {
             this.limit = items;
-            this.update();
         },
         registerDeploysRefresh: function() {
             this.deploysRefresh = setInterval(() => {
-                this.update(this.page, false);
+                this.update(false);
             }, 5000);
         },
         clearDeploysRefresh: function() {
@@ -90,30 +87,30 @@ module.exports = {
         },
         selectUser: function(user) {
             this.userId = user ? user.id : '';
-            this.update();
         },
         selectOwner: function(owner) {
             this.owner = owner;
-            this.update();
         },
         selectRepository(repo) {
             this.repository = repo;
-            this.update();
         },
         computePages: function() {
             this.pages = this.total == 0 ? 1 : Math.ceil(this.total/this.limit);
             this.page = this.page > this.pages ? this.pages : this.page;
+        },
+        goPage: function(page) {
+            this.page = page;
         }
     },
     watch: {
-        status: function() {
-            this.update();
-        },
         refresh: function() {
             this.clearDeploysRefresh();
             if (this.refresh) {
                 this.registerDeploysRefresh();
             }
+        },
+        filters: function() {
+            this.update();
         }
     },
     components: {
@@ -214,7 +211,7 @@ module.exports = {
             <pagination
                 v-bind:pages="pages"
                 v-bind:page="page"
-                v-on:page="update"
+                v-on:page="goPage"
                 v-if="!loading"
             >
             </pagination>

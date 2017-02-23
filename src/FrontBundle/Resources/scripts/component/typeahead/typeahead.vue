@@ -85,10 +85,12 @@ module.exports = {
             }
         },
         updateDefaultValue: function() {
-            if (this.defaultValue) {
-                this.lastSelected = this.defaultValue;
-                this.query = this.defaultValue;
+            var defaultValue = this.defaultValue;
+            if (!defaultValue) {
+                defaultValue = '';
             }
+            this.lastSelected = defaultValue;
+            this.query = defaultValue;
         }
     },
     watch: {

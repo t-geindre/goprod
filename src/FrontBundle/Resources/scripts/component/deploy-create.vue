@@ -15,11 +15,6 @@ module.exports = {
             }
         };
     },
-    computed: {
-        repositoryName: function() {
-            return this.deploy.owner + '/' + this.deploy.repository;
-        }
-    },
     mounted: function() {
         this.update()
     },

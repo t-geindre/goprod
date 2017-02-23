@@ -1,0 +1,10 @@
+{
+  "id": 5,
+  "name": "ads-manager",
+  "full_name": "OM/ads-manager",
+  "owner": {
+    "login": "OM",
+    "id": 3,
+    "avatar_url": "/bundles/apimock/img/organizations/om.png"
+  }
+}
