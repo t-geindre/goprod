@@ -1,13 +1,13 @@
 {
-  "url": "https://github.m6web.fr/api/v3/repos/ASSE/doc-api-contribution-6play/issues/7",
-  "repository_url": "https://github.m6web.fr/api/v3/repos/ASSE/doc-api-contribution-6play",
-  "labels_url": "https://github.m6web.fr/api/v3/repos/ASSE/doc-api-contribution-6play/issues/7/labels{/name}",
-  "comments_url": "https://github.m6web.fr/api/v3/repos/ASSE/doc-api-contribution-6play/issues/7/comments",
-  "events_url": "https://github.m6web.fr/api/v3/repos/ASSE/doc-api-contribution-6play/issues/7/events",
-  "html_url": "https://github.m6web.fr/ASSE/doc-api-contribution-6play/pull/7",
+  "url": "https://github.m6web.fr/api/v3/repos/ASSE/ads-manager/issues/7",
+  "repository_url": "https://github.m6web.fr/api/v3/repos/ASSE/ads-manager",
+  "labels_url": "https://github.m6web.fr/api/v3/repos/ASSE/ads-manager/issues/7/labels{/name}",
+  "comments_url": "https://github.m6web.fr/api/v3/repos/ASSE/ads-manager/issues/7/comments",
+  "events_url": "https://github.m6web.fr/api/v3/repos/ASSE/ads-manager/issues/7/events",
+  "html_url": "https://github.m6web.fr/ASSE/ads-manager/pull/7",
   "id": 36234,
   "number": 1,
-  "title": "Doc sur la route listant les pivots d'un asset",
+  "title": "New feature to get more cash \\o/",
   "user": {
     "login": "p-legallois",
     "id": 72,
@@ -30,9 +30,8 @@
   },
   "labels": [
     {
-      "url": "https://github.m6web.fr/api/v3/repos/ASSE/doc-api-contribution-6play/labels/Ready%20for%20review",
-      "name": "Ready for review",
-      "color": "fbca04"
+      "name": "stable",
+      "color": "a9ea8f"
     }
   ],
   "state": "open",
@@ -47,11 +46,11 @@
   "updated_at": "2017-02-16T15:15:15Z",
   "closed_at": null,
   "pull_request": {
-    "url": "https://github.m6web.fr/api/v3/repos/ASSE/doc-api-contribution-6play/pulls/7",
-    "html_url": "https://github.m6web.fr/ASSE/doc-api-contribution-6play/pull/7",
-    "diff_url": "https://github.m6web.fr/ASSE/doc-api-contribution-6play/pull/7.diff",
-    "patch_url": "https://github.m6web.fr/ASSE/doc-api-contribution-6play/pull/7.patch"
+    "url": "https://github.m6web.fr/api/v3/repos/ASSE/ads-manager/pulls/7",
+    "html_url": "https://github.m6web.fr/ASSE/ads-manager/pull/7",
+    "diff_url": "https://github.m6web.fr/ASSE/ads-manager/pull/7.diff",
+    "patch_url": "https://github.m6web.fr/ASSE/ads-manager/pull/7.patch"
   },
-  "body": "## Pourquoi\r\nLa route n'est pas documenté\r\n\r\n## Comment\r\nEn ajoutant la doc ?\r\n\r\n## US\r\nhttps://m6web.tpondemand.com/entity/34701\r\n\r\n## Recette\r\nhttps://github.m6web.fr/ASSE/doc-api-contribution-6play/blob/1028e048a8398b5deb80cca1781c79f77a15a7b3/doc_asset-publication.md",
+  "body": "",
   "score": 1.0
 }

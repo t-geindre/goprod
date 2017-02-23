@@ -1,13 +1,13 @@
 {
-  "url": "https://github.m6web.fr/api/v3/repos/OM/service-backstage/issues/1532",
-  "repository_url": "https://github.m6web.fr/api/v3/repos/OM/service-backstage",
-  "labels_url": "https://github.m6web.fr/api/v3/repos/OM/service-backstage/issues/1532/labels{/name}",
-  "comments_url": "https://github.m6web.fr/api/v3/repos/OM/service-backstage/issues/1532/comments",
-  "events_url": "https://github.m6web.fr/api/v3/repos/OM/service-backstage/issues/1532/events",
-  "html_url": "https://github.m6web.fr/OM/service-backstage/pull/1532",
+  "url": "https://github.m6web.fr/api/v3/repos/OM/team-players/issues/1532",
+  "repository_url": "https://github.m6web.fr/api/v3/repos/OM/team-players",
+  "labels_url": "https://github.m6web.fr/api/v3/repos/OM/team-players/issues/1532/labels{/name}",
+  "comments_url": "https://github.m6web.fr/api/v3/repos/OM/team-players/issues/1532/comments",
+  "events_url": "https://github.m6web.fr/api/v3/repos/OM/team-players/issues/1532/events",
+  "html_url": "https://github.m6web.fr/OM/team-players/pull/1532",
   "id": 36081,
   "number": 100,
-  "title": "Ouverture des droits watermark sur l'ensemble des ayants droits",
+  "title": "Code cleaning + refactoring a few duplicated methods",
   "user": {
     "login": "p-legallois",
     "id": 72,
@@ -30,9 +30,8 @@
   },
   "labels": [
     {
-      "url": "https://github.m6web.fr/api/v3/repos/OM/service-backstage/labels/Ready%20for%20review",
-      "name": "Ready for review",
-      "color": "fbca04"
+      "name": "unstable",
+      "color": "ffed93"
     }
   ],
   "state": "open",
@@ -47,11 +46,11 @@
   "updated_at": "2017-02-15T12:43:14Z",
   "closed_at": null,
   "pull_request": {
-    "url": "https://github.m6web.fr/api/v3/repos/OM/service-backstage/pulls/1532",
-    "html_url": "https://github.m6web.fr/OM/service-backstage/pull/1532",
-    "diff_url": "https://github.m6web.fr/OM/service-backstage/pull/1532.diff",
-    "patch_url": "https://github.m6web.fr/OM/service-backstage/pull/1532.patch"
+    "url": "https://github.m6web.fr/api/v3/repos/OM/team-players/pulls/1532",
+    "html_url": "https://github.m6web.fr/OM/team-players/pull/1532",
+    "diff_url": "https://github.m6web.fr/OM/team-players/pull/1532.diff",
+    "patch_url": "https://github.m6web.fr/OM/team-players/pull/1532.patch"
   },
-  "body": "## Pourquoi ?\r\nAttribuer les droits de contribution sur les transcoding profile watermark sur l'ensemble des ayant droit.\r\n\r\n## Comment ?\r\nScript one shot.\r\n\r\n## US\r\nhttps://m6web.tpondemand.com/entity/34242",
+  "body": "",
   "score": 1.0
 }

@@ -1,13 +1,13 @@
 {
-  "url": "https://github.m6web.fr/api/v3/repos/PSG/site-6play-bo/issues/328",
-  "repository_url": "https://github.m6web.fr/api/v3/repos/PSG/site-6play-bo",
-  "labels_url": "https://github.m6web.fr/api/v3/repos/PSG/site-6play-bo/issues/328/labels{/name}",
-  "comments_url": "https://github.m6web.fr/api/v3/repos/PSG/site-6play-bo/issues/328/comments",
-  "events_url": "https://github.m6web.fr/api/v3/repos/PSG/site-6play-bo/issues/328/events",
-  "html_url": "https://github.m6web.fr/PSG/site-6play-bo/pull/328",
+  "url": "https://github.m6web.fr/api/v3/repos/PSG/ads-manager/issues/328",
+  "repository_url": "https://github.m6web.fr/api/v3/repos/PSG/ads-manager",
+  "labels_url": "https://github.m6web.fr/api/v3/repos/PSG/ads-manager/issues/328/labels{/name}",
+  "comments_url": "https://github.m6web.fr/api/v3/repos/PSG/ads-manager/issues/328/comments",
+  "events_url": "https://github.m6web.fr/api/v3/repos/PSG/ads-manager/issues/328/events",
+  "html_url": "https://github.m6web.fr/PSG/ads-manager/pull/328",
   "id": 34238,
   "number": 1000,
-  "title": "Version avec repository par défaut",
+  "title": "Alert marketing teams whene campain ROI does not reach goal",
   "user": {
     "login": "p-legallois",
     "id": 72,
@@ -30,9 +30,8 @@
   },
   "labels": [
     {
-      "url": "https://github.m6web.fr/api/v3/repos/PSG/site-6play-bo/labels/Ready%20for%20review",
-      "name": "Ready for review",
-      "color": "fbca04"
+      "name": "failed",
+      "color": "e88f8f"
     }
   ],
   "state": "open",
@@ -47,11 +46,11 @@
   "updated_at": "2017-01-04T13:37:31Z",
   "closed_at": null,
   "pull_request": {
-    "url": "https://github.m6web.fr/api/v3/repos/PSG/site-6play-bo/pulls/328",
-    "html_url": "https://github.m6web.fr/PSG/site-6play-bo/pull/328",
-    "diff_url": "https://github.m6web.fr/PSG/site-6play-bo/pull/328.diff",
-    "patch_url": "https://github.m6web.fr/PSG/site-6play-bo/pull/328.patch"
+    "url": "https://github.m6web.fr/api/v3/repos/PSG/ads-manager/pulls/328",
+    "html_url": "https://github.m6web.fr/PSG/ads-manager/pull/328",
+    "diff_url": "https://github.m6web.fr/PSG/ads-manager/pull/328.diff",
+    "patch_url": "https://github.m6web.fr/PSG/ads-manager/pull/328.patch"
   },
-  "body": "En lien avec https://github.m6web.fr/PSG/bundle-6play-entities/issues/166 et https://github.m6web.fr/PSG/bundle-6play-entities/pull/167.\r\n\r\nJuste un POC démontrant que les projets peuvent très bien fonctionner en retirant tout les repository vides.",
+  "body": "",
   "score": 1.0
 }
