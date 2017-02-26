@@ -68,3 +68,8 @@ services:
         parent: api_mock.repository
         arguments:
             - "ApiMockBundle\\Entity\\Repository"
+
+    api_mock.repository.deployment:
+        parent: api_mock.repository
+        arguments:
+            - "ApiMockBundle\\Entity\\Deployment"

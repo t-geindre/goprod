@@ -6,11 +6,11 @@ var jQuery       = require('jquery');
 module.exports = {
     data: function() {
         return {
-            pullrequest: {},
+            pullrequest: false,
             loading: true,
             modal: false,
             processing: false,
-            mergeError: false,
+            errors: {},
             previousStatus: false
         }
     },
@@ -31,7 +31,7 @@ module.exports = {
             return ['merge', 'deploy', 'waiting'].indexOf(this.deploy.status) > -1 && !this.processing;
         },
         cancelButton: function() {
-            return ['done', 'new', 'canceled'].indexOf(this.deploy.status) == -1;
+            return ['done', 'new', 'waiting', 'canceled'].indexOf(this.deploy.status) == -1;
         },
         deploy: function() {
             if (DeploysStore.state.deploys[this.$route.params.id]) {
@@ -59,12 +59,15 @@ module.exports = {
     },
     methods: {
         update: function() {
-            this.mergeError = false;
+            this.errors = {};
             this.previousStatus = this.deploy.status;
-            if (
-                !this.deploy.pull_request_id
-                || this.processing
-            ) {
+            this.loadPullrequest();
+            if (this.deploy.status == 'deploy' && this.deploy.golive_id) {
+                this.processing = true;
+            }
+        },
+        loadPullrequest: function() {
+            if (!this.deploy.pull_request_id || this.processing) {
                 this.loading = false;
                 return;
             }
@@ -96,7 +99,8 @@ module.exports = {
             this.processing = true;
             this[{
                 'merge': 'merge',
-                'waiting': 'confirm'
+                'waiting': 'confirm',
+                'deploy': 'deployment'
             }[this.deploy.status]]();
         },
         merge : function() {
@@ -105,15 +109,21 @@ module.exports = {
                 this.deploy,
                 this.pullrequest.merge_commit_sha
             ).then(
-                () => { this.processing = false; },
                 () => {
                     this.processing = false;
-                    this.mergeError = true;
+                    this.loadPullrequest();
+                },
+                () => {
+                    this.processing = false;
+                    this.errors.merge = true;
                 }
             );
         },
         confirm: function() {
             DeploysStore.dispatch('confirm', this.deploy);
+        },
+        deployment: function() {
+            DeploysStore.dispatch('deploy', this.deploy);
         }
     },
     watch: {
@@ -131,7 +141,8 @@ module.exports = {
         'loading-spinner': require('./loading-spinner.vue'),
         'github-pullrequest': require('./github/pullrequest.vue'),
         'deploy': require('./deploy.vue'),
-        'deploy-queue': require('./deploy-queue.vue')
+        'deploy-queue': require('./deploy-queue.vue'),
+        'golive-deploy': require('./golive/deploy.vue')
     }
 };
 </script>
@@ -158,7 +169,7 @@ module.exports = {
                         </button>
                         <p>{{ previousStatusMessage }}</p>
                     </div>
-                   <div class="alert alert-danger" role="alert" v-if="mergeError">
+                   <div class="alert alert-danger" role="alert" v-if="errors.merge">
                         <p>
                             An error occured during the merge of this pullrequest. Please,
                             <a :href="pullrequest.html_url" target="_blank" class="alert-link">make sure it has not been updated</a>
@@ -169,8 +180,10 @@ module.exports = {
                             before trying to merge it again.
                         </p>
                     </div>
-                    <github-pullrequest v-on:refresh="update" v-if="deploy.status == 'merge'" v-bind:pullrequest="pullrequest">
+                    <github-pullrequest v-on:refresh="loadPullrequest" v-if="pullrequest" v-bind:pullrequest="pullrequest">
                     </github-pullrequest>
+                    <golive-deploy v-on:refresh="update" v-if="deploy.golive_id" v-bind:id="deploy.golive_id">
+                    </golive-deploy>
                     <deploy-queue v-if="deploy.status == 'queued'" v-bind:deploy="deploy"></deploy-queue>
                     <template v-if="deploy.status == 'waiting'">
                         <div class="alert alert-warning" role="alert"><p>

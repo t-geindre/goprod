@@ -1,10 +1,10 @@
 {
-  "url": "https://github.m6web.fr/api/v3/repos/OM/team-players/issues/14",
-  "repository_url": "https://github.m6web.fr/api/v3/repos/OM/team-players",
-  "labels_url": "https://github.m6web.fr/api/v3/repos/OM/team-players/issues/14/labels{/name}",
-  "comments_url": "https://github.m6web.fr/api/v3/repos/OM/team-players/issues/14/comments",
-  "events_url": "https://github.m6web.fr/api/v3/repos/OM/team-players/issues/14/events",
-  "html_url": "https://github.m6web.fr/OM/team-players/pull/14",
+  "url": "https://github.m6web.fr/api/v3/repos/OM/team-players-om/issues/14",
+  "repository_url": "https://github.m6web.fr/api/v3/repos/OM/team-players-om",
+  "labels_url": "https://github.m6web.fr/api/v3/repos/OM/team-players-om/issues/14/labels{/name}",
+  "comments_url": "https://github.m6web.fr/api/v3/repos/OM/team-players-om/issues/14/comments",
+  "events_url": "https://github.m6web.fr/api/v3/repos/OM/team-players-om/issues/14/events",
+  "html_url": "https://github.m6web.fr/OM/team-players-om/pull/14",
   "id": 23250,
   "number": 1000000,
   "title": "Jenkins build for integration tests",
@@ -46,10 +46,10 @@
   "updated_at": "2016-02-01T09:32:46Z",
   "closed_at": null,
   "pull_request": {
-    "url": "https://github.m6web.fr/api/v3/repos/OM/team-players/pulls/14",
-    "html_url": "https://github.m6web.fr/OM/team-players/pull/14",
-    "diff_url": "https://github.m6web.fr/OM/team-players/pull/14.diff",
-    "patch_url": "https://github.m6web.fr/OM/team-players/pull/14.patch"
+    "url": "https://github.m6web.fr/api/v3/repos/OM/team-players-om/pulls/14",
+    "html_url": "https://github.m6web.fr/OM/team-players-om/pull/14",
+    "diff_url": "https://github.m6web.fr/OM/team-players-om/pull/14.diff",
+    "patch_url": "https://github.m6web.fr/OM/team-players-om/pull/14.patch"
   },
   "body": "",
   "score": 1.0

@@ -53,13 +53,20 @@ class Client extends Curl
 
     protected function localSend(RequestInterface $request, MessageInterface $response, array $options = array())
     {
-        $localResponse = $this->httpKernel->handle(
-            Request::create(
-                $request->getHost().$request->getResource(),
-                $request->getMethod(),
-                $request->getContent()
-            )
+        $localRequest = Request::create(
+            $request->getHost().$request->getResource(),
+            $request->getMethod(),
+            !empty($request->getContent()) ? $request->getContent() : []
         );
+
+        $headers = [];
+        foreach ($request->getHeaders() as $header) {
+            list($key, $value) = explode(':', $header);
+            $headers[trim($key)] = trim($value);
+        }
+        $localRequest->headers->replace($headers);
+
+        $localResponse = $this->httpKernel->handle($localRequest);
 
         list($headers, $content) = explode("\r\n\r\n", (string) $localResponse);
 

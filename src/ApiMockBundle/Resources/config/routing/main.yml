@@ -1,3 +1,7 @@
 api_mock_github:
     resource: "@ApiMockBundle/Resources/config/routing/github.yml"
     prefix:   /github
+
+api_mock_golive:
+    resource: "@ApiMockBundle/Resources/config/routing/golive.yml"
+    prefix:   /golive

@@ -1,0 +1,25 @@
+mock_golive_index:
+    path: /site/
+    defaults:
+        _controller: ApiMockBundle:Golive:site
+
+mock_golive_whoami:
+    path: /api/auth/whoami
+    defaults:
+        _controller: ApiMockBundle:Golive:getWhoAmI
+
+mock_golive_projects:
+    path: /api/projects
+    defaults:
+        _controller: ApiMockBundle:Golive:getProjects
+
+mock_golive_deployment:
+    path: /api/deployments/{id}
+    defaults:
+        _controller: ApiMockBundle:Golive:getDeployment
+
+mock_golive_create_deployment:
+    path: /api/deployments
+    methods: [POST]
+    defaults:
+        _controller: ApiMockBundle:Golive:postDeployment

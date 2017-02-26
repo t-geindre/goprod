@@ -86,6 +86,15 @@ module.exports = new Vuex.Store({
                 .then(resolve)
                 .catch(reject)
             });
+        },
+        deploy: function(context, deploy) {
+            return new Promise(function(resolve, reject) {
+                ApiClient.deploy(deploy.id).then(() => {
+                    return context.dispatch('refresh', deploy);
+                })
+                .then(resolve)
+                .catch(reject);
+            });
         }
     }
 })

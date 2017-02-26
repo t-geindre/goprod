@@ -1,10 +1,10 @@
 {
-  "url": "https://github.m6web.fr/api/v3/repos/PSG/ads-manager/issues/328",
-  "repository_url": "https://github.m6web.fr/api/v3/repos/PSG/ads-manager",
-  "labels_url": "https://github.m6web.fr/api/v3/repos/PSG/ads-manager/issues/328/labels{/name}",
-  "comments_url": "https://github.m6web.fr/api/v3/repos/PSG/ads-manager/issues/328/comments",
-  "events_url": "https://github.m6web.fr/api/v3/repos/PSG/ads-manager/issues/328/events",
-  "html_url": "https://github.m6web.fr/PSG/ads-manager/pull/328",
+  "url": "https://github.m6web.fr/api/v3/repos/PSG/ads-manager-psg/issues/328",
+  "repository_url": "https://github.m6web.fr/api/v3/repos/PSG/ads-manager-psg",
+  "labels_url": "https://github.m6web.fr/api/v3/repos/PSG/ads-manager-psg/issues/328/labels{/name}",
+  "comments_url": "https://github.m6web.fr/api/v3/repos/PSG/ads-manager-psg/issues/328/comments",
+  "events_url": "https://github.m6web.fr/api/v3/repos/PSG/ads-manager-psg/issues/328/events",
+  "html_url": "https://github.m6web.fr/PSG/ads-manager-psg/pull/328",
   "id": 34238,
   "number": 1000,
   "title": "Alert marketing teams whene campain ROI does not reach goal",
@@ -46,10 +46,10 @@
   "updated_at": "2017-01-04T13:37:31Z",
   "closed_at": null,
   "pull_request": {
-    "url": "https://github.m6web.fr/api/v3/repos/PSG/ads-manager/pulls/328",
-    "html_url": "https://github.m6web.fr/PSG/ads-manager/pull/328",
-    "diff_url": "https://github.m6web.fr/PSG/ads-manager/pull/328.diff",
-    "patch_url": "https://github.m6web.fr/PSG/ads-manager/pull/328.patch"
+    "url": "https://github.m6web.fr/api/v3/repos/PSG/ads-manager-psg/pulls/328",
+    "html_url": "https://github.m6web.fr/PSG/ads-manager-psg/pull/328",
+    "diff_url": "https://github.m6web.fr/PSG/ads-manager-psg/pull/328.diff",
+    "patch_url": "https://github.m6web.fr/PSG/ads-manager-psg/pull/328.patch"
   },
   "body": "",
   "score": 1.0

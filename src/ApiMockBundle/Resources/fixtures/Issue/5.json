@@ -1,10 +1,10 @@
 {
-  "url": "https://github.m6web.fr/api/v3/repos/OL/ads-manager/issues/17",
-  "repository_url": "https://github.m6web.fr/api/v3/repos/OL/ads-manager",
-  "labels_url": "https://github.m6web.fr/api/v3/repos/OL/ads-manager/issues/17/labels{/name}",
-  "comments_url": "https://github.m6web.fr/api/v3/repos/OL/ads-manager/issues/17/comments",
-  "events_url": "https://github.m6web.fr/api/v3/repos/OL/ads-manager/issues/17/events",
-  "html_url": "https://github.m6web.fr/OL/ads-manager/pull/17",
+  "url": "https://github.m6web.fr/api/v3/repos/OL/ads-manager-ol/issues/17",
+  "repository_url": "https://github.m6web.fr/api/v3/repos/OL/ads-manager-ol",
+  "labels_url": "https://github.m6web.fr/api/v3/repos/OL/ads-manager-ol/issues/17/labels{/name}",
+  "comments_url": "https://github.m6web.fr/api/v3/repos/OL/ads-manager-ol/issues/17/comments",
+  "events_url": "https://github.m6web.fr/api/v3/repos/OL/ads-manager-ol/issues/17/events",
+  "html_url": "https://github.m6web.fr/OL/ads-manager-ol/pull/17",
   "id": 23887,
   "number": 100000,
   "title": "New fixtures system + full functional testing system",
@@ -46,10 +46,10 @@
   "updated_at": "2016-12-02T17:25:01Z",
   "closed_at": null,
   "pull_request": {
-    "url": "https://github.m6web.fr/api/v3/repos/OL/ads-manager/pulls/17",
-    "html_url": "https://github.m6web.fr/OL/ads-manager/pull/17",
-    "diff_url": "https://github.m6web.fr/OL/ads-manager/pull/17.diff",
-    "patch_url": "https://github.m6web.fr/OL/ads-manager/pull/17.patch"
+    "url": "https://github.m6web.fr/api/v3/repos/OL/ads-manager-ol/pulls/17",
+    "html_url": "https://github.m6web.fr/OL/ads-manager-ol/pull/17",
+    "diff_url": "https://github.m6web.fr/OL/ads-manager-ol/pull/17.diff",
+    "patch_url": "https://github.m6web.fr/OL/ads-manager-ol/pull/17.patch"
   },
   "body": "",
   "score": 1.0

@@ -60,6 +60,56 @@ class Client
     }
 
     /**
+     * @param string $name
+     *
+     * @return array|null
+     */
+    public function getProject(string $name)
+    {
+        $projects = $this->request(sprintf('projects?name=%s', $name));
+
+        if (count($projects) == 0) {
+            return null;
+        }
+
+        if (count($projects) == 1) {
+            return array_pop($projects);
+        }
+
+        throw new Exception\Exception(sprintf('Multiple projects found for given name "%s"', $name));
+    }
+
+    /**
+     * @param int $id
+     *
+     * @return array|null
+     */
+    public function getDeployment(int $id)
+    {
+        $deploy = $this->request(sprintf('deployments/%d', $id));
+        if (($deploy['message'] ?? null) == 'Not Found') {
+            return null;
+        }
+
+        return $deploy;
+    }
+
+    /**
+     * @param string $project
+     * @param string $stage
+     *
+     * @return array
+     */
+    public function createDeployment(string $project, string $stage)
+    {
+        return $this->request(
+            'deployments',
+            RequestInterface::METHOD_POST,
+            ['project' => $project, 'stage' => $stage]
+        );
+    }
+
+    /**
      * @param string $url
      * @param string $method
      * @param string $content
@@ -86,10 +136,14 @@ class Client
             ));
         }
 
-        $json = json_decode($response->getContent(), true);
-
         if ($response->getStatusCode() == 401) {
-            throw new Exception\AuthFailException($json['message']);
+            throw new Exception\AuthFailException('Unauthorized');
+        }
+
+        $json = json_decode($response->getContent(), true);
+        if (!is_array($json)) {
+            // echo $response->getContent(); exit;
+            throw new Exception\Exception('Invalid Golive response.');
         }
 
         return $json;

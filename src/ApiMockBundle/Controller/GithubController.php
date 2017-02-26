@@ -147,8 +147,8 @@ class GithubController extends AbstractController
                     ->setPayload(array_merge(
                         $entity->getPayload(),
                         array_filter([
-                            'status' => 'closed',
                             'merged' => $type == 'pullrequest' ? true : null,
+                            'state' => 'closed',
                         ])
                     ))
                     ->setOpen(false)

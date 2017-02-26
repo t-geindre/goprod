@@ -39,8 +39,8 @@ module.exports = {
         login: function(redirect = true) {
             this.authenticating = true;
             UserStore.dispatch('login', redirect)
-                .then(() => {
-                    if (this.authenticated) {
+                .then((response) => {
+                    if (response.authenticated) {
                         ApiClient.setCredentials(
                             UserStore.state.user.login,
                             GithubClient.auth.access_token
@@ -113,6 +113,7 @@ module.exports = {
         authenticated: function() {
             if (!this.authenticated) {
                 this.clearDeploysRefresh();
+                return;
             }
         }
     },

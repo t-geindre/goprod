@@ -1,10 +1,10 @@
 {
-  "url": "https://github.m6web.fr/api/v3/repos/ASSE/team-players/issues/167",
-  "repository_url": "https://github.m6web.fr/api/v3/repos/ASSE/team-players",
-  "labels_url": "https://github.m6web.fr/api/v3/repos/ASSE/team-players/issues/167/labels{/name}",
-  "comments_url": "https://github.m6web.fr/api/v3/repos/ASSE/team-players/issues/167/comments",
-  "events_url": "https://github.m6web.fr/api/v3/repos/ASSE/team-players/issues/167/events",
-  "html_url": "https://github.m6web.fr/ASSE/team-players/pull/167",
+  "url": "https://github.m6web.fr/api/v3/repos/ASSE/team-players-asse/issues/167",
+  "repository_url": "https://github.m6web.fr/api/v3/repos/ASSE/team-players-asse",
+  "labels_url": "https://github.m6web.fr/api/v3/repos/ASSE/team-players-asse/issues/167/labels{/name}",
+  "comments_url": "https://github.m6web.fr/api/v3/repos/ASSE/team-players-asse/issues/167/comments",
+  "events_url": "https://github.m6web.fr/api/v3/repos/ASSE/team-players-asse/issues/167/events",
+  "html_url": "https://github.m6web.fr/ASSE/team-players-asse/pull/167",
   "id": 34224,
   "number": 10000,
   "title": "Code cleaning + refactoring a few duplicated methods",
@@ -46,10 +46,10 @@
   "updated_at": "2017-01-26T09:31:34Z",
   "closed_at": null,
   "pull_request": {
-    "url": "https://github.m6web.fr/api/v3/repos/ASSE/team-players/pulls/167",
-    "html_url": "https://github.m6web.fr/ASSE/team-players/pull/167",
-    "diff_url": "https://github.m6web.fr/ASSE/team-players/pull/167.diff",
-    "patch_url": "https://github.m6web.fr/ASSE/team-players/pull/167.patch"
+    "url": "https://github.m6web.fr/api/v3/repos/ASSE/team-players-asse/pulls/167",
+    "html_url": "https://github.m6web.fr/ASSE/team-players-asse/pull/167",
+    "diff_url": "https://github.m6web.fr/ASSE/team-players-asse/pull/167.diff",
+    "patch_url": "https://github.m6web.fr/ASSE/team-players-asse/pull/167.patch"
   },
   "body": "",
   "score": 1.0

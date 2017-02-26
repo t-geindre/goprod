@@ -84,6 +84,18 @@ class DeployController extends BaseController
     }
 
     /**
+     * @param int $id
+     *
+     * @return Deploy
+     */
+    public function deployAction(int $id) : Deploy
+    {
+        return $this
+            ->get('api_bundle.manager.deploy')
+            ->deploy($this->getDeploy($id));
+    }
+
+    /**
      * @return array
      */
     public function getByCurrentUserAction() : array

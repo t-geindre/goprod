@@ -1,10 +1,10 @@
 {
-  "url": "https://github.m6web.fr/api/v3/repos/ASSE/ads-manager/issues/7",
-  "repository_url": "https://github.m6web.fr/api/v3/repos/ASSE/ads-manager",
-  "labels_url": "https://github.m6web.fr/api/v3/repos/ASSE/ads-manager/issues/7/labels{/name}",
-  "comments_url": "https://github.m6web.fr/api/v3/repos/ASSE/ads-manager/issues/7/comments",
-  "events_url": "https://github.m6web.fr/api/v3/repos/ASSE/ads-manager/issues/7/events",
-  "html_url": "https://github.m6web.fr/ASSE/ads-manager/pull/7",
+  "url": "https://github.m6web.fr/api/v3/repos/ASSE/ads-manager-asse/issues/7",
+  "repository_url": "https://github.m6web.fr/api/v3/repos/ASSE/ads-manager-asse",
+  "labels_url": "https://github.m6web.fr/api/v3/repos/ASSE/ads-manager-asse/issues/7/labels{/name}",
+  "comments_url": "https://github.m6web.fr/api/v3/repos/ASSE/ads-manager-asse/issues/7/comments",
+  "events_url": "https://github.m6web.fr/api/v3/repos/ASSE/ads-manager-asse/issues/7/events",
+  "html_url": "https://github.m6web.fr/ASSE/ads-manager-asse/pull/7",
   "id": 36234,
   "number": 1,
   "title": "New feature to get more cash \\o/",
@@ -46,10 +46,10 @@
   "updated_at": "2017-02-16T15:15:15Z",
   "closed_at": null,
   "pull_request": {
-    "url": "https://github.m6web.fr/api/v3/repos/ASSE/ads-manager/pulls/7",
-    "html_url": "https://github.m6web.fr/ASSE/ads-manager/pull/7",
-    "diff_url": "https://github.m6web.fr/ASSE/ads-manager/pull/7.diff",
-    "patch_url": "https://github.m6web.fr/ASSE/ads-manager/pull/7.patch"
+    "url": "https://github.m6web.fr/api/v3/repos/ASSE/ads-manager-asse/pulls/7",
+    "html_url": "https://github.m6web.fr/ASSE/ads-manager-asse/pull/7",
+    "diff_url": "https://github.m6web.fr/ASSE/ads-manager-asse/pull/7.diff",
+    "patch_url": "https://github.m6web.fr/ASSE/ads-manager-asse/pull/7.patch"
   },
   "body": "",
   "score": 1.0

@@ -1,7 +1,7 @@
 {
   "id": 1,
-  "name": "ads-manager",
-  "full_name": "ASSE/ads-manager",
+  "name": "ads-manager-asse",
+  "full_name": "ASSE/ads-manager-asse",
   "owner": {
       "id": 2,
       "login": "ASSE",

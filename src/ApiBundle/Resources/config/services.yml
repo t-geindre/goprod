@@ -21,6 +21,8 @@ services:
         arguments:
             - "@api_bundle.repository.deploy"
             - "@api_bundle.github_client"
+            - "@api_bundle.golive_client"
+            - "%api_bundle.golive.stage%"
             - "@doctrine.orm.entity_manager"
 
     # Listeners

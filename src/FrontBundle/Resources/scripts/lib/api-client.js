@@ -65,6 +65,10 @@ var ApiClient = function()
         );
     }
 
+    this.deploy = function(id, options = {}) {
+        return this.post('deploys/' + id + '/deploy');
+    }
+
     this.getDeploys = function(options = {}) {
         return this.get('deploys', options);
     }

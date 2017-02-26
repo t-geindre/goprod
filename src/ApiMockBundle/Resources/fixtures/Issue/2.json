@@ -1,10 +1,10 @@
 {
-  "url": "https://github.m6web.fr/api/v3/repos/OM/team-players/issues/1532",
-  "repository_url": "https://github.m6web.fr/api/v3/repos/OM/team-players",
-  "labels_url": "https://github.m6web.fr/api/v3/repos/OM/team-players/issues/1532/labels{/name}",
-  "comments_url": "https://github.m6web.fr/api/v3/repos/OM/team-players/issues/1532/comments",
-  "events_url": "https://github.m6web.fr/api/v3/repos/OM/team-players/issues/1532/events",
-  "html_url": "https://github.m6web.fr/OM/team-players/pull/1532",
+  "url": "https://github.m6web.fr/api/v3/repos/OM/team-players-om/issues/1532",
+  "repository_url": "https://github.m6web.fr/api/v3/repos/OM/team-players-om",
+  "labels_url": "https://github.m6web.fr/api/v3/repos/OM/team-players-om/issues/1532/labels{/name}",
+  "comments_url": "https://github.m6web.fr/api/v3/repos/OM/team-players-om/issues/1532/comments",
+  "events_url": "https://github.m6web.fr/api/v3/repos/OM/team-players-om/issues/1532/events",
+  "html_url": "https://github.m6web.fr/OM/team-players-om/pull/1532",
   "id": 36081,
   "number": 100,
   "title": "Code cleaning + refactoring a few duplicated methods",
@@ -46,10 +46,10 @@
   "updated_at": "2017-02-15T12:43:14Z",
   "closed_at": null,
   "pull_request": {
-    "url": "https://github.m6web.fr/api/v3/repos/OM/team-players/pulls/1532",
-    "html_url": "https://github.m6web.fr/OM/team-players/pull/1532",
-    "diff_url": "https://github.m6web.fr/OM/team-players/pull/1532.diff",
-    "patch_url": "https://github.m6web.fr/OM/team-players/pull/1532.patch"
+    "url": "https://github.m6web.fr/api/v3/repos/OM/team-players-om/pulls/1532",
+    "html_url": "https://github.m6web.fr/OM/team-players-om/pull/1532",
+    "diff_url": "https://github.m6web.fr/OM/team-players-om/pull/1532.diff",
+    "patch_url": "https://github.m6web.fr/OM/team-players-om/pull/1532.patch"
   },
   "body": "",
   "score": 1.0

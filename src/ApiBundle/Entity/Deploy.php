@@ -64,6 +64,13 @@ class Deploy
     protected $pullRequestId;
 
     /**
+     * @var int
+     *
+     * @ORM\Column(name="golive_id", type="integer", nullable=true)
+     */
+    protected $goliveId;
+
+    /**
      * @var string
      *
      * @ORM\Column(name="status", type="string", length=50)
@@ -269,5 +276,29 @@ class Deploy
     public function getCreateDate()
     {
         return $this->createDate;
+    }
+
+    /**
+     * Set goliveId
+     *
+     * @param integer $goliveId
+     *
+     * @return Deploy
+     */
+    public function setGoliveId($goliveId)
+    {
+        $this->goliveId = $goliveId;
+
+        return $this;
+    }
+
+    /**
+     * Get goliveId
+     *
+     * @return integer
+     */
+    public function getGoliveId()
+    {
+        return $this->goliveId;
     }
 }

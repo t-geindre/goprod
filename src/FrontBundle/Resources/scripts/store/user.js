@@ -43,9 +43,11 @@ module.exports = new Vuex.Store({
         },
         login: function(context, redirect = true) {
             context.commit('authenticating', true);
+            var resolveResponse = {};
             return new Promise(function(resolve, reject) {
                 GithubClient.authenticate({redirect: redirect})
                     .then(function(data) {
+                        resolveResponse = data;
                         if (data.authenticated) {
                             return ApiClient.getUser({
                                 params: {
@@ -60,7 +62,7 @@ module.exports = new Vuex.Store({
                         context.commit('user', response.data.user);
                         context.commit('complete', response.data.complete);
                         context.commit('authenticated', true);
-                        resolve(response);
+                        resolve(resolveResponse);
                     })
                     .catch(function(response) {
                         context.commit('authenticated', false);

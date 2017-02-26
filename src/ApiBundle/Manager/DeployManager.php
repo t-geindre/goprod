@@ -4,7 +4,8 @@ namespace ApiBundle\Manager;
 
 use ApiBundle\Entity\Deploy;
 use ApiBundle\Criteria\Deploy\ActiveByRepository;
-use ApiBundle\Service\Github\Client;
+use ApiBundle\Service\Github\Client as GithubClient;
+use ApiBundle\Service\Golive\Client as GoliveClient;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\EntityManager;
 use Doctrine\Common\Collections\Collection;
@@ -15,9 +16,19 @@ use Doctrine\Common\Collections\Collection;
 class DeployManager
 {
     /**
-     * @var Client
+     * @var GithubClient
      */
     protected $github;
+
+    /**
+     * @var GoliveClient
+     */
+    protected $golive;
+
+    /**
+     * @var string
+     */
+    protected $goliveStage;
 
     /**
      * @var EntityRepository
@@ -31,16 +42,22 @@ class DeployManager
 
     /**
      * @param EntityRepository $repository
-     * @param Client           $github
+     * @param GithubClient     $github
+     * @param GoliveClient     $golive
+     * @param string           $goliveStage
      * @param EntityManager    $entityManager
      */
     public function __construct(
         EntityRepository $repository,
-        Client $github,
+        GithubClient $github,
+        GoliveClient $golive,
+        string $goliveStage,
         EntityManager $entityManager
     ) {
         $this->repository = $repository;
         $this->github = $github;
+        $this->golive = $golive;
+        $this->goliveStage = $goliveStage;
         $this->entityManager = $entityManager;
     }
 
@@ -138,8 +155,44 @@ class DeployManager
      */
     public function isDeployed(Deploy $deploy) : bool
     {
+        if ($goliveId = $deploy->getGoliveId()) {
+            if ($goliveDeploy = $this->golive->getDeployment($goliveId)) {
+                if ($goliveDeploy['status'] == 'success') {
+                    return true;
+                }
+            }
+        }
+
+        $project = $this->golive->getProject($deploy->getRepository());
+        if (!is_null($project)) {
+            return false;
+        }
+
         return true;
-        // has golive config
+    }
+
+    /**
+     * @param Deploy $deploy
+     *
+     * @return Deploy
+     */
+    public function deploy(Deploy $deploy) : Deploy
+    {
+        if ($deploy->getStatus() !== Deploy::STATUS_DEPLOY
+            || !is_null($deploy->getGoliveId())
+        ) {
+            return $deploy;
+        }
+
+        $goliveDeploy = $this->golive->createDeployment(
+            $deploy->getRepository(),
+            $this->goliveStage
+        );
+
+        $deploy->setGoliveId($goliveDeploy['id']);
+        $this->save($deploy);
+
+        return $deploy;
     }
 
     /**

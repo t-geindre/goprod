@@ -16,6 +16,10 @@ parameters:
     hosts.local: http://localhost:8000
 
 api:
+    golive:
+        urls:
+            site: "%hosts.local%/mock/golive/site/"
+            api:  "%hosts.local%/mock/golive/api/"
     github:
         urls:
             site: "%hosts.local%/mock/github/"

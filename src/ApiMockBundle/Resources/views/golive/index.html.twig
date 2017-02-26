@@ -1,0 +1,15 @@
+{% extends "ApiMockBundle::layout.html.twig" %}
+{% block page_title %}Golive API keys mock{% endblock %}
+{% block title %}Golive API keys mock{% endblock %}
+{% block body %}
+<h2>Copy/paste an API key:</h2>
+<ul>
+    {% for user in users %}
+        <li>
+            <img src="{{ user.avatar_url }}" />
+            {{ user.name }}:
+            <span class="token">{{ user.access_token }}</span>
+        </li>
+    {% endfor %}
+</ul>
+{% endblock %}

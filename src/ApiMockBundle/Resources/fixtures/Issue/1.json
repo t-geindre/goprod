@@ -1,10 +1,10 @@
 {
-  "url": "https://github.m6web.fr/api/v3/repos/OL/team-players/issues/20",
-  "repository_url": "https://github.m6web.fr/api/v3/repos/OL/team-players",
-  "labels_url": "https://github.m6web.fr/api/v3/repos/OL/team-players/issues/20/labels{/name}",
-  "comments_url": "https://github.m6web.fr/api/v3/repos/OL/team-players/issues/20/comments",
-  "events_url": "https://github.m6web.fr/api/v3/repos/OL/team-players/issues/20/events",
-  "html_url": "https://github.m6web.fr/OL/team-players/pull/20",
+  "url": "https://github.m6web.fr/api/v3/repos/OL/team-players-ol/issues/20",
+  "repository_url": "https://github.m6web.fr/api/v3/repos/OL/team-players-ol",
+  "labels_url": "https://github.m6web.fr/api/v3/repos/OL/team-players-ol/issues/20/labels{/name}",
+  "comments_url": "https://github.m6web.fr/api/v3/repos/OL/team-players-ol/issues/20/comments",
+  "events_url": "https://github.m6web.fr/api/v3/repos/OL/team-players-ol/issues/20/events",
+  "html_url": "https://github.m6web.fr/OL/team-players-ol/pull/20",
   "id": 36231,
   "number": 10,
   "title": "Recruit world best players",
@@ -46,10 +46,10 @@
   "updated_at": "2017-02-17T07:05:39Z",
   "closed_at": null,
   "pull_request": {
-    "url": "https://github.m6web.fr/api/v3/repos/OL/team-players/pulls/20",
-    "html_url": "https://github.m6web.fr/OL/team-players/pull/20",
-    "diff_url": "https://github.m6web.fr/OL/team-players/pull/20.diff",
-    "patch_url": "https://github.m6web.fr/OL/team-players/pull/20.patch"
+    "url": "https://github.m6web.fr/api/v3/repos/OL/team-players-ol/pulls/20",
+    "html_url": "https://github.m6web.fr/OL/team-players-ol/pull/20",
+    "diff_url": "https://github.m6web.fr/OL/team-players-ol/pull/20.diff",
+    "patch_url": "https://github.m6web.fr/OL/team-players-ol/pull/20.patch"
   },
   "body": "",
   "score": 1.0

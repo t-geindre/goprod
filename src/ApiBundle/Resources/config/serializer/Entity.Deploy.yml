@@ -17,3 +17,5 @@ ApiBundle\Entity\Deploy:
             expose: true
         user:
             expose: true
+        goliveId:
+            expose: true

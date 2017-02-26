@@ -1,27 +1,16 @@
-<!DOCTYPE html>
-<html lang="fr">
-    <head>
-        <meta charset="utf-8">
-        <title>Github oauth mock</title>
-        <link rel="icon" href="data:;base64,iVBORw0KGgo=">
-        <link rel="stylesheet" type="text/css" href="/bundles/apimock/css/style.css">
-    </head>
-    <body>
-        <div class="container">
-            <h1>Github oauth mock</h1>
-            <div class="main">
-                <h2>Select user to login with:</h2>
-                <ul>
-                    {% for user in users %}
-                        <li>
-                            <a href="{{ path('index') }}?code={{ user.oauth_code }}">
-                                <img src="{{ user.avatar_url }}" />
-                                {{ user.name }}
-                            </a>
-                        </li>
-                    {% endfor %}
-                </ul>
-            </div>
-        </div>
-    </body>
-</html>
+{% extends "ApiMockBundle::layout.html.twig" %}
+{% block page_title %}Github oauth mock{% endblock %}
+{% block title %}Github oauth mock{% endblock %}
+{% block body %}
+<h2>Select user to login with:</h2>
+<ul>
+    {% for user in users %}
+        <li>
+            <a href="{{ path('index') }}?code={{ user.oauth_code }}">
+                <img src="{{ user.avatar_url }}" />
+                {{ user.name }}
+            </a>
+        </li>
+    {% endfor %}
+</ul>
+{% endblock %}

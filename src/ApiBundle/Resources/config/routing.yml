@@ -52,6 +52,12 @@ deploy_cancel:
     defaults:
         _controller: ApiBundle:Deploy:cancel
 
+deploy_deploy:
+    path: /deploys/{id}/deploy
+    methods:  [POST]
+    defaults:
+        _controller: ApiBundle:Deploy:deploy
+
 deploy_confirm:
     path: /deploys/{id}/confirm
     methods:  [POST]
