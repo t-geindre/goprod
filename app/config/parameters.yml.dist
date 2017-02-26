@@ -1,4 +1,6 @@
 parameters:
+    golive.urls.site: https://golive.m6web.fr/
+    golive.urls.api: https://deploy.m6web.fr/v1/
     github.urls.site: https://github.m6web.fr/
     github.urls.api: https://github.m6web.fr/api/v3/
     github.client_id: ~

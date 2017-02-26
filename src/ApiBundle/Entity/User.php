@@ -4,6 +4,7 @@ namespace ApiBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use ApiBundle\Validator\Constraints as ApiAssert;
 
 /**
  * User
@@ -43,6 +44,7 @@ class User
      *
      * @ORM\Column(name="golive_key", type="string", length=255, nullable=true)
      * @Assert\NotBlank(groups={"complete_profile"})
+     * @ApiAssert\GoliveApiKey(groups={"complete_profile"})
      */
     protected $goliveKey;
 
@@ -149,6 +151,10 @@ class User
      */
     public function setGoliveKey($goliveKey)
     {
+        if (empty($goliveKey)) {
+            return;
+        }
+
         $this->goliveKey = $goliveKey;
 
         return $this;
@@ -162,30 +168,6 @@ class User
     public function getGoliveKey()
     {
         return $this->goliveKey;
-    }
-
-    /**
-     * Set hipchatName
-     *
-     * @param string $hipchatName
-     *
-     * @return User
-     */
-    public function setHipchatName($hipchatName)
-    {
-        $this->hipchatName = $hipchatName;
-
-        return $this;
-    }
-
-    /**
-     * Get hipchatName
-     *
-     * @return string
-     */
-    public function getHipchatName()
-    {
-        return $this->hipchatName;
     }
 
     /**

@@ -31,6 +31,17 @@ class Configuration implements ConfigurationInterface
                         ->scalarNode('client_secret')->end()
                     ->end()
                 ->end()
+                ->arrayNode('golive')
+                    ->children()
+                        ->arrayNode('urls')
+                            ->children()
+                                ->scalarNode('site')->end()
+                                ->scalarNode('api')->end()
+                            ->end()
+                        ->end()
+                        ->scalarNode('stage')->end()
+                    ->end()
+                ->end()
             ->end();
 
         return $treeBuilder;

@@ -47,7 +47,7 @@ services:
 
     api_bundle.listener.doctrine.deploy:
         class: "ApiBundle\\Listener\\Doctrine\\Deploy"
-        # Inject container to avaid circular dependency with EM
+        # Inject container to avoid circular dependency with EM
         arguments: [ "@service_container"]
         tags:
             -
@@ -58,10 +58,7 @@ services:
                 event: "kernel.terminate"
                 method: "updateQueues"
 
-    # Misc
-    api_bundle.serializer.form.error:
-        class: "ApiBundle\\Form\\Serializer\\ErrorsSerializer"
-
+    # External services clients
     api_bundle.github_client:
         class: "ApiBundle\\Service\\Github\\Client"
         arguments:
@@ -72,3 +69,20 @@ services:
             - "%api_bundle.github.client_secret%"
             - ~
             - "@event_dispatcher"
+
+    api_bundle.golive_client:
+        class: "ApiBundle\\Service\\Golive\\Client"
+        arguments:
+            - "@buzz"
+            - "%api_bundle.golive.urls.api%"
+
+    # Misc
+    api_bundle.serializer.form.error:
+        class: "ApiBundle\\Form\\Serializer\\ErrorsSerializer"
+
+    api_bundle.validator.goliveapikey:
+        class: "ApiBundle\\Validator\\Constraints\\GoliveApiKeyValidator"
+        calls:
+            - [ "setClient", ["@api_bundle.golive_client"]]
+        tags:
+            - { name: validator.constraint_validator }

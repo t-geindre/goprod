@@ -1,6 +1,7 @@
 <script>
 var UserStore    = require('../store/user.js');
 var DeploysStore = require('../store/deploys.js');
+var ConfigStore  = require('../store/config.js');
 var jQuery       = require('jquery');
 
 module.exports = {
@@ -33,6 +34,9 @@ module.exports = {
         },
         deploysCount: function() {
             return DeploysStore.state.count;
+        },
+        apiKeyUrl: function() {
+            return ConfigStore.state.config.golive.urls.site + '#/apikeys';
         }
     },
     methods: {
@@ -75,6 +79,9 @@ module.exports = {
             if (!this.profileComplete) {
                 this.displayProfile();
             }
+        },
+        $route: function() {
+            this.hideProfile();
         }
     },
     components: {
@@ -136,10 +143,10 @@ module.exports = {
                         </div>
                         <form>
                             <div class="form-group" v-bind:class="{'has-error':this.formErrors.fields.goliveKey}">
-                                <label for="goliveApiKey">Golive API Key (<a href="#">manage</a>):</label>
+                                <label for="goliveApiKey">Golive API Key (<a v-bind:href="apiKeyUrl" target="_blank">manage</a>):</label>
                                 <input type="password" name="goliveKey" class="form-control" id="goliveApiKey" placeholder="fds54fds98sd8ds897vd8s7" v-model="formData.goliveKey" />
-                                <span id="helpBlock" class="help-block" v-if="this.formErrors.fields.goliveKey">
-                                    A valid API key is required
+                                <span id="helpBlock" class="help-block" v-if="formErrors.fields.goliveKey">
+                                    {{ formErrors.fields.goliveKey }}
                                 </span>
                             </div>
                         </form>

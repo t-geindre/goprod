@@ -32,6 +32,9 @@ class BaseController extends Controller
 
             if (!is_null($user)) {
                 $this->get('api_bundle.github_client')->setAccessToken($user->getAccessToken());
+                if ($goliveKey = $user->getGoliveKey()) {
+                    $this->get('api_bundle.golive_client')->setAccessToken($goliveKey);
+                }
 
                 return $user;
             }

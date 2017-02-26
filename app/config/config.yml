@@ -43,6 +43,11 @@ api:
             api:  "%github.urls.api%"
         client_id: "%github.client_id%"
         client_secret: "%github.client_secret%"
+    golive:
+        urls:
+            site: "%golive.urls.site%"
+            api:  "%golive.urls.api%"
+        stage: preprod
 
 jms_serializer:
     metadata:
