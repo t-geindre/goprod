@@ -8,6 +8,8 @@ user_profile:
     methods:  [GET]
     defaults:
         _controller: ApiBundle:User:profile
+        _serializer:
+            groups: ['private']
 
 user_update:
     path: /user

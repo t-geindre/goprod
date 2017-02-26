@@ -3,11 +3,9 @@
 namespace ApiBundle\Listener\Kernel;
 
 use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
-use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpFoundation\Response;
 use JMS\Serializer\SerializerInterface;
-use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
-use ApiBundle\Controller\BaseController as ApiController;
+use JMS\Serializer\SerializationContext;
 
 /**
  * Serialize view
@@ -32,23 +30,27 @@ class KernelView
      */
     public function onKernelView(GetResponseForControllerResultEvent $event)
     {
-        if (!($result = $event->getControllerResult()) instanceof Response && !is_null($result)) {
-            $event->setResponse($this->getResponse($result));
-        }
-    }
+        if (!($result = $event->getControllerResult()) instanceof Response) {
+            $controller = $event->getRequest()->attributes->get('_controller');
+            if (empty($controller) || strpos($controller, '::') === false) {
+                return;
+            }
 
-    /**
-     * @param string  $content
-     * @param integer $code
-     *
-     * @return Response
-     */
-    protected function getResponse($content, $code = 200) : Response
-    {
-        return new Response(
-            $this->serializer->serialize($content, 'json'),
-            $code,
-            ['content-type' => 'application/json']
-        );
+            list($class, $method) = explode('::', $controller);
+            if (!is_subclass_of($class, "ApiBundle\Controller\BaseController")) {
+                return;
+            }
+
+            $config = $event->getRequest()->attributes->get('_serializer') ?? [];
+            $context = SerializationContext::create()->setGroups($config['groups'] ?? ['public']);
+
+            $event->setResponse(
+                new Response(
+                    $this->serializer->serialize($result, 'json', $context),
+                    200,
+                    ['content-type' => 'application/json']
+                )
+            );
+        }
     }
 }

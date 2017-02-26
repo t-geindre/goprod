@@ -3,13 +3,22 @@ ApiBundle\Entity\User:
     properties:
         id:
             expose: true
+            groups: ['public', 'private']
         login:
             expose: true
+            groups: ['public', 'private']
         name:
             expose: true
+            groups: ['public', 'private']
         hipchatName:
             expose: true
+            groups: ['public', 'private']
         avatarUrl:
             expose: true
+            groups: ['public', 'private']
         createDate:
             expose: true
+            groups: ['public', 'private']
+        goliveKey:
+            expose: true
+            groups: ['private']

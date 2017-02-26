@@ -3,19 +3,28 @@ ApiBundle\Entity\Deploy:
     properties:
         id:
             expose: true
+            groups: ['public']
         owner:
             expose: true
+            groups: ['public']
         repository:
             expose: true
+            groups: ['public']
         description:
             expose: true
+            groups: ['public']
         pullRequestId:
             expose: true
+            groups: ['public']
         status:
             expose: true
+            groups: ['public']
         createDate:
             expose: true
+            groups: ['public']
         user:
             expose: true
+            groups: ['public']
         goliveId:
             expose: true
+            groups: ['public']
