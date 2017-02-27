@@ -100,12 +100,12 @@ class Client
      *
      * @return array
      */
-    public function createDeployment(string $project, string $stage)
+    public function createDeployment(string $project, string $stage, string $action = 'deploy')
     {
         return $this->request(
             'deployments',
             RequestInterface::METHOD_POST,
-            ['project' => $project, 'stage' => $stage]
+            ['project' => $project, 'stage' => $stage, 'action' => $action]
         );
     }
 

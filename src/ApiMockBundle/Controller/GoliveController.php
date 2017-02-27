@@ -115,7 +115,7 @@ class GoliveController extends AbstractController
             ->setStage($request->get('stage'))
             ->setInstance('default')
             ->setUser($user->getLogin())
-            ->setAction('deploy')
+            ->setAction($request->get('action'))
             ->setRef('HEAD')
             ->setStatus('pending')
             ->setRevision(uniqid())
