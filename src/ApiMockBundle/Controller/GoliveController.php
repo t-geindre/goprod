@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\Criteria;
 use Symfony\Component\HttpFoundation\Response;
 use ApiBundle\Entity\User;
 use ApiMockBundle\Entity\Deployment;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 /**
  * Github controller
@@ -127,6 +128,50 @@ class GoliveController extends AbstractController
         $em->flush();
 
         return $this->response($this->formatDeployment($deployment));
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @return Response|StreamedResponse
+     */
+    public function getLiveDeploymentAction(int $id, Request $request) : Response
+    {
+        if (!$deployment = $this->get('api_mock.repository.deployment')->find($id)) {
+            return $this->response(['message' => 'Not Found'], 404);
+        }
+
+        $events = [
+            ['message' => null,                                            'status' => 'pending'],
+            ['message' => null,                                            'status' => 'pending'],
+            ['message' => 'Checking disk space usage',                     'status' => 'running'],
+            ['message' => 'Configuring Git credentials',                   'status' => 'running'],
+            ['message' => 'Pruning Git remote cached copy',                'status' => 'running'],
+            ['message' => 'Updating code base with remote_cache strategy', 'status' => 'running'],
+            ['message' => 'Configuring Composer',                          'status' => 'running'],
+            ['message' => 'Installing configuration files',                'status' => 'running'],
+            ['message' => 'Installing Composer dependencies',              'status' => 'running'],
+            ['message' => 'Cleaning .git directories in vendors',          'status' => 'running'],
+            ['message' => 'Setting permissions',                           'status' => 'running'],
+            ['message' => 'Creating www symlink',                          'status' => 'running'],
+            ['message' => 'Success!',                                      'status' => 'success'],
+        ];
+
+        if ($request->headers->get('Accept') == 'text/event-stream') {
+            return StreamedResponse::create(
+                function () use ($events) {
+                    foreach ($events as $id => $event) {
+                        echo sprintf("\n\nid:%d\n%s\n", $id, json_encode($event));
+                        flush(); ob_flush();
+                        usleep(mt_rand(50, 100)*10000);
+                    }
+                },
+                200,
+                ['Content-type' => 'text/event-stream']
+            );
+        }
+
+        return $this->response($events);
     }
 
     /**

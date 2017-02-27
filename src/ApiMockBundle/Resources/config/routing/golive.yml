@@ -18,6 +18,11 @@ mock_golive_deployment:
     defaults:
         _controller: ApiMockBundle:Golive:getDeployment
 
+mock_golive_deployment_live:
+    path: /api/deployments/{id}/live
+    defaults:
+        _controller: ApiMockBundle:Golive:getLiveDeployment
+
 mock_golive_create_deployment:
     path: /api/deployments
     methods: [POST]
