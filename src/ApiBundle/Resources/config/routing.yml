@@ -16,6 +16,8 @@ user_update:
     methods:  [POST]
     defaults:
         _controller: ApiBundle:User:update
+        _serializer:
+            groups: ['private']
 
 user_chekprofile:
     path: /user/profile/complete

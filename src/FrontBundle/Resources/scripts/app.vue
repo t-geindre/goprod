@@ -2,6 +2,7 @@
 require('bootstrap');
 
 var GithubClient = require('./lib/github-client.js');
+var GoliveClient = require('./lib/golive-client.js');
 var ApiClient    = require('./lib/api-client.js');
 var Notify       = require('./lib/notify.js');
 var UserStore    = require('./store/user.js');
@@ -9,32 +10,21 @@ var DeploysStore = require('./store/deploys.js');
 var ConfigStore  = require('./store/config.js');
 
 module.exports = {
-    components: {
-        'loading-spinner': require('./component/loading-spinner.vue'),
-        'user-details': require('./component/user-details.vue')
-    },
-    data: function() {
-        return {
-            authError: false,
-            authenticating: false,
-            deploysRefresh: null,
-            queuedDeploys: []
-        }
-    },
+    name: 'app',
+    data: () => ({
+        authError: false,
+        authenticating: false,
+        deploysRefresh: null,
+        queuedDeploys: []
+    }),
     computed: {
-        authenticated: function() {
-            return UserStore.state.authenticated;
-        },
-        configured: function() {
-            return ConfigStore.state.configured;
-        },
-        deploys: function() {
-            return DeploysStore.state.deploys;
-        }
+        user: () => UserStore.state.user,
+        authenticated: () => UserStore.state.authenticated,
+        configured: () => ConfigStore.state.configured,
+        config: () => ConfigStore.state.config,
+        deploys: () => DeploysStore.state.deploys
     },
-    mounted: function() {
-        ConfigStore.dispatch('loadConfig');
-    },
+    mounted: () => ConfigStore.dispatch('loadConfig'),
     methods: {
         login: function(redirect = true) {
             this.authenticating = true;
@@ -42,7 +32,7 @@ module.exports = {
                 .then((response) => {
                     if (response.authenticated) {
                         ApiClient.setCredentials(
-                            UserStore.state.user.login,
+                            this.user.login,
                             GithubClient.auth.access_token
                         );
                         this.registerDeploysRefresh();
@@ -50,9 +40,7 @@ module.exports = {
                     }
                     this.authenticating = false;
                 })
-                .then(() => {
-                    this.authenticating = false;
-                })
+                .then(() => this.authenticating = false)
                 .catch((response) => {
                     this.authenticating = false;
                     this.authError = true;
@@ -74,11 +62,9 @@ module.exports = {
     watch: {
         configured: function() {
             if (this.configured) {
-                GithubClient.setupUrls(ConfigStore.state.config.github.urls);
-                GithubClient.setupApp({
-                    client_id: ConfigStore.state.config.github.client_id,
-                    scope: 'repo'
-                });
+                GithubClient.setupUrls(this.config.github.urls);
+                GithubClient.setupApp({client_id: this.config.github.client_id, scope: 'repo'});
+                GoliveClient.setBaseUrl(this.config.golive.urls.api);
                 this.login(false);
             }
         },
@@ -113,9 +99,15 @@ module.exports = {
         authenticated: function() {
             if (!this.authenticated) {
                 this.clearDeploysRefresh();
-                return;
             }
+        },
+        user: function() {
+            GoliveClient.setAccessToken(this.user.golive_key);
         }
+    },
+    components: {
+        'loading-spinner': require('./component/loading-spinner.vue'),
+        'user-details': require('./component/user-details.vue')
     },
     beforeDestroy: function() {
         this.clearDeploysRefresh();
