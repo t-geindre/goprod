@@ -41,6 +41,11 @@ module.exports = {
     components: {
         'loading-spinner': require('../loading-spinner.vue'),
         'github-issue': require('./issue.vue')
+    },
+    watch: {
+        pullrequest: function() {
+            this.update();
+        }
     }
 };
 </script>

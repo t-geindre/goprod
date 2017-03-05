@@ -10,7 +10,18 @@ module.exports = new function()
 
     // Deployments
     this.getLiveDeployment = function(id) {
-        return this.get('deployments/' + id + '/live');
+        var evtSrc = new EventSource(
+            baseUrl + 'deployments/' + id + '/live',
+            {
+                headers: {'Authorization': 'token '+accessToken}
+            }
+        );
+
+        evtSrc.onerror = (error) => {
+            evtSrc.close();
+        }
+
+        return evtSrc;
     }
 
     // Config
@@ -25,7 +36,13 @@ module.exports = new function()
     // Internals
     this.get = function(route, options = {})
     {
-        options.params = Object.assign(this.credentials, options.params);
+        options.headers = Object.assign(
+            {
+                'Authorization': 'token ' + accessToken,
+                'Accept': 'text/event-stream'
+            },
+            options.headers
+        );
 
         return Vue.http(
             Object.assign(

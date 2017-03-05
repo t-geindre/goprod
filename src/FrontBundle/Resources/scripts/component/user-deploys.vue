@@ -9,7 +9,7 @@ module.exports = {
     },
     computed: {
         deploys: function() {
-            return DeploysStore.state.sortable
+            return DeploysStore.state.deploys
                 .sort((a, b) => {
                     if (a[this.sort[0]] < b[this.sort[0]]) {
                         return this.sort[1] == 'asc' ? -1 : 1;
@@ -18,10 +18,13 @@ module.exports = {
                         return this.sort[1] == 'asc' ? 1 : -1;
                     }
                     return 0;
-                });
+                })
+                .filter(
+                    (deploy) => ['canceled', 'done'].indexOf(deploy.status) == -1
+                );
         },
         count: function() {
-            return DeploysStore.state.count;
+            return this.deploys.length;
         }
     },
     methods: {

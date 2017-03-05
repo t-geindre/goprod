@@ -7,25 +7,24 @@ Vue.use(Vuex);
 
 module.exports = new Vuex.Store({
     state: {
-        deploys: {},
-        sortable: [],
+        deploys: [],
         count: 0
     },
     mutations: {
         add: function(state, deploy) {
-            state.sortable.push(deploy);
-            state.deploys[deploy.id] = deploy;
+            state.deploys.push(deploy);
             state.count++;
         },
-        deploys: function(state, deploys) {
-            state.deploys = {};
-            state.sortable = [];
-            state.count = 0;
-            deploys.forEach(function(deploy) {
-                state.sortable.push(deploy);
-                state.deploys[deploy.id] = deploy;
-                state.count++;
-            });
+        replace: function(state, deploys) {
+            state.deploys = deploys;
+            state.count = deploys.length;
+        },
+        update: function(state, deploy) {
+            Vue.set(
+                state.deploys,
+                state.deploys.findIndex((item) => item.id = deploy.id),
+                deploy
+            );
         }
     },
     actions: {
@@ -34,19 +33,16 @@ module.exports = new Vuex.Store({
                 if (!deploy.id) {
                     ApiClient.getDeploysByCurrentUser()
                         .then(function(response) {
-                            context.commit('deploys', response.data);
+                            context.commit('replace', response.data);
                             resolve(response);
                         }, reject);
                     return;
                 }
-                if (!context.state.deploys[deploy.id]) {
-                    reject();
-                }
                 ApiClient.getDeploy(deploy.id)
                     .then((response) => {
-                        return context.dispatch('refresh');
-                    })
-                    .then(resolve, reject);
+                        context.commit('update', response.data);
+                        resolve(response);
+                    }, reject);
             });
         },
         create: function(context, deploy) {
@@ -59,16 +55,22 @@ module.exports = new Vuex.Store({
             });
         },
         cancel: function(context, deploy) {
-            return ApiClient.cancelDeploy(deploy.id)
-                .then(function(response) {
-                    return context.dispatch('refresh');
-                });
+            return new Promise(function(resolve, reject) {
+                ApiClient.cancelDeploy(deploy.id)
+                    .then(function(response) {
+                        context.commit('update', response.data);
+                        resolve(response);
+                    }, reject);
+            });
         },
         confirm: function(context, deploy) {
-            return ApiClient.confirmDeploy(deploy.id)
-                .then(function(response) {
-                    return context.dispatch('refresh');
-                });
+            return new Promise(function(resolve, reject) {
+                ApiClient.confirmDeploy(deploy.id)
+                    .then(function(response) {
+                        context.commit('update', response.data);
+                        resolve(response);
+                    }, reject);
+            });
         },
         merge: function(context, deploy, sha) {
             return new Promise(function(resolve, reject) {
@@ -83,17 +85,18 @@ module.exports = new Vuex.Store({
                 .then(() => {
                     return context.dispatch('refresh', deploy);
                 })
-                .then(resolve)
-                .catch(reject)
+                .then(resolve, reject)
             });
         },
         deploy: function(context, deploy) {
             return new Promise(function(resolve, reject) {
-                ApiClient.deploy(deploy.id).then(() => {
-                    return context.dispatch('refresh', deploy);
-                })
-                .then(resolve)
-                .catch(reject);
+                ApiClient
+                    .deploy(deploy.id)
+                    .then((response) => {
+                        context.commit('update', response.data);
+                        resolve(response);
+                    })
+                    .catch(reject);
             });
         }
     }

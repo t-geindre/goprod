@@ -141,6 +141,16 @@ class GoliveController extends AbstractController
             return $this->response(['message' => 'Not Found'], 404);
         }
 
+        $wait = true;
+        if ($deployment->getStatus() != 'pending') {
+            $wait = false;
+        } else {
+            $deployment->setStatus('success');
+            $em = $this->get('doctrine')->getManager();
+            $em->persist($deployment);
+            $em->flush();
+        }
+
         $events = [
             ['message' => null,                                            'status' => 'pending'],
             ['message' => null,                                            'status' => 'pending'],
@@ -159,11 +169,12 @@ class GoliveController extends AbstractController
 
         if ($request->headers->get('Accept') == 'text/event-stream') {
             return StreamedResponse::create(
-                function () use ($events) {
+                function () use ($events, $wait) {
+                    echo "\n\n";
                     foreach ($events as $id => $event) {
-                        echo sprintf("\n\nid:%d\n%s\n", $id, json_encode($event));
+                        echo sprintf("id:%d\ndata: %s\n\n", $id, json_encode($event));
                         flush(); ob_flush();
-                        usleep(mt_rand(50, 100)*10000);
+                        usleep($wait ? mt_rand(50, 100)*1000 : 0);
                     }
                 },
                 200,

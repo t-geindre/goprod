@@ -35,7 +35,7 @@ class DeployController extends BaseController
      */
     public function getAction(int $id) : Deploy
     {
-        $deploy = $this->getDeploy($id);
+        $deploy = $this->getDeploy($id, false);
         $manager = $this->get('api_bundle.manager.deploy');
 
         $manager
@@ -161,17 +161,18 @@ class DeployController extends BaseController
     }
 
     /**
-     * @param int $id
+     * @param int  $id
+     * @param bool $checkOwner
      *
      * @return Deploy
      */
-    protected function getDeploy(int $id) : Deploy
+    protected function getDeploy(int $id, bool $checkOwner = true) : Deploy
     {
         if (is_null($deploy = $this->get('api_bundle.repository.deploy')->find($id))) {
             throw $this->createNotFoundException('Deploy not found');
         }
 
-        if ($deploy->getUser() != $this->getUser()) {
+        if ($checkOwner && $deploy->getUser() != $this->getUser()) {
             throw $this->createBadRequestException('Bad credentials');
         }
 

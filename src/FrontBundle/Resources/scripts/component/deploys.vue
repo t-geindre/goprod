@@ -59,14 +59,7 @@ module.exports = {
             this.sortOrder = order;
         },
         goToDeploy: function(deploy) {
-            if (deploy.user.id == this.user.id
-                && ['merge', 'deploy', 'waiting'].indexOf(deploy.status) > -1
-            ) {
-                this.$router.push({
-                    name: 'deploy-process',
-                    params: { id: deploy.id }
-                });
-            }
+            this.$router.push({name: 'deploy-process', params: { id: deploy.id }});
         },
         toggleFullscreen: function() {
             this.fullscreen = !this.fullscreen;

@@ -71,11 +71,11 @@ module.exports = {
         deploys: function() {
             if (this.queuedDeploys.length > 0) {
                 this.queuedDeploys.forEach((id) => {
-                    if (this.deploys[id] && this.deploys[id].status != 'queued') {
+                    var deploy = this.deploys.find((deploy) => deploy.id == id && deploy.status != 'queued');
+                    if (deploy) {
                         Notify(
-                            this.deploys[id].owner + '/'
-                            + this.deploys[id].repository + '\n' +
-                            'Deployment started!',
+                            deploy.owner + '/' + deploy.repository + '\n'
+                            + 'Deployment started!',
                             {
                                 icon: '/bundles/front/img/deploy-icon.png',
                                 click: () => {
@@ -89,12 +89,9 @@ module.exports = {
                     }
                 });
             }
-            this.queuedDeploys = [];
-            for (var id in this.deploys) {
-                if (this.deploys[id].status == 'queued') {
-                    this.queuedDeploys.push(id);
-                }
-            }
+            this.queuedDeploys = this.deploys
+                .filter((deploy) => deploy.status == 'queued')
+                .map((deploy) => deploy.id);
         },
         authenticated: function() {
             if (!this.authenticated) {

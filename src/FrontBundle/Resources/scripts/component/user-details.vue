@@ -33,7 +33,9 @@ module.exports = {
             return UserStore.state.complete;
         },
         deploysCount: function() {
-            return DeploysStore.state.count;
+            return DeploysStore.state.deploys.filter(
+                (deploy) => ['canceled', 'done'].indexOf(deploy.status) == -1
+            ).length;
         },
         apiKeyUrl: function() {
             return ConfigStore.state.config.golive.urls.site + '#/apikeys';

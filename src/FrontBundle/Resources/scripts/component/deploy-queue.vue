@@ -23,6 +23,9 @@ module.exports = {
                     this.deploys = response.data;
                     this.loading = false;
                 });
+        },
+        goToDeploy: function(deploy) {
+            this.$router.push({name: 'deploy-process', params: { id: deploy.id }});
         }
     },
     components: {
@@ -38,14 +41,15 @@ module.exports = {
 </script>
 
 <template>
-    <div class="panel panel-default">
-        <div class="panel-heading">Your deployment has been queued</div>
+    <div class="panel panel-warning">
+        <div class="panel-heading">This deployment has been queued</div>
         <loading-spinner v-if="loading" class="medium"></loading-spinner>
         <div class="list-group" v-else>
             <deploy
                 v-for="deploy in deploys"
                 v-bind:deploy="deploy"
                 class="list-group-item"
+                v-on:click="goToDeploy(deploy)"
             >
             </deploy>
         </div>

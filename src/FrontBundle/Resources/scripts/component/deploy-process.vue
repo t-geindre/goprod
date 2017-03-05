@@ -1,53 +1,99 @@
 <script>
+var UserStore    = require('../store/user.js');
 var DeploysStore = require('../store/deploys.js');
+var ApiClient    = require('../lib/api-client.js');
 var GithubClient = require('../lib/github-client.js');
 var jQuery       = require('jquery');
 
 module.exports = {
-    data: function() {
-        return {
-            pullrequest: false,
-            loading: true,
-            modal: false,
-            processing: false,
-            errors: {},
-            previousStatus: false
-        }
-    },
+    data: () => ({
+        pullrequest: false,
+        loading: true,
+        modal: false,
+        processing: false,
+        errors: {},
+        previousStatus: false,
+        deployProcess: {},
+        localDeploy: {user: {}}
+    }),
     mounted: function() {
+        this.deployProcess = {
+            queued: {
+                cancel: true,
+                action: false,
+                actionLabel: 'Please wait...'
+            },
+            merge : {
+                action: () => DeploysStore
+                    .dispatch('merge', this.deploy, this.pullrequest.merge_commit_sha)
+                    .then(() => this.loadPullrequest(false))
+                    .then(() => { this.processing = false; })
+                    .catch(() => {
+                        this.processing = false;
+                        this.errors.merge = true;
+                    }),
+                actionLabel: 'Merge pullrequest',
+                cancel: true
+            },
+            deploy : {
+                action: () => DeploysStore.dispatch('deploy', this.deploy),
+                actionLabel: 'Deploy project',
+                cancel: true
+            },
+            waiting: {
+                action: () => DeploysStore.dispatch('confirm', this.deploy)
+                    .then(() => { this.$router.push({ name: 'user-deploys' }) }),
+                actionLabel: 'Confirm deployment is over',
+                cancel: false
+            },
+            canceled: {
+                action: false,
+                cancel: false
+            },
+            done: {
+                action: false,
+                cancel: false
+            }
+        };
         this.modal = jQuery('.confirm-dialog', this.template).modal({ show: false});
         this.update();
     },
     computed: {
+        actionButtons: function() {
+            return (
+                this.deploy.id
+                && this.deploy.user.login == this.user.login
+                && (
+                    this.deployProcess[this.deploy.status].action
+                    || this.deployProcess[this.deploy.status].cancel
+                )
+            );
+        },
         actionLabel: function() {
-            return ({
-                'merge': 'Merge pullrequest',
-                'deploy': 'Deploy project',
-                'waiting': 'Confirm deployment is over',
-                'queued': 'Please wait...'
-            })[this.deploy.status];
+            return this.deployProcess[this.deploy.status].actionLabel;
         },
         actionButton: function() {
-            return ['merge', 'deploy', 'waiting'].indexOf(this.deploy.status) > -1 && !this.processing;
+            return this.deployProcess[this.deploy.status].action && !this.processing;
         },
         cancelButton: function() {
-            return ['done', 'new', 'waiting', 'canceled'].indexOf(this.deploy.status) == -1;
+            return this.deployProcess[this.deploy.status].cancel;
         },
         deploy: function() {
-            if (DeploysStore.state.deploys[this.$route.params.id]) {
-                return DeploysStore.state.deploys[this.$route.params.id];
+            var deploy = DeploysStore.state.deploys.find(
+                (deploy) => deploy.id == this.$route.params.id
+            );
+            if (deploy == undefined) {
+                return this.localDeploy;
             }
-
-            this.$router.push({ name: 'user-deploys' });
-
-            return { user:{} };
+            return deploy;
         },
         previousStatusMessage: function() {
             if (this.previousStatus
                 && this.previousStatus != this.deploy.status
             ) {
                 var messages = {
-                    'merge': 'Pullrequest has been merged'
+                    'merge': 'Pullrequest successfully merged',
+                    'deploy': 'Project successfully deployed'
                 };
                 if (messages[this.previousStatus]) {
                     return messages[this.previousStatus];
@@ -55,32 +101,62 @@ module.exports = {
             }
 
             return false;
-        }
+        },
+        user: () => UserStore.state.user
     },
     methods: {
+        next: function() {
+            if (!this.processing && this.deployProcess[this.deploy.status].action) {
+                this.processing = true;
+                this.previousStatus = this.deploy.status;
+                this.deployProcess[this.deploy.status].action();
+            }
+        },
+        loadPullrequest: function(loading = true) {
+            this.loading = loading;
+            return new Promise((resolve, reject) => {
+                if (!this.deploy.pull_request_id) {
+                    this.loading = false;
+                    resolve();
+                    return;
+                }
+
+                GithubClient.getPullRequest({
+                    owner: this.deploy.owner,
+                    repo: this.deploy.repository,
+                    number: this.deploy.pull_request_id
+                }).then((response) => {
+                    this.pullrequest = response.data;
+                    this.loading = false;
+
+                    if (this.pullrequest.merged && this.deploy.status == 'merge') {
+                        DeploysStore.dispatch('refresh', this.deploy);
+                    }
+                    resolve();
+                }).catch(reject);
+            });
+        },
         update: function() {
-            this.errors = {};
-            this.previousStatus = this.deploy.status;
+            this.processing = false;
             this.loadPullrequest();
             if (this.deploy.status == 'deploy' && this.deploy.golive_id) {
                 this.processing = true;
             }
-        },
-        loadPullrequest: function() {
-            if (!this.deploy.pull_request_id || this.processing) {
-                this.loading = false;
-                return;
+            if (!this.deploy.id) {
+                this.loading = true;
+                ApiClient
+                    .getDeploy(this.$route.params.id)
+                    .then(
+                        (response) => {
+                            this.loading = false;
+                            this.localDeploy = response.data;
+                            this.loadPullrequest();
+                        },
+                        () => {
+                            this.$router.push({ name: 'user-deploys' });
+                        }
+                    )
             }
-
-            this.loading = true;
-            GithubClient.getPullRequest({
-                owner: this.deploy.owner,
-                repo: this.deploy.repository,
-                number: this.deploy.pull_request_id
-            }).then((response) => {
-                this.pullrequest = response.data;
-                this.loading = false;
-            });
         },
         cancel: function(confirm) {
             if (!confirm) {
@@ -89,51 +165,25 @@ module.exports = {
             }
 
             this.modal.modal('hide');
-            DeploysStore.dispatch('cancel', this.deploy);
+            DeploysStore.dispatch('cancel', this.deploy)
+                .then(() => {
+                    this.$router.push({ name: 'user-deploys' });
+                });
         },
-        next: function() {
-            if (this.processing) {
-                return;
+        goliveStatus: function(status) {
+            if (status == 'success' && this.deploy.status == 'deploy') {
+                DeploysStore.dispatch('refresh', this.deploy)
+                    .then(() => { this.processing = false });
             }
-            this.previousStatus = this.deploy.status;
-            this.processing = true;
-            this[{
-                'merge': 'merge',
-                'waiting': 'confirm',
-                'deploy': 'deployment'
-            }[this.deploy.status]]();
-        },
-        merge : function() {
-            DeploysStore.dispatch(
-                'merge',
-                this.deploy,
-                this.pullrequest.merge_commit_sha
-            ).then(
-                () => {
-                    this.processing = false;
-                    this.loadPullrequest();
-                },
-                () => {
-                    this.processing = false;
-                    this.errors.merge = true;
-                }
-            );
-        },
-        confirm: function() {
-            DeploysStore.dispatch('confirm', this.deploy);
-        },
-        deployment: function() {
-            DeploysStore.dispatch('deploy', this.deploy);
         }
     },
     watch: {
         $route: function() {
-            this.processing = false;
             this.update();
         },
-        pullrequest: function() {
-            if (this.pullrequest.merged && this.deploy.status == 'merge') {
-                DeploysStore.dispatch('refresh', this.deploy);
+        deploy: function() {
+            if (!this.deploy.id) {
+                this.update();
             }
         }
     },
@@ -150,16 +200,13 @@ module.exports = {
 <template>
     <div>
         <div class="page-header">
-            <h1>
-                Deployment
-                <small>{{ deploy.owner }}/{{ deploy.repository }}</small>
-            </h1>
+            <h1>Deployment <small>{{ deploy.owner }}/{{ deploy.repository }}</small></h1>
         </div>
         <template v-if="!loading">
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h3 class="panel-title">
-                        {{ deploy.description }}
+                        Deployment process
                     </h3>
                 </div>
                 <div class="panel-body">
@@ -180,18 +227,28 @@ module.exports = {
                             before trying to merge it again.
                         </p>
                     </div>
+                    <deploy-queue v-if="deploy.status == 'queued'" v-bind:deploy="deploy"></deploy-queue>
+                    <div class="panel panel-default" v-else>
+                        <div class="panel-heading">
+                            <h3 class="panel-title">
+                                Deployment
+                            </h3>
+                        </div>
+                        <div class="list-group">
+                            <deploy v-bind:deploy="deploy" class="list-group-item"></deploy>
+                        </div>
+                    </div>
                     <github-pullrequest v-on:refresh="loadPullrequest" v-if="pullrequest" v-bind:pullrequest="pullrequest">
                     </github-pullrequest>
-                    <golive-deploy v-on:refresh="update" v-if="deploy.golive_id" v-bind:id="deploy.golive_id">
+                    <golive-deploy v-on:status="goliveStatus" v-if="deploy.golive_id" v-bind:id="deploy.golive_id">
                     </golive-deploy>
-                    <deploy-queue v-if="deploy.status == 'queued'" v-bind:deploy="deploy"></deploy-queue>
-                    <template v-if="deploy.status == 'waiting'">
+                    <template v-if="deploy.status == 'waiting' && actionButtons">
                         <div class="alert alert-warning" role="alert"><p>
                             Before confirming your deployment is over, dont forget to
                             <strong>check that the project is still working in production</strong>.
                         </p></div>
                     </template>
-                    <div class="pull-right">
+                    <div class="pull-right" v-if="actionButtons">
                         <button type="button" @click="cancel(false)" class="btn btn-danger" v-if="cancelButton" v-bind:disabled="processing">
                             <span class="glyphicon glyphicon-remove"></span> Cancel
                         </button>
