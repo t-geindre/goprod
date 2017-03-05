@@ -47,3 +47,11 @@ h2 {
     color: #1b809e;
     font-size: 18px;
 }
+.token {
+    border: 1px solid #eee;
+    padding: 5px 10px;
+    border-radius: 5px;
+    display: inline-block;
+    margin: 10px 0;
+    font-style: italic;
+}
