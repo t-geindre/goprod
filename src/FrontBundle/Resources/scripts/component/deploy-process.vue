@@ -12,7 +12,6 @@ module.exports = {
         modal: false,
         processing: false,
         errors: {},
-        previousStatus: false,
         deployProcess: {},
         localDeploy: {user: {}}
     }),
@@ -87,28 +86,12 @@ module.exports = {
             }
             return deploy;
         },
-        previousStatusMessage: function() {
-            if (this.previousStatus
-                && this.previousStatus != this.deploy.status
-            ) {
-                var messages = {
-                    'merge': 'Pullrequest successfully merged',
-                    'deploy': 'Project successfully deployed'
-                };
-                if (messages[this.previousStatus]) {
-                    return messages[this.previousStatus];
-                }
-            }
-
-            return false;
-        },
         user: () => UserStore.state.user
     },
     methods: {
         next: function() {
             if (!this.processing && this.deployProcess[this.deploy.status].action) {
                 this.processing = true;
-                this.previousStatus = this.deploy.status;
                 this.deployProcess[this.deploy.status].action();
             }
         },
@@ -210,12 +193,6 @@ module.exports = {
                     </h3>
                 </div>
                 <div class="panel-body">
-                    <div class="alert alert-success" role="alert" v-if="previousStatusMessage">
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                            <span aria-hidden="true">×</span>
-                        </button>
-                        <p>{{ previousStatusMessage }}</p>
-                    </div>
                    <div class="alert alert-danger" role="alert" v-if="errors.merge">
                         <p>
                             An error occured during the merge of this pullrequest. Please,

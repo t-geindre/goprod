@@ -46,7 +46,13 @@
 
 <template>
     <div>
-        <div class="panel panel-default" v-bind:class="{ 'panel-success': status == 'success' }">
+        <div
+            class="panel"
+            v-bind:class="{
+                'panel-success': status == 'success',
+                'panel-info': status == 'pending' || status == 'running',
+                'panel-danger': status == 'failure'
+            }">
             <div class="panel-heading">
                 <div class="btn-group-xs pull-right">
                     <a v-bind:href="url" target="_blank" class="btn btn-link">
