@@ -33,7 +33,12 @@
                 this.update();
             },
             status: function() {
-                this.$emit('status', this.status);
+                setTimeout(
+                    () => this.$emit('status', this.status),
+                    // delay event because golive might return a non
+                    // up to date response (not the same status)
+                    500
+                );
             }
         }
     }

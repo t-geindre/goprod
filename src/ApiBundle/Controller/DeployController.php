@@ -38,9 +38,12 @@ class DeployController extends BaseController
         $deploy = $this->getDeploy($id, false);
         $manager = $this->get('api_bundle.manager.deploy');
 
-        $manager
-            ->updateStatus($deploy)
-            ->save($deploy);
+        if ($deploy->getUser()->getId() == $this->getUser()->getId())
+        {
+            $manager
+                ->updateStatus($deploy)
+                ->save($deploy);
+        }
 
         return $deploy;
     }

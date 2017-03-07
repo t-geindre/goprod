@@ -13,6 +13,7 @@ module.exports = new function()
         var evtSrc = new EventSource(
             baseUrl + 'deployments/' + id + '/live',
             {
+                withCredentials: true,
                 headers: {'Authorization': 'token '+accessToken}
             }
         );

@@ -35,9 +35,10 @@ var GithubClient = function()
         );
     }
 
-    this.getIssue = function(issues) {
+    this.getIssue = function(issue) {
         return this.get(
-            'repos/'+issues.owner+'/'+issues.repo+'/issues/'+issues.number
+            'repos/'+issue.owner+'/'+issue.repo+'/issues/'+issue.number,
+            { params: { avoidCache: (new Date()).getTime() }}
         );
     }
 
