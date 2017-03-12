@@ -44,6 +44,7 @@ module.exports = {
                 this.loadPullRequest(this.$route.params);
                 return;
             }
+            this.pullrequest = false;
             this.loading = false;
         },
         create: function() {
@@ -60,15 +61,14 @@ module.exports = {
                     this.errors = response.data.errors;
                 });
         },
-        selectOwner: function(owner) {
-            this.deploy.owner = owner;
-        },
-        selectRepo: function (repo) {
-            this.deploy.repository = repo;
+        selectRepo: function(repo) {
+            this.deploy.repository = repo.repo;
+            this.deploy.owner = repo.owner;
         }
     },
     watch: {
         $route: function() {
+            console.log('route');
             this.update();
         }
     },
@@ -101,7 +101,7 @@ module.exports = {
                         <label for="repositoryName">Repository</label>
                         <repository-selector
                             v-bind:owner="deploy.owner" v-bind:repo="deploy.repository" v-bind:disabled="pullrequest"
-                            v-on:owner="selectOwner" v-on:repo="selectRepo"
+                            v-on:select="selectRepo"
                         ></repository-selector>
                         <span id="helpBlock" class="help-block" v-if="this.errors.fields.repository">
                             {{ this.errors.fields.repository }}

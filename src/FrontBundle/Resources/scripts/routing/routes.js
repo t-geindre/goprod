@@ -12,7 +12,8 @@ module.exports = [
     {
         name: 'deploy-create-by-pullrequest',
         path: '/deploys/new/by-pullrequest/:owner/:repo/:number',
-        component: require('../component/deploy-create.vue')
+        component: require('../component/deploy-create.vue'),
+        props: (route) => route.query
     },
     {
         name: 'deploy-by-project',
@@ -32,6 +33,7 @@ module.exports = [
     {
         name: 'deploys',
         path: '/deploys',
-        component: require('../component/deploys.vue')
+        component: require('../component/deploys.vue'),
+        props: (route) => route.query
     }
 ]

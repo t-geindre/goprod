@@ -27,11 +27,10 @@ module.exports = {
             if (repository) {
                 this.organization = repository.owner;
                 this.repository = repository;
-                this.$emit('repo', this.repository.name);
-                this.$emit('owner', this.organization.login);
+                this.$emit('select', { repo: this.repository.name, owner: this.organization.login});
                 return;
             }
-            this.$emit('repo', '');
+            this.$emit('select', { repo: '', owner: ''});
         },
         searchRepositories: function(q) {
             return new Promise((resolve, reject) => {
@@ -48,11 +47,11 @@ module.exports = {
             if (organization != this.organization) {
                 this.organization = organization;
                 this.repository = '';
-                this.$emit('owner', this.organization.login);
-                this.$emit('repo', '');
+                this.$emit('select', { repo: this.repository.name, owner: this.organization.login});
             }
         },
         updateDefaults: function() {
+            this.organization = {};
             if (this.owner) {
                 this.organizations.forEach((organization) => {
                     if (organization.login == this.owner) {
@@ -60,6 +59,7 @@ module.exports = {
                     }
                 });
             }
+            this.repository = '';
             if (this.repo) {
                 this.repository = { name: this.repo };
             }
