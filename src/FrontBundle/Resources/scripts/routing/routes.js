@@ -1,3 +1,5 @@
+var UserStore = require('../store/user.js');
+
 module.exports = [
     {
         name: 'home',
@@ -7,13 +9,22 @@ module.exports = [
     {
         name: 'deploy-by-pullrequest',
         path: '/deploys/new/by-pullrequest',
-        component: require('../component/deploy-pullrequest.vue')
+        component: require('../component/deploy-pullrequest.vue'),
+        props: (route) => Object.assign(
+            {},
+            {
+                userLogin: UserStore.state.user.login,
+                userName: UserStore.state.user.name,
+                open: true,
+                userIs: 'author'
+            },
+            route.query
+        )
     },
     {
         name: 'deploy-create-by-pullrequest',
         path: '/deploys/new/by-pullrequest/:owner/:repo/:number',
-        component: require('../component/deploy-create.vue'),
-        props: (route) => route.query
+        component: require('../component/deploy-create.vue')
     },
     {
         name: 'deploy-by-project',

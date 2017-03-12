@@ -72,8 +72,16 @@ class GithubController extends AbstractController
                     continue;
                 }
                 list($key, $value) = $field;
-                if ($key == 'is' && in_array($value, ['open', 'closed'])) {
+                if ($key == 'is' && in_array($value, ['open', 'closed', 'merged'])) {
                     $criteria->andWhere($criteria->expr()->eq('open', $value == 'open'));
+                }
+                if ($key == 'user') {
+                    $criteria->andWhere($criteria->expr()->eq('owner', $value));
+                }
+                if ($key == 'repo') {
+                    list($owner, $repo) = explode('/', $value);
+                    $criteria->andWhere($criteria->expr()->eq('owner', $owner));
+                    $criteria->andWhere($criteria->expr()->eq('repo', $repo));
                 }
                 if (in_array($key, ['author', 'assignee', 'mentions'])) {
                     $criteria->andWhere($criteria->expr()->eq('author', $value));

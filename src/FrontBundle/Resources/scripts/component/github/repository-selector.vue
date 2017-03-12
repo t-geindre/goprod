@@ -19,6 +19,7 @@ module.exports = {
     mounted: function() {
         GithubClient.getOrganizations().then((response)=> {
             this.organizations = response.data;
+            this.organizations.unshift(this.user);
             this.updateDefaults();
         });
     },
@@ -93,12 +94,6 @@ module.exports = {
                 <span class="caret"></span>
             </button>
             <ul class="dropdown-menu">
-                <li>
-                    <a href="#" v-on:click.prevent="selectOrganization(user)">
-                        <img v-bind:src="user.avatar_url" />
-                        {{ user.login }}
-                    </a>
-                </li>
                 <li v-for="organization in organizations">
                     <a href="#" v-on:click.prevent="selectOrganization(organization)">
                         <img v-bind:src="organization.avatar_url" />

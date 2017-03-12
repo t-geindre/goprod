@@ -52,7 +52,7 @@ module.exports = {
         <p v-if="count == 0">
             You have no active deployment. You can create a new one
             <router-link :to="{ name: 'deploy-by-pullrequest' }">by pullrequest</router-link> or
-            <router-link :to="{ name: 'deploy-by-project' }">by project</router-link>.
+            <router-link :to="{ name: 'deploy-by-project' }">by repository</router-link>.
         </p>
         <div class="panel panel-default" v-else>
             <div class="panel-heading clearfix">

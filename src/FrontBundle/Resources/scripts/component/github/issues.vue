@@ -3,95 +3,85 @@ var GithubClient = require('../../lib/github-client.js');
 var UserStore    = require('../../store/user.js');
 
 module.exports = {
-    props: ['queryAppend'],
-    computed: {
-        user: function() {
-            return UserStore.state.user;
-        }
+    props: {
+        sort:        { default: 'created'},
+        order:       { default: 'desc' },
+        open:        { default: true },
+        userIs:      { default: 'author' },
+        userLogin:   { default: '' },
+        userName:    { default: ''},
+        page:        { default: 1 },
+        owner:       { default: '' },
+        repository:  { default: '' },
+        type:        { default: '' }
     },
-    data: function() {
-        return {
-            issues: [],
-            sort: 'created',
-            order: 'desc',
-            open: true,
-            iam: 'author',
-            query: '',
-            loading: false,
-            pagination: {
-                per_page: 10,
-                page: 1,
-                pages: 1
-            }
-        }
-    },
+    data: () => ({
+        issues: [],
+        loading: false,
+        byPage: 10,
+        pages: 1
+    }),
     mounted: function() {
-        this.query = 'is:open author:'+this.user.login;
         this.update();
+    },
+    computed: {
+        user: () => UserStore.state.user,
+        filters: function() {
+            var query = this.type == 'pullrequest' ? 'is:pr ' : '';
+            if (this.userIs.length > 0 && this.userLogin.length > 0) {
+                query += this.userIs + ':' + this.userLogin + ' ';
+            }
+            if (this.owner.length > 0) {
+                if (this.repository.length > 0) {
+                    query += 'repo:' + this.owner + '/' + this.repository + ' ';
+                } else {
+                    query += 'user:' + this.owner + ' ';
+                }
+            }
+            if (!this.open || this.open == 'false') {
+                query += 'is:' + (this.type == 'pullrequest' ? 'merged' : 'closed') + ' ';
+            } else {
+                query += 'is:open';
+            }
+            return {
+                q: query,
+                sort: this.sort,
+                order: this.order,
+                per_page: this.byPage,
+                page: this.page
+            };
+        }
     },
     methods: {
         update: function() {
             this.loading = true;
-            GithubClient.searchIssues({
-                q: this.query + (this.queryAppend ? ' '+this.queryAppend : ''),
-                sort: this.sort,
-                order: this.order,
-                per_page: this.pagination.per_page,
-                page: this.pagination.page
-            })
+            GithubClient.searchIssues(this.filters)
             .then((response) => {
-                this.pagination.pages = Math.ceil(
-                    response.data.total_count / this.pagination.per_page
-                );
+                this.pages = Math.max(1, Math.ceil(
+                    response.data.total_count / this.byPage
+                ));
+                if (this.page > this.pages) {
+                    this.filter({ page: this.pages }, true);
+                }
                 this.issues = response.data.items;
                 this.loading = false;
             });
         },
-        setSort: function(type, order) {
-            this.sort = type;
-            this.order = order;
-            this.update();
-        },
-        queryUpdate: function(remove, add) {
-            var items = this.query.toLowerCase().split(' ');
-            remove.forEach(function(remove) {
-                var index;
-                while ((index = items.indexOf(remove)) > -1) {
-                    items.splice(index, 1);
-                }
-            })
-            items.unshift(add);
-            this.query = items.join(' ');
-        },
-        goToPage: function(page) {
-            this.pagination.page = page;
-            this.update();
+        filter: function(filters, replace = false) {
+            this.$emit('filter', filters, replace);
         }
     },
     watch: {
-        open: function() {
-            this.queryUpdate(
-                ['is:closed', 'is:open'],
-                this.open ? 'is:open' : 'is:closed'
-            );
-            this.goToPage(1);
-        },
-        iam: function() {
-            this.queryUpdate(
-                [
-                    'author:'+this.user.login,
-                    'assignee:'+this.user.login,
-                    'mentions:'+this.user.login
-                ],
-                this.iam+':'+this.user.login
-            );
-            this.goToPage(1);
+        filters: function() {
+            this.update();
         }
     },
     components: {
         'pagination': require('../pagination.vue'),
         'loading-spinner': require('../loading-spinner.vue'),
-        'github-issue': require('./issue.vue')
+        'github-issue': require('./issue.vue'),
+        'typeahead-users': require('../typeahead/users.vue'),
+        'repository-selector': require('../github/repository-selector.vue')
     }
 };
 </script>
@@ -99,35 +89,49 @@ module.exports = {
 <template>
 <div class="github-issues">
     <div class="row form-group">
-        <div class="btn-group col-md-5">
-            <label class="btn btn-default" v-bind:class="{active:iam=='author'}">
-                <input type="radio" value="author" v-model="iam" name="iam"> Created
-            </label>
-            <label class="btn btn-default" v-bind:class="{active:iam=='assignee'}">
-                <input type="radio" value="assignee" v-model="iam" name="iam"> Assigned
-            </label>
-            <label class="btn btn-default" v-bind:class="{active:iam=='mentions'}">
-                <input type="radio" value="mentions" v-model="iam" name="iam"> Mentioned
-            </label>
-        </div>
-        <div class="col-md-7">
+        <div class="col-md-3">
             <div class="input-group">
                 <div class="input-group-addon">
-                    <span class="glyphicon glyphicon-search"></span>
+                    <span class="glyphicon glyphicon-user"></span>
                 </div>
-                <input type="text" class="form-control" id="query" v-model="query" v-on:keyup.enter="update" />
+                <typeahead-users
+                    display-field="name" class="form-control" min-length="2"
+                    v-on:select="filter({userLogin: $event.login, userName: $event.name })"
+                    v-on:clear="filter({userLogin: '', userName: '' })"
+                    v-bind:default-value="userName"
+                    placeholder="user"
+                >
+                </typeahead-users>
             </div>
+        </div>
+        <div class="btn-group col-md-5">
+            <label class="btn btn-default" v-bind:class="{active:userIs=='author'}">
+                <input type="radio" value="author" v-on:click="filter({ userIs: 'author' })" name="userIs"> Created
+            </label>
+            <label class="btn btn-default" v-bind:class="{active:userIs=='assignee'}">
+                <input type="radio" value="assignee" v-on:click="filter({ userIs: 'assignee' })" name="userIs"> Assigned
+            </label>
+            <label class="btn btn-default" v-bind:class="{active:userIs=='mentions'}">
+                <input type="radio" value="mentions" v-on:click="filter({ userIs: 'mentions' })" name="userIs"> Mentioned
+            </label>
+        </div>
+        <div class="col-md-4">
+            <repository-selector
+                v-on:select="filter({repository: $event.repo, owner: $event.owner})"
+                v-bind:owner="owner"
+                v-bind:repo="repository"
+            ></repository-selector>
         </div>
     </div>
     <div class="panel panel-default">
         <div class="panel-heading">
             <div class="btn-group btn-group-sm">
                 <label class="btn btn-default" v-bind:class="{active:open}">
-                    <input type="radio" name="open" v-model="open" v-bind:value="true">
+                    <input type="radio" name="open" v-on:click="filter({open: true})" />
                     <span class="glyphicon glyphicon-ok"></span> Open
                 </label>
                 <label class="btn btn-default"  v-bind:class="{active:!open}">
-                    <input type="radio" name="open" v-model="open" v-bind:value="false">
+                    <input type="radio" name="open" v-on:click="filter({open: false})" />
                     <span class="glyphicon glyphicon-remove"></span> Closed
                 </label>
             </div>
@@ -136,12 +140,12 @@ module.exports = {
                     Sort <span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu">
-                    <li><a href="#" v-on:click.prevent="setSort('created', 'desc')">Newest</a></li>
-                    <li><a href="#" v-on:click.prevent="setSort('created', 'asc')">Oldest</a></li>
-                    <li><a href="#" v-on:click.prevent="setSort('comments', 'desc')">Most commented</a></li>
-                    <li><a href="#" v-on:click.prevent="setSort('comments', 'asc')">Least commented</a></li>
-                    <li><a href="#" v-on:click.prevent="setSort('updated', 'desc')">Recently updated</a></li>
-                    <li><a href="#" v-on:click.prevent="setSort('updated', 'asc')">Least recently updated</a></li>
+                    <li><a href="#" v-on:click.prevent="filter({ sort: 'created', order: 'desc'})">Newest</a></li>
+                    <li><a href="#" v-on:click.prevent="filter({ sort: 'created', order: 'asc'})">Oldest</a></li>
+                    <li><a href="#" v-on:click.prevent="filter({ sort: 'comments', order: 'desc'})">Most commented</a></li>
+                    <li><a href="#" v-on:click.prevent="filter({ sort: 'comments', order: 'asc'})">Least commented</a></li>
+                    <li><a href="#" v-on:click.prevent="filter({ sort: 'updated', order: 'desc'})">Recently updated</a></li>
+                    <li><a href="#" v-on:click.prevent="filter({ sort: 'updated', order: 'asc'})">Least recently updated</a></li>
                 </ul>
             </div>
         </div>
@@ -157,9 +161,9 @@ module.exports = {
         <loading-spinner class="medium" v-else></loading-spinner>
         <div class="panel-footer text-center">
             <pagination
-                v-bind:pages="pagination.pages"
-                v-bind:page="pagination.page"
-                v-on:page="goToPage"
+                v-bind:pages="pages"
+                v-bind:page="page"
+                v-on:page="filter({page: $event})"
                 v-if="!loading"
             >
             </pagination>
@@ -176,5 +180,9 @@ module.exports = {
 
     label.btn > input[type='radio'] {
       display: none;
+    }
+
+    .btn-group>.btn.active {
+        z-index: inherit;
     }
 </style>
