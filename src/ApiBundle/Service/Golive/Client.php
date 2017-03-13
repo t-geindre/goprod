@@ -97,6 +97,7 @@ class Client
     /**
      * @param string $project
      * @param string $stage
+     * @param string $action
      *
      * @return array
      */

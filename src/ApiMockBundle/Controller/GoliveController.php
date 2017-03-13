@@ -131,6 +131,7 @@ class GoliveController extends AbstractController
     }
 
     /**
+     * @param int     $id
      * @param Request $request
      *
      * @return Response|StreamedResponse
@@ -173,7 +174,8 @@ class GoliveController extends AbstractController
                     echo "\n\n";
                     foreach ($events as $id => $event) {
                         echo sprintf("id:%d\ndata: %s\n\n", $id, json_encode($event));
-                        flush(); ob_flush();
+                        flush();
+                        ob_flush();
                         usleep($wait ? mt_rand(50, 1000)*1000 : 0);
                     }
                 },

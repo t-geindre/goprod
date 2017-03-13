@@ -38,7 +38,7 @@ module.exports = {
                     query += 'user:' + this.owner + ' ';
                 }
             }
-            if (!this.open || this.open == 'false') {
+            if (!this.open) {
                 query += 'is:' + (this.type == 'pullrequest' ? 'merged' : 'closed') + ' ';
             } else {
                 query += 'is:open';

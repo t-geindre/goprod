@@ -15,7 +15,6 @@ module.exports = [
             {
                 userLogin: UserStore.state.user.login,
                 userName: UserStore.state.user.name,
-                open: true,
                 userIs: 'author'
             },
             route.query
