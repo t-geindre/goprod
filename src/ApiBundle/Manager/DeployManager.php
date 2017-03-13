@@ -178,19 +178,23 @@ class DeployManager
      */
     public function deploy(Deploy $deploy) : Deploy
     {
-        if ($deploy->getStatus() !== Deploy::STATUS_DEPLOY
-            || !is_null($deploy->getGoliveId())
+        if ($deploy->getStatus() == Deploy::STATUS_DEPLOY
+            && !is_null($this->golive->getProject($deploy->getRepository()))
         ) {
-            return $deploy;
+            if (!is_null($deployId = $deploy->getGoliveId())
+                && ($this->golive->getDeployment($deployId)['status'] ?? '') != 'failure'
+            ) {
+                return $deploy;
+            }
+
+            $goliveDeploy = $this->golive->createDeployment(
+                $deploy->getRepository(),
+                $this->goliveStage
+            );
+
+            $deploy->setGoliveId($goliveDeploy['id']);
+            $this->save($deploy);
         }
-
-        $goliveDeploy = $this->golive->createDeployment(
-            $deploy->getRepository(),
-            $this->goliveStage
-        );
-
-        $deploy->setGoliveId($goliveDeploy['id']);
-        $this->save($deploy);
 
         return $deploy;
     }

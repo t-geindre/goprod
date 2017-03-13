@@ -53,6 +53,15 @@ app-build: check-env
 	@touch web/build.js
 	@npm run $(ENV)
 
+coke:
+	$(info Checking PHP coding styles)
+	@vendor/bin/coke
+
+atoum:
+	$(info Running PHP units tests)
+	@vendor/bin/atoum
+
 database: database-create schema-update
 dependencies: npm-install composer-install
 install: dependencies database assets-install fixtures-load
+tests: install coke atoum
