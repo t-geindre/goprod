@@ -47,7 +47,7 @@ api:
         urls:
             site: "%golive.urls.site%"
             api:  "%golive.urls.api%"
-        stage: preprod
+        stage: prod
 
 jms_serializer:
     metadata:

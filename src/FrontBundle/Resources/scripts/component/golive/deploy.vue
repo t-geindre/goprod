@@ -6,7 +6,8 @@
         props: ['id'],
         data: () => ({
             status: 'pending',
-            events: []
+            events: [],
+            eventSource: false
         }),
         mounted: function() {
             this.update();
@@ -19,13 +20,19 @@
         },
         methods: {
             update: function() {
-                GoliveClient
-                    .getLiveDeployment(this.id)
-                    .onmessage = (message) => {
-                        var data = JSON.parse(message.data);
-                        this.status = data.status;
-                        this.events.push(data);
-                    };
+                this.eventSource = GoliveClient.getLiveDeployment(this.id);
+                this.eventSource.onmessage = (message) => {
+                    var data = JSON.parse(message.data);
+                    this.status = data.status;
+                    this.events.push(data);
+                };
+            },
+            closeEventSource: function() {
+                if (this.eventSource !== false) {
+                    console.log('close');
+                    this.eventSource.close();
+                    this.eventSource = false;
+                }
             }
         },
         watch: {
@@ -33,6 +40,9 @@
                 this.update();
             },
             status: function() {
+                if (this.status != 'running') {
+                    this.closeEventSource();
+                }
                 setTimeout(
                     () => this.$emit('status', this.status),
                     // delay event because golive might return a non
@@ -40,6 +50,9 @@
                     500
                 );
             }
+        },
+        beforeDestroy: function() {
+            this.closeEventSource();
         }
     }
 </script>
