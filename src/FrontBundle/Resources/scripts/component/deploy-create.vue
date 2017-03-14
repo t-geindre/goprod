@@ -68,7 +68,6 @@ module.exports = {
     },
     watch: {
         $route: function() {
-            console.log('route');
             this.update();
         }
     },

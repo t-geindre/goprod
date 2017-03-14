@@ -29,7 +29,6 @@
             },
             closeEventSource: function() {
                 if (this.eventSource !== false) {
-                    console.log('close');
                     this.eventSource.close();
                     this.eventSource = false;
                 }
