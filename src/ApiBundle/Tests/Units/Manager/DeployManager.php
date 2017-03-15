@@ -11,6 +11,85 @@ use atoum;
 class DeployManager extends atoum
 {
     /**
+     * Test updateStatus method
+     */
+    public function testUpdateStatus()
+    {
+        $this->given(
+            $this->newTestedInstance(
+                $this->getEntityRepositoryMock(),
+                $this->getGithubClientMock(),
+                $this->getGoliveClientMock(),
+                'prod',
+                $this->getEntityManagerMock()
+            )
+        )
+        ->then
+            // No pull request, no golive deploy
+            ->object($this->testedInstance->updateStatus(
+                $deploy = $this->getDeployMock()->setStatus(Deploy::STATUS_NEW)
+            ))
+                ->isIdenticalTo($this->testedInstance)
+            ->string($deploy->getStatus())
+                ->isEqualTo(Deploy::STATUS_WAITING)
+        ->given(
+            $this->newTestedInstance(
+                $this->getEntityRepositoryMock([
+                    $this->getDeployMock(2)->setStatus(Deploy::STATUS_DEPLOY),
+                ]),
+                $this->getGithubClientMock(),
+                $this->getGoliveClientMock([], ['status' => 'success']),
+                'prod',
+                $this->getEntityManagerMock()
+            )
+        )
+        ->then
+            // Another one running, should be queued
+            ->object($this->testedInstance->updateStatus(
+                $deploy = $this->getDeployMock(1)->setStatus(Deploy::STATUS_NEW)
+            ))
+                ->isIdenticalTo($this->testedInstance)
+            ->string($deploy->getStatus())
+                ->isEqualTo(Deploy::STATUS_QUEUED)
+        ->given(
+            $this->newTestedInstance(
+                $this->getEntityRepositoryMock(),
+                $this->getGithubClientMock(false),
+                $this->getGoliveClientMock([], ['status' => 'success']),
+                'prod',
+                $this->getEntityManagerMock()
+            )
+        )
+        ->then
+            // PR not merged
+            ->object($this->testedInstance->updateStatus(
+                $deploy = $this->getDeployMock()
+                    ->setStatus(Deploy::STATUS_NEW)
+                    ->setPullrequestId(1)
+            ))
+                ->isIdenticalTo($this->testedInstance)
+            ->string($deploy->getStatus())
+                ->isEqualTo(Deploy::STATUS_MERGE)
+            // Not deployed
+            ->object($this->testedInstance->updateStatus(
+                $deploy = $this->getDeployMock()
+                    ->setStatus(Deploy::STATUS_NEW)
+            ))
+                ->isIdenticalTo($this->testedInstance)
+            ->string($deploy->getStatus())
+                ->isEqualTo(Deploy::STATUS_DEPLOY)
+            ->object($this->testedInstance->updateStatus(
+                $deploy = $this->getDeployMock()
+                    ->setStatus(Deploy::STATUS_NEW)
+                    ->setGoliveId(10)
+            ))
+                ->isIdenticalTo($this->testedInstance)
+            ->string($deploy->getStatus())
+                ->isEqualTo(Deploy::STATUS_WAITING)
+        ;
+    }
+
+    /**
      * Test canStart method
      */
     public function testCanStart()
@@ -239,6 +318,102 @@ class DeployManager extends atoum
     }
 
     /**
+     * Test save method
+     */
+    public function testSave()
+    {
+        $this->given(
+            $this->newTestedInstance(
+                $this->getEntityRepositoryMock(),
+                $this->getGithubClientMock(),
+                $golive = $this->getGoliveClientMock(),
+                'prod',
+                $em = $this->getEntityManagerMock()
+            )
+        )
+        ->then
+            ->object($this->testedInstance->save(
+                $deploy = $this->getDeployMock()
+            ))
+                ->isIdenticalTo($this->testedInstance)
+                ->mock($em)
+                    ->call('persist')->withArguments($deploy)->once()
+                    ->call('persist')->once()
+                    ->call('flush')->once()
+        ;
+    }
+
+    /**
+     * Test save method
+     */
+    public function testUpdateQueue()
+    {
+        $this->given(
+            $this->newTestedInstance(
+                $this->getEntityRepositoryMock(),
+                $this->getGithubClientMock(),
+                $golive = $this->getGoliveClientMock(),
+                'prod',
+                $em = $this->getEntityManagerMock()
+            )
+        )
+        ->then
+            // Empty queue
+            ->object($this->testedInstance->updateQueue('foo', 'bar'))
+                ->isIdenticalTo($this->testedInstance)
+            ->mock($em)
+                ->call('persist')->never()
+                ->call('flush')->never()
+        ->given(
+            $this->newTestedInstance(
+                $this->getEntityRepositoryMock($deploys = [
+                    $this->getDeployMock()->setStatus(Deploy::STATUS_MERGE),
+                    $this->getDeployMock()->setStatus(Deploy::STATUS_QUEUED),
+                ]),
+                $this->getGithubClientMock(),
+                $golive = $this->getGoliveClientMock(),
+                'prod',
+                $em = $this->getEntityManagerMock()
+            )
+        )
+        ->then
+            // Not empty queue, but first deploy already running
+            ->object($this->testedInstance->updateQueue('foo', 'bar'))
+                ->isIdenticalTo($this->testedInstance)
+            ->mock($em)
+                ->call('persist')->never()
+                ->call('flush')->never()
+            ->string($deploys[0]->getStatus())
+                ->isEqualTo(Deploy::STATUS_MERGE)
+            ->string($deploys[1]->getStatus())
+                ->isEqualTo(Deploy::STATUS_QUEUED)
+        ->given(
+            $this->newTestedInstance(
+                $this->getEntityRepositoryMock($deploys = [
+                    $this->getDeployMock()->setStatus(Deploy::STATUS_QUEUED),
+                    $this->getDeployMock()->setStatus(Deploy::STATUS_QUEUED),
+                ]),
+                $this->getGithubClientMock(),
+                $golive = $this->getGoliveClientMock(),
+                'prod',
+                $em = $this->getEntityManagerMock()
+            )
+        )
+        ->then
+            // Not empty queue, all queued
+            ->object($this->testedInstance->updateQueue('foo', 'bar'))
+                ->isIdenticalTo($this->testedInstance)
+            ->mock($em)
+                ->call('persist')->withArguments($deploys[0])->once()
+                ->call('flush')->once()
+            ->string($deploys[0]->getStatus())
+                ->isEqualTo(Deploy::STATUS_WAITING)
+            ->string($deploys[1]->getStatus())
+                ->isEqualTo(Deploy::STATUS_QUEUED)
+        ;
+    }
+
+    /**
      * @param array $matching
      *
      * @return Doctrine\ORM\EntityRepository
@@ -291,6 +466,9 @@ class DeployManager extends atoum
     protected function getEntityManagerMock()
     {
         $mock = new \mock\Doctrine\ORM\EntityManager();
+
+        $mock->getMockController()->persist = true;
+        $mock->getMockController()->flush = true;
 
         return $mock;
     }
