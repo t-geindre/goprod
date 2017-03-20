@@ -3,41 +3,37 @@ module.exports = {};
 </script>
 
 <template>
-    <p class="loading-spinner"><span class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span></p>
+    <p class="loading-spinner"></p>
 </template>
 
 <style type="text/css" scoped>
-    .glyphicon-refresh-animate {
-        -animation: spin .7s infinite linear;
-        -webkit-animation: spin2 .7s infinite linear;
+    @keyframes spinner {
+        to {transform: rotate(360deg);}
     }
-
-    @-webkit-keyframes spin2 {
-        from { -webkit-transform: rotate(0deg);}
-        to { -webkit-transform: rotate(360deg);}
-    }
-
-    @keyframes spin {
-        from { transform: scale(1) rotate(0deg);}
-        to { transform: scale(1) rotate(360deg);}
-    }
-
     .loading-spinner {
-        padding: 20px;
-        text-align:center;
+        width: 15px;
+        height: 15px;
+        border-radius: 50%;
+        border: 2px solid #ccc;
+        border-top-color: #07d;
+        animation: spinner .4s linear infinite;
+        margin: 50px auto;
     }
 
     .loading-spinner.big {
-        font-size:60px;
+        width: 60px;
+        height: 60px;
     }
 
     .loading-spinner.medium {
-        font-size:30px;
+        width: 30px;
+        height: 30px;
     }
 
     .loading-spinner.inline {
         display: inline-block;
         padding:0;
         margin:0;
+        vertical-align: text-top;
     }
 </style>

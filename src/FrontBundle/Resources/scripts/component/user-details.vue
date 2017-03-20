@@ -143,7 +143,7 @@ module.exports = {
                         <div class="alert alert-warning" role="alert" v-if="!profileComplete">
                             Please, <strong>complete your profile</strong>
                         </div>
-                        <form>
+                        <form v-on:submit.prevent="updateProfile">
                             <div class="form-group" v-bind:class="{'has-error':this.formErrors.fields.goliveKey}">
                                 <label for="goliveApiKey">Golive API Key (<a v-bind:href="apiKeyUrl" target="_blank">manage</a>):</label>
                                 <input type="password" name="goliveKey" class="form-control" id="goliveApiKey" placeholder="fds54fds98sd8ds897vd8s7" v-model="formData.goliveKey" />
