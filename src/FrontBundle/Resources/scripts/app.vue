@@ -113,7 +113,7 @@ module.exports = {
 </script>
 
 <template>
-<div>
+<transition name="fade">
     <div v-if="configured">
         <nav class="navbar navbar-inverse navbar-fixed-top">
             <div class="container">
@@ -178,7 +178,7 @@ module.exports = {
             </transition>
         </div>
     </div>
-</div>
+</transition>
 </template>
 
 <style type="text/css" scoped>
@@ -193,6 +193,21 @@ module.exports = {
 
 .navbar-inverse .navbar-brand {
     color:#19C9FF;
+}
+
+
+.fade-enter-active, .fade-leave-active {
+    transition: opacity .05s;
+    position: absolute;
+    width: 100%;
+    padding-right: 30px;
+}
+
+.fade-enter, .fade-leave-to {
+    opacity: 0;
+    position: absolute;
+    width: 100%;
+    padding-right: 30px;
 }
 </style>
 <style type="text/css" src="../../../../node_modules/bootstrap/dist/css/bootstrap.min.css"></style>
