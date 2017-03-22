@@ -153,19 +153,54 @@ class GoliveController extends AbstractController
         }
 
         $events = [
-            ['message' => null,                                            'status' => 'pending'],
-            ['message' => null,                                            'status' => 'pending'],
-            ['message' => 'Checking disk space usage',                     'status' => 'running'],
-            ['message' => 'Configuring Git credentials',                   'status' => 'running'],
-            ['message' => 'Pruning Git remote cached copy',                'status' => 'running'],
-            ['message' => 'Updating code base with remote_cache strategy', 'status' => 'running'],
-            ['message' => 'Configuring Composer',                          'status' => 'running'],
-            ['message' => 'Installing configuration files',                'status' => 'running'],
-            ['message' => 'Installing Composer dependencies',              'status' => 'running'],
-            ['message' => 'Cleaning .git directories in vendors',          'status' => 'running'],
-            ['message' => 'Setting permissions',                           'status' => 'running'],
-            ['message' => 'Creating www symlink',                          'status' => 'running'],
-            ['message' => 'Success!',                                      'status' => 'success'],
+            [
+                'message' => null,
+                'status' => 'pending',
+            ],
+            [
+                'message' => 'Doing some admin stuff',
+                'status' => 'running',
+            ],
+            [
+                'message' => 'Cleaning some strange directories',
+                'status' => 'running',
+            ],
+            [
+                'message' => 'Moving something',
+                'status' => 'running',
+            ],
+            [
+                'message' => 'Forgot to clean smothing, admin stuff, you know...',
+                'status' => 'running',
+            ],
+            [
+                'message' => 'Calling an API, juste for fun',
+                'status' => 'running',
+            ],
+            [
+                'message' => 'Installing some dependencies',
+                'status' => 'running',
+            ],
+            [
+                'message' => 'Running smoke checks',
+                'status' => 'running',
+            ],
+            [
+                'message' => 'Doing a bit more strange admin stuff',
+                'status' => 'running',
+            ],
+            [
+                'message' => 'Wait a few more seconds',
+                'status' => 'running',
+            ],
+            [
+                'message' => '...a bit more',
+                'status' => 'running',
+            ],
+            [
+                'message' => 'Success!',
+                'status' => 'success',
+            ],
         ];
 
         if ($request->headers->get('Accept') == 'text/event-stream') {
@@ -176,7 +211,7 @@ class GoliveController extends AbstractController
                         echo sprintf("id:%d\ndata: %s\n\n", $id, json_encode($event));
                         flush();
                         ob_flush();
-                        usleep($wait ? mt_rand(50, 1000)*1000 : 0);
+                        sleep($wait ? mt_rand(1, 3) : 0);
                     }
                 },
                 200,

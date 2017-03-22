@@ -16,6 +16,9 @@
             goliveUrl: () => ConfigStore.state.config.golive.urls.site,
             url: function() {
                 return this.goliveUrl + '#/deployments/' + this.id
+            },
+            empty: function() {
+                return this.events.length == 0;
             }
         },
         methods: {
@@ -24,7 +27,9 @@
                 this.eventSource.onmessage = (message) => {
                     var data = JSON.parse(message.data);
                     this.status = data.status;
-                    this.events.push(data);
+                    if (data.message) {
+                        this.events.push(data);
+                    }
                 };
             },
             closeEventSource: function() {
@@ -49,6 +54,9 @@
                     500
                 );
             }
+        },
+        components: {
+            'loading-spinner': require('../loading-spinner.vue')
         },
         beforeDestroy: function() {
             this.closeEventSource();
@@ -76,10 +84,21 @@
                 </h3>
             </div>
             <div class="panel-body">
-                <ul>
+                <p v-if="empty">
+                    <loading-spinner class="inline"></loading-spinner>
+                    Pending...
+                </p>
+                <ul v-else>
                     <li v-for="event in events" v-if="event.message">{{ event.message }}</li>
                 </ul>
             </div>
         </div>
     </div>
 </template>
+
+
+<style scoped>
+p {
+    text-align:center;
+}
+</style>
