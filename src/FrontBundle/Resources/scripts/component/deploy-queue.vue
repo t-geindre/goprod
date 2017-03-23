@@ -1,8 +1,12 @@
 <script>
 var ApiClient = require('../lib/api-client.js');
+var UserStore = require('../store/user.js');
 
 module.exports = {
-    props: ['deploy'],
+    props: {
+        deploy: {},
+        title: { default: 'This deployment has been queued' }
+    },
     data: function() {
         return {
             loading: true,
@@ -28,9 +32,23 @@ module.exports = {
             this.$router.push({name: 'deploy-process', params: { id: deploy.id }});
         }
     },
+    computed: {
+        isEmpty: function() {
+            return this.deploys.length == 0;
+        },
+        user: () => UserStore.state.user
+    },
     components: {
         'loading-spinner': require('./loading-spinner.vue'),
         'deploy': require('./deploy.vue')
+    },
+    watch: {
+        deploy: {
+            handler: function() {
+                this.update();
+            },
+            deep :true
+        }
     },
     beforeDestroy: function() {
         if (this.deploysRefresh) {
@@ -41,8 +59,8 @@ module.exports = {
 </script>
 
 <template>
-    <div class="panel panel-warning">
-        <div class="panel-heading">This deployment has been queued</div>
+    <div class="panel panel-info" v-if="!isEmpty">
+        <div class="panel-heading">{{ title }}</div>
         <loading-spinner v-if="loading" class="medium"></loading-spinner>
         <div class="list-group" v-else>
             <deploy
@@ -50,6 +68,7 @@ module.exports = {
                 v-bind:deploy="deploy"
                 class="list-group-item"
                 v-on:click="goToDeploy(deploy)"
+                v-bind:class="{ 'list-group-item-info': user.login == deploy.user.login }"
             >
             </deploy>
         </div>

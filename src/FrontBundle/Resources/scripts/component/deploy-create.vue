@@ -74,7 +74,8 @@ module.exports = {
     components: {
         'loading-spinner': require('./loading-spinner.vue'),
         'github-pullrequest': require('./github/pullrequest.vue'),
-        'repository-selector': require('./github/repository-selector.vue')
+        'repository-selector': require('./github/repository-selector.vue'),
+        'deploy-queue': require('./deploy-queue.vue')
     }
 };
 </script>
@@ -95,7 +96,6 @@ module.exports = {
                     <div class="alert alert-danger" role="alert" v-if="this.errors.global && this.errors.global.length > 0">
                         <p v-for="error in this.errors.global">{{ error }}</p>
                     </div>
-                    <github-pullrequest v-bind:pullrequest="pullrequest" v-on:refresh="update" v-if="pullrequest"></github-pullrequest>
                     <div class="form-group" v-bind:class="{'has-error':this.errors.fields.repository}">
                         <label for="repositoryName">Repository</label>
                         <repository-selector
@@ -106,6 +106,7 @@ module.exports = {
                             {{ this.errors.fields.repository }}
                         </span>
                     </div>
+                    <github-pullrequest v-bind:pullrequest="pullrequest" v-on:refresh="update" v-if="pullrequest"></github-pullrequest>
 
                     <div class="form-group" v-bind:class="{'has-error':this.errors.fields.description}">
                         <label for="description">Description</label>
@@ -117,6 +118,7 @@ module.exports = {
                             {{ this.errors.fields.description }}
                         </span>
                     </div>
+                    <deploy-queue v-bind:deploy="deploy" v-if="deploy.repository" title="This deployment will be queued" class="panel-primary"></deploy-queue>
                     <div class="pull-right">
                         <template v-if="!pullrequest || (pullrequest.mergeable || pullrequest.merged)">
                         </template>

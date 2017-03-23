@@ -71,7 +71,7 @@ module.exports = {
         deploys: function() {
             if (this.queuedDeploys.length > 0) {
                 this.queuedDeploys.forEach((id) => {
-                    var deploy = this.deploys.find((deploy) => deploy.id == id && deploy.status != 'queued');
+                    var deploy = this.deploys.find((deploy) => deploy.id == id && ['queued', 'canceled'].indexOf(deploy.status) == -1);
                     if (deploy) {
                         Notify(
                             deploy.owner + '/' + deploy.repository + '\n'
