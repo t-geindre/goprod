@@ -3,11 +3,12 @@
 namespace ApiBundle\Service\Golive;
 
 use Buzz\Message\RequestInterface;
+use ApiBundle\Service\AccessToken\AccessTokenAwareInterface;
 
 /**
  * Golive client
  */
-class Client
+class Client implements AccessTokenAwareInterface
 {
     /**
      * @var Buzz\Browser
@@ -40,11 +41,9 @@ class Client
     }
 
     /**
-     * @param string|null $token
-     *
-     * @return Client
+     * {@inheritdoc}
      */
-    public function setAccessToken(string $token = null) : Client
+    public function setAccessToken(string $token = null)
     {
         $this->accessToken = $token;
 

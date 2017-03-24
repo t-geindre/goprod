@@ -13,37 +13,6 @@ use ApiBundle\Entity\User;
 class BaseController extends Controller
 {
     /**
-     * @param string|null $accessToken
-     * @param string|null $login
-     *
-     * @return User
-     */
-    protected function getUser(string $accessToken = null, string $login = null) : User
-    {
-        $request = $this->get('request_stack')->getMasterRequest();
-        $accessToken = $accessToken ?? $request->get('access_token');
-        $login = $login ?? $request->get('login');
-
-        if (!is_null($login) && !is_null($accessToken)) {
-            $user = $this
-                ->get('doctrine')
-                ->getRepository('ApiBundle\\Entity\\User')
-                ->findOneBy(['login' => $login, 'accessToken' => $accessToken]);
-
-            if (!is_null($user)) {
-                $this->get('api_bundle.github_client')->setAccessToken($user->getAccessToken());
-                if ($goliveKey = $user->getGoliveKey()) {
-                    $this->get('api_bundle.golive_client')->setAccessToken($goliveKey);
-                }
-
-                return $user;
-            }
-        }
-
-        throw $this->createBadRequestException('Bad credentials');
-    }
-
-    /**
      * @param string          $message
      * @param \Exception|null $previous
      */

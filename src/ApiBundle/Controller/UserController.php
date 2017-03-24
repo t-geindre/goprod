@@ -24,7 +24,7 @@ class UserController extends BaseController
         }
 
         try {
-            $github = $this->get('api_bundle.github_client');
+            $github = $this->get('api_bundle.github_client.not_tokenified');
 
             return [
                 'access_token' => $github->authUser($code)['access_token'],

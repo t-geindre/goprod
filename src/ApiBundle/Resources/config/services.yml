@@ -1,7 +1,7 @@
 services:
     # Doctrine repositories
     api_bundle.repository:
-        class: Doctrine\ORM\EntityRepository
+        class: "Doctrine\\ORM\\EntityRepository"
         factory: ["@doctrine.orm.entity_manager", getRepository]
         abstract: true
 
@@ -71,12 +71,17 @@ services:
             - "%api_bundle.github.client_secret%"
             - ~
             - "@event_dispatcher"
+        tags:
+            - { name: "api_bundle.tokenify", property: "accessToken", required: true }
+            - { name: "api_bundle.another", property: "accessToken", required: true }
 
     api_bundle.golive_client:
         class: "ApiBundle\\Service\\Golive\\Client"
         arguments:
             - "@buzz"
             - "%api_bundle.golive.urls.api%"
+        tags:
+            - { name: "api_bundle.tokenify", property: "goliveKey", required: true }
 
     # Misc
     api_bundle.serializer.form.error:
@@ -88,3 +93,11 @@ services:
             - [ "setClient", ["@api_bundle.golive_client"]]
         tags:
             - { name: validator.constraint_validator }
+
+    api_bundle.token_authenticator:
+        class: "ApiBundle\\Security\\TokenAuthenticator"
+
+    api_bundle.tokenifier.factory:
+        class: "ApiBundle\\Service\\AccessToken\\AccessTokenAwareFactory"
+        arguments: ["@security.token_storage"]
+

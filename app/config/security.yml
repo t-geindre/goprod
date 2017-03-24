@@ -1,7 +1,9 @@
 security:
     providers:
-        in_memory:
-            memory: ~
+        db_provider:
+            entity:
+                class: "ApiBundle\\Entity\\User"
+                property: "accessToken"
 
     firewalls:
         dev:
@@ -10,3 +12,10 @@ security:
 
         main:
             anonymous: ~
+            guard:
+                authenticators:
+                    - "api_bundle.token_authenticator"
+    access_control:
+        - { path: ^/api/config$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/api/user/auth$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/api, roles: ROLE_USER }

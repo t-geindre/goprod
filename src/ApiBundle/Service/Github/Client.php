@@ -4,11 +4,12 @@ namespace ApiBundle\Service\Github;
 
 use Buzz\Message\RequestInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use ApiBundle\Service\AccessToken\AccessTokenAwareInterface;
 
 /**
  * Github client
  */
-class Client
+class Client implements AccessTokenAwareInterface
 {
     /**
      * @var Buzz\Browser
@@ -78,11 +79,9 @@ class Client
     }
 
     /**
-     * @param string $token
-     *
-     * @return Client
+     * {@inheritdoc}
      */
-    public function setAccessToken(string $token) : Client
+    public function setAccessToken(string $token)
     {
         $this->accessToken = $token;
         $this->currentUser = null;
