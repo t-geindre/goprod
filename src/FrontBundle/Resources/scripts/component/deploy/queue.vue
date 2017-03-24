@@ -1,6 +1,6 @@
 <script>
-var ApiClient = require('../lib/api-client.js');
-var UserStore = require('../store/user.js');
+var ApiClient = require('../../lib/api-client.js');
+var UserStore = require('../../store/user.js');
 
 module.exports = {
     props: {
@@ -39,7 +39,7 @@ module.exports = {
         user: () => UserStore.state.user
     },
     components: {
-        'loading-spinner': require('./loading-spinner.vue'),
+        'loading-spinner': require('../loading-spinner.vue'),
         'deploy': require('./deploy.vue')
     },
     watch: {

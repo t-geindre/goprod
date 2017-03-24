@@ -1,8 +1,8 @@
 <script>
-var UserStore    = require('../store/user.js');
-var DeploysStore = require('../store/deploys.js');
-var ApiClient    = require('../lib/api-client.js');
-var GithubClient = require('../lib/github-client.js');
+var UserStore    = require('../../store/user.js');
+var DeploysStore = require('../../store/deploys.js');
+var ApiClient    = require('../../lib/api-client.js');
+var GithubClient = require('../../lib/github-client.js');
 var jQuery       = require('jquery');
 
 module.exports = {
@@ -171,11 +171,11 @@ module.exports = {
         }
     },
     components: {
-        'loading-spinner': require('./loading-spinner.vue'),
-        'github-pullrequest': require('./github/pullrequest.vue'),
+        'loading-spinner': require('../loading-spinner.vue'),
+        'github-pullrequest': require('../github/pullrequest.vue'),
         'deploy': require('./deploy.vue'),
-        'deploy-queue': require('./deploy-queue.vue'),
-        'golive-deploy': require('./golive/deploy.vue')
+        'deploy-queue': require('./queue.vue'),
+        'golive-deploy': require('../golive/deploy.vue')
     }
 };
 </script>

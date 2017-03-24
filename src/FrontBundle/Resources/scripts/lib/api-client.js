@@ -6,7 +6,7 @@ Vue.use(VueResource);
 var client;
 var ApiClient = function()
 {
-    this.credentials = {};
+    this.accessToken = '';
     this.routerConfigured = false;
     this.baseUrl = 'api/';
 
@@ -75,7 +75,7 @@ var ApiClient = function()
 
     // Internals
     this.setCredentials = function(login, accessToken) {
-        this.credentials = { login: login, access_token: accessToken };
+        this.accessToken = accessToken;
     }
 
     this.post = function(route, options = {}) {
@@ -99,7 +99,10 @@ var ApiClient = function()
 
     this.get = function(route, options = {})
     {
-        options.params = Object.assign(this.credentials, options.params);
+        options.headers = Object.assign(
+            { 'X-AUTH-TOKEN' : this.accessToken },
+            options.headers
+        );
 
         return Vue.http(
             Object.assign(

@@ -20,7 +20,7 @@ module.exports = {
         }
     },
     components: {
-        'github-issues': require('./github/issues.vue')
+        'github-issues': require('../github/issues.vue')
     }
 };
 </script>

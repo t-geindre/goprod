@@ -1,5 +1,5 @@
 <script>
-var DeploysStore = require('../store/deploys.js');
+var DeploysStore = require('../../store/deploys.js');
 
 module.exports = {
     data: function() {

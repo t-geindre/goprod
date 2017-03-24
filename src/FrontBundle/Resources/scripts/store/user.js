@@ -50,9 +50,8 @@ module.exports = new Vuex.Store({
                         resolveResponse = data;
                         if (data.authenticated) {
                             return ApiClient.getUser({
-                                params: {
-                                    access_token: data.auth.access_token,
-                                    login: data.auth.login
+                                headers: {
+                                    'X-AUTH-TOKEN': data.auth.access_token
                                 }
                             })
                         }

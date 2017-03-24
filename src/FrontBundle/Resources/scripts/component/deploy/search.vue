@@ -1,6 +1,6 @@
 <script>
-var ApiClient = require('../lib/api-client.js');
-var UserStore = require('../store/user.js');
+var ApiClient = require('../../lib/api-client.js');
+var UserStore = require('../../store/user.js');
 
 module.exports = {
     props: {
@@ -85,11 +85,11 @@ module.exports = {
         }
     },
     components: {
-        'loading-spinner': require('./loading-spinner.vue'),
-        'pagination': require('./pagination.vue'),
+        'loading-spinner': require('../loading-spinner.vue'),
+        'pagination': require('../pagination.vue'),
         'deploy': require('./deploy.vue'),
-        'typeahead-users': require('./typeahead/users.vue'),
-        'repository-selector': require('./github/repository-selector.vue')
+        'typeahead-users': require('../typeahead/users.vue'),
+        'repository-selector': require('../github/repository-selector.vue')
     },
     beforeDestroy: function() {
         this.clearAutoRefresh();

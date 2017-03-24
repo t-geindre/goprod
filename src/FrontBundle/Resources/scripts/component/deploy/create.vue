@@ -1,6 +1,6 @@
 <script>
-var DeploysStore = require('../store/deploys.js');
-var GithubClient = require('../lib/github-client.js');
+var DeploysStore = require('../../store/deploys.js');
+var GithubClient = require('../../lib/github-client.js');
 
 module.exports = {
     data: function() {
@@ -72,10 +72,10 @@ module.exports = {
         }
     },
     components: {
-        'loading-spinner': require('./loading-spinner.vue'),
-        'github-pullrequest': require('./github/pullrequest.vue'),
-        'repository-selector': require('./github/repository-selector.vue'),
-        'deploy-queue': require('./deploy-queue.vue')
+        'loading-spinner': require('../loading-spinner.vue'),
+        'github-pullrequest': require('../github/pullrequest.vue'),
+        'repository-selector': require('../github/repository-selector.vue'),
+        'deploy-queue': require('./queue.vue')
     }
 };
 </script>
