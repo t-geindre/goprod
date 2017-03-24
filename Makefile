@@ -13,9 +13,9 @@ endif
 npm-install: check-env
 	$(info Installing NPM dependencies)
 ifeq ($(ENV),prod)
-	@npm install --production
+	@yarn install --production
 else
-	@npm install
+	@yarn install
 endif
 
 composer-install: check-env
@@ -61,7 +61,11 @@ atoum:
 	$(info Running PHP units tests)
 	@vendor/bin/atoum
 
+karma:
+	$(info Running Javascript units tests)
+	@npm run test:unit
+
 database: database-create schema-update
 dependencies: npm-install composer-install
 install: dependencies database assets-install fixtures-load
-tests: install coke atoum
+tests: install coke atoum karma

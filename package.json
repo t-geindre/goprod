@@ -7,7 +7,8 @@
     "watch": "watchify -vd -p browserify-hmr -e src/FrontBundle/Resources/scripts/main.js -o web/build.js",
     "serve": "php bin/console server:run 127.0.0.1:8000",
     "dev": "npm-run-all --parallel watch serve",
-    "prod": "cross-env NODE_ENV=production browserify -g envify src/FrontBundle/Resources/scripts/main.js | uglifyjs -c warnings=false -m > web/build.js"
+    "prod": "cross-env NODE_ENV=production browserify -g envify src/FrontBundle/Resources/scripts/main.js | uglifyjs -c warnings=false -m > web/build.js",
+    "test:unit": "karma start --single-run"
   },
   "dependencies": {
     "bootstrap": "^3.3.7",
@@ -29,6 +30,11 @@
     "vuex": "^2.1.2"
   },
   "devDependencies": {
+    "jasmine-core": "^2.5.2",
+    "karma": "^1.5.0",
+    "karma-browserify": "^5.1.1",
+    "karma-chrome-launcher": "^2.0.0",
+    "karma-jasmine": "^1.1.0",
     "npm-run-all": "^2.1.2",
     "watchify": "^3.4.0"
   },

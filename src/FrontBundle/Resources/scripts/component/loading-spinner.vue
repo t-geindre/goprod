@@ -1,5 +1,5 @@
 <script>
-module.exports = {};
+module.exports = {props:['class']};
 </script>
 
 <template>
