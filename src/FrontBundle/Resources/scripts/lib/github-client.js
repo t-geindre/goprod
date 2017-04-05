@@ -67,6 +67,11 @@ var GithubClient = function()
         return this.get('search/repositories', { params: terms });
     }
 
+    // References
+    this.deleteReference = function(owner, repo, ref) {
+        return this.delete('repos/' + owner + '/' + repo + '/git/refs/' + encodeURI(ref));
+    }
+
     // Internals
     this.setupUrls = function(urls) {
         this.urls = urls;
@@ -156,6 +161,11 @@ var GithubClient = function()
 
     this.put = function(url, options = {}) {
         options.method = 'put';
+        return this.get(url, options);
+    }
+
+    this.delete = function(url, options = {}) {
+        options.method = 'delete';
         return this.get(url, options);
     }
 }

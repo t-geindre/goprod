@@ -222,4 +222,12 @@ class GithubController extends AbstractController
             'items' => $this->getPayloads($repositories->toArray()),
         ]);
     }
+
+    /**
+     * @return Response
+     */
+    public function deleteReferenceAction()
+    {
+        return $this->response([], 204);
+    }
 }

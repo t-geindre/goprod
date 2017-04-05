@@ -43,3 +43,11 @@ mock_gitub_search_repositories:
     path: /search/repositories
     defaults:
         _controller: ApiMockBundle:Github:searchRepositories
+
+mock_gitub_delete_reference:
+    path: /repos/{owner}/{repo}/git/{ref}
+    methods:  [DELETE]
+    defaults:
+        _controller: ApiMockBundle:Github:deleteReference
+    requirements:
+        ref: .+

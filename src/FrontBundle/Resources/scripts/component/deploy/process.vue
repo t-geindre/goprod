@@ -13,7 +13,8 @@ module.exports = {
         processing: false,
         errors: {},
         deployProcess: {},
-        localDeploy: {user: {}}
+        localDeploy: {user: {}},
+        deleteBranch: true
     }),
     mounted: function() {
         this.deployProcess = {
@@ -26,6 +27,16 @@ module.exports = {
                 action: () => DeploysStore
                     .dispatch('merge', this.deploy, this.pullrequest.merge_commit_sha)
                     .then(() => this.loadPullrequest(false))
+                    .then(() => {
+                        if (this.deleteBranch) {
+                            return GithubClient.deleteReference(
+                                this.deploy.owner,
+                                this.deploy.repository,
+                                'heads/' + this.pullrequest.head.ref
+                            );
+                        }
+                        this.processing = false;
+                    })
                     .then(() => { this.processing = false; })
                     .catch(() => {
                         this.processing = false;
@@ -121,6 +132,7 @@ module.exports = {
         },
         update: function() {
             this.processing = false;
+            this.deleteBranch = true;
             this.loadPullrequest();
             if (this.deploy.status == 'deploy' && this.deploy.golive_id) {
                 this.processing = true;
@@ -217,6 +229,15 @@ module.exports = {
                     </div>
                     <github-pullrequest v-on:refresh="loadPullrequest" v-if="pullrequest" v-bind:pullrequest="pullrequest">
                     </github-pullrequest>
+                    <div class="alert alert-info checkbox" v-if="deploy.status == 'merge'">
+                        <p>
+                            <label>
+                                <input type="checkbox" v-model="deleteBranch" />
+                                delete associated branch
+                                <code>{{ pullrequest.head.ref }}</code>
+                            </label>
+                        </p>
+                    </div>
                     <golive-deploy v-on:status="goliveStatus" v-if="deploy.golive_id" v-bind:id="deploy.golive_id">
                     </golive-deploy>
                     <template v-if="deploy.status == 'waiting' && actionButtons">
