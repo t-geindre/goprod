@@ -229,14 +229,17 @@ module.exports = {
                     </div>
                     <github-pullrequest v-on:refresh="loadPullrequest" v-if="pullrequest" v-bind:pullrequest="pullrequest">
                     </github-pullrequest>
-                    <div class="alert alert-info checkbox" v-if="deploy.status == 'merge'">
-                        <p>
+                    <div class="panel panel-info" v-if="deploy.status == 'merge' && actionButtons && !processing">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Merge options</h3>
+                        </div>
+                        <div class="panel-body checkbox">
                             <label>
                                 <input type="checkbox" v-model="deleteBranch" />
                                 delete associated branch
                                 <code>{{ pullrequest.head.ref }}</code>
                             </label>
-                        </p>
+                        </div>
                     </div>
                     <golive-deploy v-on:status="goliveStatus" v-if="deploy.golive_id" v-bind:id="deploy.golive_id">
                     </golive-deploy>

@@ -25,6 +25,10 @@ module.exports = new function()
         return evtSrc;
     }
 
+    this.getDeployment = function(id) {
+        return this.get('deployments/' + id);
+    }
+
     // Config
     this.setAccessToken = function(token) {
         accessToken = token;

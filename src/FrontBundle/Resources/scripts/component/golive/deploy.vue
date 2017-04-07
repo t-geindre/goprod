@@ -23,14 +23,21 @@
         },
         methods: {
             update: function() {
-                this.eventSource = GoliveClient.getLiveDeployment(this.id);
-                this.eventSource.onmessage = (message) => {
-                    var data = JSON.parse(message.data);
-                    this.status = data.status;
-                    if (data.message) {
-                        this.events.push(data);
-                    }
-                };
+                GoliveClient.getDeployment(this.id).then((response) => {
+                    this.status = response.data.status;
+                    this.eventSource = GoliveClient.getLiveDeployment(this.id);
+                    this.eventSource.onmessage = (message) => {
+                        var data = JSON.parse(message.data);
+                        this.status = data.status;
+                        if (data.message) {
+                            this.events.push(data);
+                        }
+                        if (data.status != 'running') {
+                            this.closeEventSource();
+                        }
+                    };
+                });
+
             },
             closeEventSource: function() {
                 if (this.eventSource !== false) {
@@ -44,9 +51,6 @@
                 this.update();
             },
             status: function() {
-                if (this.status != 'running') {
-                    this.closeEventSource();
-                }
                 setTimeout(
                     () => this.$emit('status', this.status),
                     // delay event because golive might return a non
@@ -84,10 +88,11 @@
                 </h3>
             </div>
             <div class="panel-body">
-                <p v-if="empty">
+                <p v-if="status == 'pending'">
                     <loading-spinner class="inline"></loading-spinner>
                     Pending...
                 </p>
+                <p v-else-if="empty">No log for this deployment</p>
                 <ul v-else>
                     <li v-for="event in events" v-if="event.message">{{ event.message }}</li>
                 </ul>
@@ -99,6 +104,7 @@
 
 <style scoped>
 p {
-    text-align:center;
+    color:#888;
+    margin-bottom: 0;
 }
 </style>
