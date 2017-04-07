@@ -17,7 +17,8 @@ module.exports = [
                 userName: UserStore.state.user.name,
                 userIs: 'author'
             },
-            route.query
+            route.query,
+            { open: route.query.open != undefined ? route.query.open == 'true' || route.query.open === true : true }
         )
     },
     {
