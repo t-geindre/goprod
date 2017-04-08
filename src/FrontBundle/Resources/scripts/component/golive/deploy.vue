@@ -25,19 +25,18 @@
             update: function() {
                 GoliveClient.getDeployment(this.id).then((response) => {
                     this.status = response.data.status;
-                    this.eventSource = GoliveClient.getLiveDeployment(this.id);
-                    this.eventSource.onmessage = (message) => {
-                        var data = JSON.parse(message.data);
-                        this.status = data.status;
-                        if (data.message) {
-                            this.events.push(data);
-                        }
-                        if (data.status != 'running') {
-                            this.closeEventSource();
-                        }
-                    };
                 });
-
+                this.eventSource = GoliveClient.getLiveDeployment(this.id);
+                this.eventSource.onmessage = (message) => {
+                    var data = JSON.parse(message.data);
+                    this.status = data.status;
+                    if (data.message) {
+                        this.events.push(data);
+                    }
+                    if (['running', 'pending'].indexOf(data.status) == -1) {
+                        this.closeEventSource();
+                    }
+                };
             },
             closeEventSource: function() {
                 if (this.eventSource !== false) {
