@@ -1,0 +1,10 @@
+{
+    "main container": "div.container",
+    "login button": ".login-btn",
+    "arthur pendragon": ".a-pendragon",
+    "golive api key field" : "input#goliveApiKey",
+    "update profile button" : ".profile-modal button.btn-primary",
+    "modal profile" : ".profile-modal",
+    "logout button" : ".nav .logout",
+    "my name" : "a.user-infos"
+}

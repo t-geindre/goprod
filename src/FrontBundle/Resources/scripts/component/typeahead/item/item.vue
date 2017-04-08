@@ -1,6 +1,6 @@
 <script>
-module.exports ={
-    props: ['item', 'displayField']
+module.exports = {
+  props: ['item', 'displayField']
 }
 </script>
 

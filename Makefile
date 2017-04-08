@@ -1,57 +1,76 @@
 ENV:=dev
+SHELL := /bin/bash
 
 all: install app-build
 
-check-env:
-ifneq ($(ENV),prod)
-ifneq ($(ENV),dev)
-	$(warning ENV must either be set on "prod" or "dev")
-	@exit 1
-endif
-endif
-
-npm-install: check-env
+npm-install:
 	$(info Installing NPM dependencies)
-ifeq ($(ENV),prod)
-	@yarn install --production
-else
-	@yarn install
-endif
+	@if [ "$(ENV)" = "prod" ] ; then \
+		yarn install --production ;\
+	else \
+		yarn install ;\
+	fi
 
-composer-install: check-env
+composer-install:
 	$(info Installing Composer dependencies)
-ifeq ($(ENV),prod)
-	@composer install --no-dev
-else
-	@composer install
-endif
+	@if [ "$(ENV)" = "prod" ] ; then \
+		composer install --no-dev --no-interaction ;\
+	else \
+		composer install --no-interaction ;\
+	fi
 
-assets-install: check-env
+assets-install:
 	$(info Installing assets)
-ifeq ($(ENV),prod)
-	bin/console assets:install -e $(ENV)
-else
-	bin/console assets:install --symlink -e $(ENV)
-endif
+	@if [ "$(ENV)" = "prod" ] ; then \
+		bin/console assets:install -e $(ENV) ;\
+	else \
+		bin/console assets:install --symlink -e $(ENV) ;\
+	fi
 
-database-create: check-env
+database-create:
 	$(info Creating database)
-	@bin/console doctrine:database:create --if-not-exists -e $(ENV)
+	# SQLite/Doctrine issue, see: https://github.com/doctrine/dbal/pull/2402
+	@if [ "$(ENV)" = "test" -o "$(ENV)" = "dev" ] ; then \
+		bin/console doctrine:database:create -e $(ENV) ;\
+	else \
+		bin/console doctrine:database:create --if-not-exists -e $(ENV) ;\
+	fi
 
-schema-update: check-env
+database-drop:
+	$(info Droping database)
+	# SQLite/Doctrine issue, see: https://github.com/doctrine/dbal/pull/2402
+	@if [ "$(ENV)" = "test" -o "$(ENV)" = "dev" ] ; then \
+		bin/console doctrine:database:drop --force -e $(ENV) ;\
+	else \
+		bin/console doctrine:database:force --if-exists -e $(ENV) ;\
+	fi
+
+schema-update:
 	$(info Updating database schema)
 	@bin/console doctrine:schema:update --force -e $(ENV)
 
-fixtures-load: check-env
-ifeq ($(ENV),dev)
-	$(info Loading fixtures)
-	@bin/console apimock:fixtures:load -vv -e $(ENV)
-endif
+fixtures-load:
+	@if [ "$(ENV)" = "dev" -o "$(ENV)" = "test" ] ; then \
+		echo Loading fixtures ;\
+		bin/console apimock:fixtures:load -vv -e $(ENV) ;\
+	fi
 
-app-build: check-env
+app-build:
 	$(info Building application)
 	@touch web/build.js
-	@npm run $(ENV)
+	@if [ "$(ENV)" = "dev" ] ; then \
+		npm run dev ;\
+	else \
+		npm run build ;\
+	fi
+
+eslinter:
+	$(info Checking Javascript coding styles)
+	@./node_modules/.bin/eslint "src/FrontBundle/Resources/scripts/component/**"
+
+eslinter-fix:
+	$(info Fixing Javascript coding styles)
+	@./node_modules/.bin/eslint "src/FrontBundle/Resources/scripts/component/**" --fix
 
 coke:
 	$(info Checking PHP coding styles)
@@ -65,7 +84,19 @@ karma:
 	$(info Running Javascript units tests)
 	@npm run test:unit
 
+cucumber: ENV=test
+cucumber: database-drop database fixtures-load
+	$(info Running cucumber functionals tests)
+	@./node_modules/.bin/cucumber-js
+
 database: database-create schema-update
+
 dependencies: npm-install composer-install
+
 install: dependencies database assets-install fixtures-load
-tests: install coke atoum karma
+
+tests: ENV=test
+tests: dependencies database-drop all coke eslinter atoum karma cucumber
+
+build: ENV=prod
+build: all

@@ -80,7 +80,7 @@ abstract class AbstractLoader
         $cmd = $this->manager->getClassMetadata($this->getEntityClass());
         $connection = $this->manager->getConnection();
         $connection->beginTransaction();
-        $connection->query('TRUNCATE '.$cmd->getTableName());
+        $connection->query('DELETE FROM '.$cmd->getTableName());
         $connection->commit();
         $this->logger->info(sprintf('%s table cleared.', $this->getType()));
     }

@@ -1,9 +1,9 @@
-var Vue       = require('vue');
-var VueRouter = require('vue-router');
-var Routes    = require('./routes');
+const Vue = require('vue')
+const VueRouter = require('vue-router')
+const Routes = require('./routes')
 
 Vue.use(VueRouter);
 
 module.exports = new VueRouter({
-    routes: Routes
+  routes: Routes
 });

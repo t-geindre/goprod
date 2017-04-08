@@ -38,8 +38,12 @@ monolog:
             type: stream
             path: "%kernel.logs_dir%/%kernel.environment%.log"
             level: debug
-            channels: [!event]
+            channels: ["!event"]
         console:
             type:   console
-            channels: [!event, !doctrine]
-
+            channels: ["!event", "!doctrine"]
+doctrine:
+    dbal:
+        driver: pdo_sqlite
+        path: '%kernel.root_dir%/../var/database_dev.db'
+        charset: UTF8

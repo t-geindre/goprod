@@ -3,8 +3,8 @@ parameters:
     golive.urls.api: https://deploy.m6web.fr/v1/
     github.urls.site: https://github.m6web.fr/
     github.urls.api: https://github.m6web.fr/api/v3/
-    github.client_id: ~
-    github.client_secret: ~
+    github.client_id: sd8f7ds98dsv4
+    github.client_secret: vds6sd46ds4v8dsv8d7v
     kernel.secret: ~
     database.host: localhost
     database.name: goprod

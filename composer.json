@@ -11,7 +11,7 @@
         "psr-4": { "Tests\\": "tests/" }
     },
     "require": {
-        "php": ">=5.5.9",
+        "php": ">=7.0",
         "symfony/symfony": "3.2.*",
         "doctrine/orm": "^2.5",
         "doctrine/doctrine-bundle": "^1.6",
@@ -29,7 +29,7 @@
         "sensio/generator-bundle": "^3.0",
         "m6web/coke": "^2.1",
         "m6web/symfony2-coding-standard": "^3.3",
-        "atoum/atoum": "^2.9"
+        "atoum/atoum": "^3.0"
     },
     "scripts": {
         "symfony-scripts": [
@@ -44,11 +44,6 @@
         "post-update-cmd": [
             "@symfony-scripts"
         ]
-    },
-    "config": {
-        "platform": {
-            "php": "5.5.9"
-        }
     },
     "extra": {
         "symfony-app-dir": "app",
