@@ -211,7 +211,7 @@ class GoliveController extends AbstractController
                         echo sprintf("id:%d\ndata: %s\n\n", $id, json_encode($event));
                         flush();
                         ob_flush();
-                        sleep($wait ? mt_rand(1, 3) : 0);
+                        usleep($wait ? mt_rand(100000, 1000000) : 0);
                     }
                 },
                 200,
