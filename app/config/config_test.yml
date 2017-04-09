@@ -14,3 +14,12 @@ web_profiler:
 
 swiftmailer:
     disable_delivery: true
+
+doctrine:
+    dbal:
+        driver: pdo_sqlite
+        path: '%kernel.root_dir%/../var/database_test.db'
+        charset: UTF8
+
+parameters:
+    hosts.local: http://localhost:8765

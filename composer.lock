@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "9fb85dee9cf58f376e825d8f3ac19b7a",
+    "content-hash": "199c30ae3edd52b2470357cfa4360fe3",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -285,20 +285,20 @@
         },
         {
             "name": "doctrine/dbal",
-            "version": "v2.5.5",
+            "version": "v2.5.12",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/dbal.git",
-                "reference": "9f8c05cd5225a320d56d4bfdb4772f10d045a0c9"
+                "reference": "7b9e911f9d8b30d43b96853dab26898c710d8f44"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/dbal/zipball/9f8c05cd5225a320d56d4bfdb4772f10d045a0c9",
-                "reference": "9f8c05cd5225a320d56d4bfdb4772f10d045a0c9",
+                "url": "https://api.github.com/repos/doctrine/dbal/zipball/7b9e911f9d8b30d43b96853dab26898c710d8f44",
+                "reference": "7b9e911f9d8b30d43b96853dab26898c710d8f44",
                 "shasum": ""
             },
             "require": {
-                "doctrine/common": ">=2.4,<2.7-dev",
+                "doctrine/common": ">=2.4,<2.8-dev",
                 "php": ">=5.3.2"
             },
             "require-dev": {
@@ -352,7 +352,7 @@
                 "persistence",
                 "queryobject"
             ],
-            "time": "2016-09-09T19:13:33+00:00"
+            "time": "2017-02-08T12:53:47+00:00"
         },
         {
             "name": "doctrine/doctrine-bundle",
@@ -2396,16 +2396,16 @@
     "packages-dev": [
         {
             "name": "atoum/atoum",
-            "version": "2.9.0",
+            "version": "3.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/atoum/atoum.git",
-                "reference": "421aafc829d0a1120422ddc3fe5872ae1814add9"
+                "reference": "decb381ef771ada37f8850774a9e9770a3da506f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/atoum/atoum/zipball/421aafc829d0a1120422ddc3fe5872ae1814add9",
-                "reference": "421aafc829d0a1120422ddc3fe5872ae1814add9",
+                "url": "https://api.github.com/repos/atoum/atoum/zipball/decb381ef771ada37f8850774a9e9770a3da506f",
+                "reference": "decb381ef771ada37f8850774a9e9770a3da506f",
                 "shasum": ""
             },
             "require": {
@@ -2414,14 +2414,18 @@
                 "ext-session": "*",
                 "ext-tokenizer": "*",
                 "ext-xml": "*",
-                "php": ">=5.3.3"
+                "php": "^5.6.0 || ^7.0.0"
             },
             "replace": {
                 "mageekguy/atoum": "*"
             },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "~1.12"
+            },
             "suggest": {
                 "atoum/stubs": "Provides IDE support (like autocompletion) for atoum",
-                "ext-mbstring": "Provides support for UTF-8 strings"
+                "ext-mbstring": "Provides support for UTF-8 strings",
+                "ext-xdebug": "Provides code coverage report (>= 2.3)"
             },
             "bin": [
                 "bin/atoum"
@@ -2429,7 +2433,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.x-dev"
+                    "dev-master": "3.x-dev"
                 }
             },
             "autoload": {
@@ -2472,7 +2476,7 @@
                 "test",
                 "unit testing"
             ],
-            "time": "2017-02-11T13:23:43+00:00"
+            "time": "2017-02-22T13:05:37+00:00"
         },
         {
             "name": "m6web/coke",
@@ -2685,8 +2689,5 @@
     "platform": {
         "php": ">=5.5.9"
     },
-    "platform-dev": [],
-    "platform-overrides": {
-        "php": "5.5.9"
-    }
+    "platform-dev": []
 }
