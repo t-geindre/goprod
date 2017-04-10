@@ -5,7 +5,8 @@ Yet another tool-deploy !
 Requirements:
  * Yarn
  * Npm
- * PHP7+
+ * NodeJS 6+
+ * PHP 7+
 
 ## Features
 
