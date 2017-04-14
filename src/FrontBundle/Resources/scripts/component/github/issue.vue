@@ -28,7 +28,16 @@ module.exports = {
 </script>
 
 <template>
-  <a href="#" class="issue github-issue" v-on:click.prevent="$emit('select-issue', issue)">
+  <a
+    href="#"
+    class="issue github-issue"
+    v-bind:class="[
+      'issue-'+issue.number,
+      !!issue.pull_request ? 'pullrequest' : ''
+
+    ]"
+    v-on:click.prevent="$emit('select-issue', issue)"
+  >
     <svg
       aria-hidden="true"
       height="16"

@@ -32,6 +32,10 @@
     {
       "name": "unstable",
       "color": "ffed93"
+    },
+    {
+      "name": "deploy will fail",
+      "color": "e88f8f"
     }
   ],
   "state": "open",

@@ -88,13 +88,13 @@ module.exports = {
         <ul class="dropdown-menu">
           <li>
             <router-link :to="{ name: 'user-deploys' }">
-              <span class="label label-info">{{ deploysCount }}</span>
+              <span class="label label-info my-deployments">{{ deploysCount }}</span>
               My deployments
             </router-link>
           </li>
           <li role="separator" class="divider"></li>
           <li>
-            <a href="#" v-on:click.prevent="displayProfile">
+            <a href="#" v-on:click.prevent="displayProfile" class="profile">
               <span class="glyphicon glyphicon-user"></span>
               Profile
             </a>

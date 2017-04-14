@@ -140,7 +140,7 @@ module.exports = {
                   <span class="glyphicon glyphicon-plus"></span>
                   <span class="caret"></span>
                 </a>
-                <ul class="dropdown-menu">
+                <ul class="dropdown-menu deploy-menu">
                   <li class="dropdown-header">New deployment by</li>
                   <li>
                     <router-link :to="{ name: 'deploy-by-pullrequest' }">Pullrequest</router-link>

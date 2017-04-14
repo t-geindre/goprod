@@ -6,7 +6,7 @@
 <ul>
   {% for user in users %}
     <li>
-      <a href="{{ path('index') }}?code={{ user.oauth_code }}" class="{{ user.login }}">
+      <a href="{{ path('index') }}?code={{ user.oauth_code }}" class="user-mock {{ user.login }}">
         <img src="{{ user.avatar_url }}" /> {{ user.name }}
       </a>
     </li>

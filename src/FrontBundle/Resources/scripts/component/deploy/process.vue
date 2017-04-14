@@ -6,6 +6,7 @@ const GithubClient = require('../../lib/github-client.js')
 const jQuery = require('jquery')
 
 module.exports = {
+  props: ['id'],
   data: () => ({
     pullrequest: false,
     loading: true,
@@ -25,23 +26,23 @@ module.exports = {
       },
       merge: {
         action: () => DeploysStore
-        .dispatch('merge', this.deploy, this.pullrequest.merge_commit_sha)
-        .then(() => this.loadPullrequest(false))
-        .then(() => {
-          if (this.deleteBranch) {
-            return GithubClient.deleteReference(
-              this.deploy.owner,
-              this.deploy.repository,
-              'heads/' + this.pullrequest.head.ref
-             );
-          }
-          this.processing = false;
-        })
-        .then(() => { this.processing = false; })
-        .catch(() => {
-          this.processing = false;
-          this.errors.merge = true;
-        }),
+          .dispatch('merge', this.deploy, this.pullrequest.merge_commit_sha)
+          .then(() => this.loadPullrequest(false))
+          .then(() => {
+            if (this.deleteBranch) {
+              return GithubClient.deleteReference(
+                this.deploy.owner,
+                this.deploy.repository,
+                'heads/' + this.pullrequest.head.ref
+               );
+            }
+            this.processing = false;
+          })
+          .then(() => { this.processing = false; })
+          .catch(() => {
+            this.processing = false;
+            this.errors.merge = true;
+          }),
         actionLabel: 'Merge pullrequest',
         cancel: true
       },
@@ -90,7 +91,7 @@ module.exports = {
     },
     deploy: function () {
       var deploy = DeploysStore.state.deploys.find(
-       (deploy) => deploy.id === this.$route.params.id
+        (deploy) => deploy.id === this.id
       );
       if (deploy === undefined) {
         return this.localDeploy;
@@ -131,6 +132,7 @@ module.exports = {
       });
     },
     update: function () {
+      this.localDeploy = {user: {}};
       this.processing = false;
       this.deleteBranch = true;
       this.loadPullrequest();
@@ -140,7 +142,7 @@ module.exports = {
       if (!this.deploy.id) {
         this.loading = true;
         ApiClient
-        .getDeploy(this.$route.params.id)
+        .getDeploy(this.id)
         .then(
             (response) => {
               this.loading = false;
@@ -170,16 +172,14 @@ module.exports = {
         DeploysStore.dispatch('refresh', this.deploy)
         .then(() => { this.processing = false });
       }
+      if (status === 'failure') {
+        this.processing = false;
+      }
     }
   },
   watch: {
-    $route: function () {
+    id: function () {
       this.update();
-    },
-    deploy: function () {
-      if (!this.deploy.id) {
-        this.update();
-      }
     }
   },
   components: {
@@ -248,10 +248,10 @@ module.exports = {
             </div>
           </template>
           <div class="pull-right" v-if="actionButtons">
-            <button type="button" @click="cancel(false)" class="btn btn-danger" v-if="cancelButton" v-bind:disabled="processing">
+            <button type="button" @click="cancel(false)" class="btn btn-danger cancel-deploy" v-if="cancelButton" v-bind:disabled="processing">
               <span class="glyphicon glyphicon-remove"></span> Cancel
             </button>
-            <button type="button" class="btn btn-primary" v-on:click="next" v-bind:disabled="!actionButton">
+            <button type="button" class="btn btn-primary action-button" v-on:click="next" v-bind:disabled="!actionButton">
               <loading-spinner class="inline" v-if="processing"></loading-spinner>
                 {{ actionLabel }} <span class="glyphicon glyphicon-chevron-right"></span>
               </button>
@@ -260,7 +260,7 @@ module.exports = {
       </div>
     </template>
     <loading-spinner class="medium" v-else></loading-spinner>
-    <div class="modal confirm-dialog">
+    <div class="modal confirm-dialog cancel-deployment-modal">
       <div class="modal-dialog modal-lg">
         <div class="modal-content">
           <div class="modal-header">
@@ -272,7 +272,7 @@ module.exports = {
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-            <button type="button" v-on:click="cancel(true)" class="btn btn-danger">Cancel deployment</button>
+            <button type="button" v-on:click="cancel(true)" class="btn btn-danger confirm-cancel-deploy">Cancel deployment</button>
           </div>
         </div>
       </div>

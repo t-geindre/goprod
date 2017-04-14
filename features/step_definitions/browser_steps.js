@@ -1,36 +1,37 @@
 const seleniumWebdriver = require('selenium-webdriver');
-const selectors = require('./config/selectors.json');
 const assert = require('assert');
 
-function getSelector(label) {
-  var lowerLabel = label.toLowerCase();
-
-  if (lowerLabel in selectors) {
-    return selectors[lowerLabel];
-  }
-
-  throw 'Unable to find corresponding selector to "' + label + '"';
-}
-
 module.exports = function () {
+
+  this.Given(/^I am logged in as (.+)$/, function (userName) {
+    return  this.driver.get(this.symfonyServer.baseUrl)
+      .then(() => this.waitElementLocated('login button'))
+      .then((el) => {
+        el.click();
+        return this.waitElementLocated(userName);
+      })
+      .then((el) => {
+        el.click();
+        return this.waitElementLocated('main container');
+      })
+  })
+
   this.Given(/^I am on the homepage$/, function () {
     this.driver.get(this.symfonyServer.baseUrl);
-      return this.driver.wait(
-        seleniumWebdriver.until.elementLocated({css: getSelector('main container')})
-      );
+    return this.waitElementLocated('main container');
   });
 
-  this.When(/^I click on (.*)$/, function (text) {
-    return this.driver.findElement({css: getSelector(text)}).then(function(element) {
-      return element.click();
-    });
+  this.When(/^I click on (.+)$/, function (label) {
+    return this.waitElementLocated(label)
+      .then((el) => el.click());
   });
 
-  this.When(/^I fill (.*) with "([^"]*)"$/, function (label, text) {
-    return this.driver.findElement({css: getSelector(label)}).then(function(element) {
-      element.clear();
-      element.sendKeys(text);
-    });
+  this.When(/^I fill (.+) with "([^"]*)"$/, function (label, text) {
+    return this.waitElementLocated(label)
+      .then((el) => {
+        el.clear();
+        el.sendKeys(text);
+      });
   });
 
   this.When('I refresh the current page', function() {
@@ -38,17 +39,27 @@ module.exports = function () {
   })
 
   this.Then(/^I should see "([^"]*)"$/, function (text) {
-    var xpath = "//*[contains(text(),'" + text + "')]";
-    var condition = seleniumWebdriver.until.elementLocated({xpath: xpath});
-    return this.driver.wait(condition);
+    return this.waitElementLocated({ xpath: "//*[contains(text(),\"" + text + "\")]" });
   });
 
-
-  this.Then(/^(.*) should be hidden$/, function (label) {
-    var selector = getSelector(label)+'[style*="display: none"]';
-    var condition = seleniumWebdriver.until.elementLocated({css: selector});
-    return this.driver.wait(condition);
+  this.Then(/^I should see ([^"]*)$/, function (label) {
+    return this.waitElementLocated(label)
+      .then((el) => this.waitElementVisible(el));
   });
+
+  this.Then(/^(.+) should be hidden$/, function (label) {
+    return this.waitElementLocated(label)
+      .then((el) => this.waitElementNotVisible(el));
+  });
+
+  this.Then(/^(.+) should be (enabled|disabled)$/, function (label, state) {
+    return this.waitElementLocated({ css: this.getSelector(label)+':'+state });
+  });
+
+  this.When(/^I press return on (.+)$/, function (label) {
+    return this.waitElementLocated(label)
+      .then((el) => el.sendKeys(seleniumWebdriver.Key.RETURN))
+  })
 };
 
 
