@@ -226,7 +226,34 @@ class GithubController extends AbstractController
     /**
      * @return Response
      */
-    public function deleteReferenceAction()
+    public function deleteReferenceAction() : Response
+    {
+        return $this->response([], 204);
+    }
+
+    /**
+     * @param string $repo
+     * @param string $owner
+     *
+     * @return Response
+     */
+    public function getLatestReleaseAction(string $repo, string $owner) : Response
+    {
+        if ($owner == 'OM') {
+            return $this->response(['tag_name' => 'v23.85.1'], 200);
+        }
+
+        if ($owner == 'ASSE') {
+            return $this->response(['tag_name' => 'no_semver_tag'], 200);
+        }
+
+        return $this->response([], 404);
+    }
+
+    /**
+     * @return Response
+     */
+    public function createReleaseAction() : Response
     {
         return $this->response([], 204);
     }

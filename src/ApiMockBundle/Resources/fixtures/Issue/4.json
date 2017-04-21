@@ -36,6 +36,10 @@
     {
       "name": "deploy will fail",
       "color": "e88f8f"
+    },
+    {
+      "name": "has releases",
+      "color": "4146f4"
     }
   ],
   "state": "open",

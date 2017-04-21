@@ -51,3 +51,18 @@ mock_gitub_delete_reference:
         _controller: ApiMockBundle:Github:deleteReference
     requirements:
         ref: .+
+
+mock_gitub_latest_release:
+    path: /repos/{owner}/{repo}/releases/latest
+    defaults:
+        _controller: ApiMockBundle:Github:getLatestRelease
+    requirements:
+        ref: .+
+
+mock_gitub_create_release:
+    path: /repos/{owner}/{repo}/releases
+    methods:  [POST]
+    defaults:
+        _controller: ApiMockBundle:Github:createRelease
+    requirements:
+        ref: .+
