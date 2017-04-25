@@ -6,6 +6,7 @@ const GithubClient = require('../../lib/github-client.js')
 const jQuery = require('jquery')
 
 module.exports = {
+  props: ['id'],
   data: () => ({
     pullrequest: false,
     loading: true,
@@ -14,7 +15,10 @@ module.exports = {
     errors: {},
     deployProcess: {},
     localDeploy: {user: {}},
-    deleteBranch: true
+    deleteBranch: true,
+    newTag: '',
+    latestRealease: false,
+    semver: []
   }),
   mounted: function () {
     this.deployProcess = {
@@ -25,23 +29,36 @@ module.exports = {
       },
       merge: {
         action: () => DeploysStore
-        .dispatch('merge', this.deploy, this.pullrequest.merge_commit_sha)
-        .then(() => this.loadPullrequest(false))
-        .then(() => {
-          if (this.deleteBranch) {
-            return GithubClient.deleteReference(
-              this.deploy.owner,
-              this.deploy.repository,
-              'heads/' + this.pullrequest.head.ref
-             );
-          }
-          this.processing = false;
-        })
-        .then(() => { this.processing = false; })
-        .catch(() => {
-          this.processing = false;
-          this.errors.merge = true;
-        }),
+          .dispatch('merge', this.deploy, this.pullrequest.merge_commit_sha)
+          .then(() => {
+            var promises = [
+              this.loadPullrequest(false)
+            ];
+            if (this.deleteBranch) {
+              promises.push(
+                GithubClient.deleteReference(
+                  this.deploy.owner,
+                  this.deploy.repository,
+                  'heads/' + this.pullrequest.head.ref
+                )
+              );
+            }
+            if (this.newTag.length > 0) {
+              promises.push(
+                GithubClient.createNewRelease(
+                  this.deploy.owner,
+                  this.deploy.repository,
+                  { tag_name: this.newTag }
+                )
+              );
+            }
+            return Promise.all(promises);
+          })
+          .then(() => { this.processing = false; })
+          .catch(() => {
+            this.processing = false;
+            this.errors.merge = true;
+          }),
         actionLabel: 'Merge pullrequest',
         cancel: true
       },
@@ -90,7 +107,7 @@ module.exports = {
     },
     deploy: function () {
       var deploy = DeploysStore.state.deploys.find(
-       (deploy) => deploy.id === this.$route.params.id
+        (deploy) => deploy.id === this.id
       );
       if (deploy === undefined) {
         return this.localDeploy;
@@ -119,20 +136,36 @@ module.exports = {
           owner: this.deploy.owner,
           repo: this.deploy.repository,
           number: this.deploy.pull_request_id
-        }).then((response) => {
-          this.pullrequest = response.data;
-          this.loading = false;
+        })
+          .then((response) => {
+            this.pullrequest = response.data;
 
-          if (this.pullrequest.merged && this.deploy.status === 'merge') {
-            DeploysStore.dispatch('refresh', this.deploy);
-          }
-          resolve();
-        }).catch(reject);
+            if (this.pullrequest.merged && this.deploy.status === 'merge') {
+              DeploysStore.dispatch('refresh', this.deploy);
+            }
+
+            return GithubClient.getLastestRelease(
+              this.deploy.owner,
+              this.deploy.repository
+            );
+          })
+          .then((response) => {
+            this.latestRealease = response.data.tag_name;
+            this.loading = false;
+            resolve()
+          })
+          .catch(() => {
+            this.loading = false;
+            resolve();
+          });
       });
     },
     update: function () {
+      this.localDeploy = {user: {}};
       this.processing = false;
       this.deleteBranch = true;
+      this.newTag = '';
+      this.latestRealease = false;
       this.loadPullrequest();
       if (this.deploy.status === 'deploy' && this.deploy.golive_id) {
         this.processing = true;
@@ -140,7 +173,7 @@ module.exports = {
       if (!this.deploy.id) {
         this.loading = true;
         ApiClient
-        .getDeploy(this.$route.params.id)
+        .getDeploy(this.id)
         .then(
             (response) => {
               this.loading = false;
@@ -170,15 +203,26 @@ module.exports = {
         DeploysStore.dispatch('refresh', this.deploy)
         .then(() => { this.processing = false });
       }
+      if (status === 'failure') {
+        this.processing = false;
+      }
     }
   },
   watch: {
-    $route: function () {
+    id: function () {
       this.update();
     },
-    deploy: function () {
-      if (!this.deploy.id) {
-        this.update();
+    latestRealease: function () {
+      this.semver = [];
+      if (this.latestRealease) {
+        var matches = this.latestRealease.match(/^([v]*)([0-9]+)\.([0-9]+)\.([0-9]+)$/);
+        if (matches) {
+          this.semver = [
+            { version: matches[1] + (parseInt(matches[2]) + 1) + '.0.0', label: 'major' },
+            { version: matches[1] + matches[2] + '.' + (parseInt(matches[3]) + 1) + '.0', label: 'minor' },
+            { version: matches[1] + matches[2] + '.' + matches[3] + '.' + (parseInt(matches[4]) + 1), label: 'patch' }
+          ];
+        }
       }
     }
   },
@@ -229,12 +273,33 @@ module.exports = {
             <div class="panel-heading">
               <h3 class="panel-title">Merge options</h3>
             </div>
-            <div class="panel-body checkbox">
-              <label>
-                <input type="checkbox" v-model="deleteBranch" />
-                delete associated branch
-                <code>{{ pullrequest.head.ref }}</code>
-              </label>
+            <div class="panel-body">
+              <div class="form-group" v-if="latestRealease">
+                <label for="newTagInput">Create a new release (current <code>{{ latestRealease }}</code>):</label>
+                <div v-bind:class="{ 'input-group': semver.length > 0 }">
+                  <input class="form-control" v-model="newTag" id="newTagInput" />
+                  <div class="input-group-btn" v-if="semver.length > 0">
+                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      Semver <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+                      <li v-for="version in semver">
+                        <a href="#" v-on:click.prevent="newTag = version.version">
+                          <code>{{ version.version }}</code>
+                          <em>{{ version.label }}</em>
+                        </a>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+              <label>Delete associated branch:</label>
+              <div class="form-group checkbox">
+                <label>
+                  <input type="checkbox" v-model="deleteBranch" />
+                  <code>{{ pullrequest.head.ref }}</code>
+                </label>
+              </div>
             </div>
           </div>
           <golive-deploy v-on:status="goliveStatus" v-if="deploy.golive_id" v-bind:id="deploy.golive_id">
@@ -248,19 +313,19 @@ module.exports = {
             </div>
           </template>
           <div class="pull-right" v-if="actionButtons">
-            <button type="button" @click="cancel(false)" class="btn btn-danger" v-if="cancelButton" v-bind:disabled="processing">
+            <button type="button" @click="cancel(false)" class="btn btn-danger cancel-deploy" v-if="cancelButton" v-bind:disabled="processing">
               <span class="glyphicon glyphicon-remove"></span> Cancel
             </button>
-            <button type="button" class="btn btn-primary" v-on:click="next" v-bind:disabled="!actionButton">
+            <button type="button" class="btn btn-primary action-button" v-on:click="next" v-bind:disabled="!actionButton">
               <loading-spinner class="inline" v-if="processing"></loading-spinner>
-                {{ actionLabel }} <span class="glyphicon glyphicon-chevron-right"></span>
-              </button>
+              {{ actionLabel }} <span class="glyphicon glyphicon-chevron-right"></span>
+            </button>
           </div>
         </div>
       </div>
     </template>
     <loading-spinner class="medium" v-else></loading-spinner>
-    <div class="modal confirm-dialog">
+    <div class="modal confirm-dialog cancel-deployment-modal">
       <div class="modal-dialog modal-lg">
         <div class="modal-content">
           <div class="modal-header">
@@ -272,7 +337,7 @@ module.exports = {
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-            <button type="button" v-on:click="cancel(true)" class="btn btn-danger">Cancel deployment</button>
+            <button type="button" v-on:click="cancel(true)" class="btn btn-danger confirm-cancel-deploy">Cancel deployment</button>
           </div>
         </div>
       </div>

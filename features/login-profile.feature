@@ -17,11 +17,23 @@ Feature: Login
 
     When I fill golive API key field with "fds89g7sd98f7sd89c4sd894sd89"
     And I click on update profile button
-    Then modal profile should be hidden
+    Then the profile modal should be hidden
 
     When I refresh the current page
     Then I should see "Arthur PENDRAGON"
     And I should see "Logout"
+
+    When I click on my name
+    And I click on profile button
+    Then I should see the profile modal
+
+    When I fill golive API key field with "invalid key"
+    And I click on update profile button
+    Then I should see "This API key is not valid."
+
+    When I fill golive API key field with " "
+    And I click on update profile button
+    Then the profile modal should be hidden
 
     When I click on my name
     And I click on logout button

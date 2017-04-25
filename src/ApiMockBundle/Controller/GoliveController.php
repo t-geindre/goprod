@@ -142,11 +142,33 @@ class GoliveController extends AbstractController
             return $this->response(['message' => 'Not Found'], 404);
         }
 
-        $wait = true;
-        if ($deployment->getStatus() != 'pending') {
+        $finalStatus = 'success';
+        if (!is_null(
+            $pullrequestNumber = $this
+                ->get('api_bundle.repository.deploy')
+                ->findOneBy(['goliveId' => $id])
+                ->getPullRequestId()
+        )) {
+            array_map(
+                function ($label) use (&$finalStatus) {
+                    if ($label['name'] == 'deploy will fail') {
+                        $finalStatus = 'failure';
+                    }
+                },
+                $this
+                    ->get('api_mock.repository.issue')
+                    ->findOneBy([
+                        'number' => $pullrequestNumber,
+                    ])
+                    ->getPayload()['labels']
+            );
+        }
+
+        $wait = $this->container->getParameter('kernel.environment') != 'test';
+        if (in_array($deployment->getStatus(), ['success', 'failure'])) {
             $wait = false;
         } else {
-            $deployment->setStatus('success');
+            $deployment->setStatus($finalStatus);
             $em = $this->get('doctrine')->getManager();
             $em->persist($deployment);
             $em->flush();
@@ -198,8 +220,8 @@ class GoliveController extends AbstractController
                 'status' => 'running',
             ],
             [
-                'message' => 'Success!',
-                'status' => 'success',
+                'message' => $finalStatus.'!',
+                'status' => $finalStatus,
             ],
         ];
 

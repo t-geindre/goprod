@@ -39,7 +39,8 @@ module.exports = [
   {
     name: 'deploy-process',
     path: '/deploys/:id',
-    component: require('../component/deploy/process.vue')
+    component: require('../component/deploy/process.vue'),
+    props: (route) => ({ id: parseInt(route.params.id) })
   },
   {
     name: 'deploys',

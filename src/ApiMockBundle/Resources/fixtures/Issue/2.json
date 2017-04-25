@@ -32,6 +32,10 @@
     {
       "name": "unstable",
       "color": "ffed93"
+    },
+    {
+      "name": "has semver",
+      "color": "f141f4"
     }
   ],
   "state": "open",

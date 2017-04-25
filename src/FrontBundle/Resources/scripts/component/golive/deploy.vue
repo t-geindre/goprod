@@ -23,6 +23,7 @@
       },
       methods: {
         update: function () {
+          this.events = [];
           GoliveClient.getDeployment(this.id).then((response) => {
             this.status = response.data.status;
           });
@@ -74,7 +75,8 @@
       v-bind:class="{
         'panel-success': status == 'success',
         'panel-info': status == 'pending' || status == 'running',
-        'panel-danger': status == 'failure'
+        'panel-danger': status == 'failure',
+        'golive-deploy' : true
       }"
     >
       <div class="panel-heading">

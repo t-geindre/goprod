@@ -117,7 +117,7 @@ module.exports = {
             <template v-if="!pullrequest || (pullrequest.mergeable || pullrequest.merged)">
             </template>
             <button
-              type="button" class="btn btn-primary" v-on:click="create"
+              type="button" class="btn btn-primary create-deploy" v-on:click="create"
               v-bind:disabled="pullrequest && (!pullrequest.mergeable && !pullrequest.merged)"
             >
               New deployment

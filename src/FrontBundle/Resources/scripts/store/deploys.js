@@ -21,9 +21,9 @@ module.exports = new Vuex.Store({
     },
     update: function (state, deploy) {
       Vue.set(
-       state.deploys,
-       state.deploys.findIndex((item) => item.id === deploy.id),
-       deploy
+        state.deploys,
+        state.deploys.findIndex((item) => item.id === deploy.id),
+        deploy
       );
     }
   },
@@ -39,64 +39,61 @@ module.exports = new Vuex.Store({
           return;
         }
         ApiClient.getDeploy(deploy.id)
-        .then((response) => {
-          context.commit('update', response.data);
-          resolve(response);
-        }, reject);
+          .then((response) => {
+            context.commit('update', response.data);
+            resolve(response);
+          }, reject);
       });
     },
     create: function (context, deploy) {
       return new Promise(function (resolve, reject) {
         ApiClient.createDeploy(deploy)
-        .then(function (response) {
-          context.commit('add', response.data.entity);
-          resolve(response);
-        }, reject);
+          .then(function (response) {
+            context.commit('add', response.data.entity);
+            resolve(response);
+          }, reject);
       });
     },
     cancel: function (context, deploy) {
       return new Promise(function (resolve, reject) {
         ApiClient.cancelDeploy(deploy.id)
-        .then(function (response) {
-          context.commit('update', response.data);
-          resolve(response);
-        }, reject);
+          .then(function (response) {
+            context.commit('update', response.data);
+            resolve(response);
+          }, reject);
       });
     },
     confirm: function (context, deploy) {
       return new Promise(function (resolve, reject) {
         ApiClient.confirmDeploy(deploy.id)
-        .then(function (response) {
-          context.commit('update', response.data);
-          resolve(response);
-        }, reject);
+          .then(function (response) {
+            context.commit('update', response.data);
+            resolve(response);
+          }, reject);
       });
     },
     merge: function (context, deploy, sha) {
       return new Promise(function (resolve, reject) {
-        GithubClient.mergePullRequest(
-          {
+        GithubClient.mergePullRequest({
             owner: deploy.owner,
             repo: deploy.repository,
             number: deploy.pull_request_id
-          },
-        sha
-       )
-       .then(() => {
-         return context.dispatch('refresh', deploy);
-       })
-       .then(resolve, reject)
+        }, sha)
+          .then(() => {
+            return context.dispatch('refresh', deploy);
+          })
+          .then(resolve, reject)
       });
     },
     deploy: function (context, deploy) {
       return new Promise(function (resolve, reject) {
         ApiClient
-        .deploy(deploy.id)
-        .then((response) => {
-          context.commit('update', response.data);
-          resolve(response);
-        })
-        .catch(reject);
+          .deploy(deploy.id)
+          .then((response) => {
+            context.commit('update', response.data);
+            resolve(response);
+          })
+          .catch(reject);
       });
     }
   }

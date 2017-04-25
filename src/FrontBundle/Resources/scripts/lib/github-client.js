@@ -19,12 +19,12 @@ var GithubClient = function () {
     scope: ''
   };
 
-    // User
+  // User
   this.getCurrentUser = function () {
     return this.get('user');
   }
 
-    // Issues
+  // Issues
   this.searchIssues = function (terms) {
     return this.get(
       'search/issues',
@@ -39,7 +39,7 @@ var GithubClient = function () {
      );
   }
 
-    // Pullrequest
+  // Pullrequest
   this.getPullRequest = function (pullrequest) {
     return this.get(
       'repos/' + pullrequest.owner + '/' + pullrequest.repo + '/pulls/' + pullrequest.number,
@@ -54,22 +54,37 @@ var GithubClient = function () {
      );
   }
 
-    // Organizations
+  // Organizations
   this.getOrganizations = function () {
     return this.get('organizations');
   }
 
-    // Repositories
+  // Repositories
   this.searchRepositories = function (terms = {}) {
     return this.get('search/repositories', { params: terms });
   }
 
-    // References
+  // References
   this.deleteReference = function (owner, repo, ref) {
     return this.delete('repos/' + owner + '/' + repo + '/git/refs/' + encodeURI(ref));
   }
 
-    // Internals
+  // Releases
+  this.getLastestRelease = function (owner, repo) {
+    return this.get(
+      'repos/' + owner + '/' + repo + '/releases/latest',
+      { params: { avoidCache: (new Date()).getTime() } }
+    );
+  }
+
+  this.createNewRelease = function (owner, repo, payload) {
+    return this.post(
+      'repos/' + owner + '/' + repo + '/releases',
+      { body: payload }
+    );
+  }
+
+  // Internals
   this.setupUrls = function (urls) {
     this.urls = urls;
   }
@@ -154,6 +169,11 @@ var GithubClient = function () {
 
   this.put = function (url, options = {}) {
     options.method = 'put';
+    return this.get(url, options);
+  }
+
+  this.post = function (url, options = {}) {
+    options.method = 'post';
     return this.get(url, options);
   }
 

@@ -132,7 +132,7 @@ module.exports = {
           </label>
           <label class="btn btn-default"  v-bind:class="{active:!open}">
             <input type="radio" name="open" v-on:click="filter({open: false})" />
-            <span class="glyphicon glyphicon-remove"></span> Closed
+            <span class="glyphicon glyphicon-remove closed-issue"></span> Closed
           </label>
         </div>
         <div class="dropdown pull-right">
