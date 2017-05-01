@@ -17,8 +17,10 @@ class AppKernel extends Kernel
             new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
             new Sensio\Bundle\BuzzBundle\SensioBuzzBundle(),
             new JMS\SerializerBundle\JMSSerializerBundle(),
+            new CL\Bundle\SlackBundle\CLSlackBundle(),
             new ApiBundle\ApiBundle(),
             new FrontBundle\FrontBundle(),
+            new NotificationBundle\NotificationBundle(),
         ];
 
         if (in_array($this->getEnvironment(), ['dev', 'test'], true)) {

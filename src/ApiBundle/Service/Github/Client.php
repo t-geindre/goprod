@@ -90,6 +90,14 @@ class Client implements AccessTokenAwareInterface
     }
 
     /**
+     * @return string
+     */
+    public function getSiteUrl() : string
+    {
+        return $this->siteUrl;
+    }
+
+    /**
      * @param string $code
      *
      * @return array

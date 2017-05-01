@@ -23,3 +23,9 @@ doctrine:
 
 parameters:
     hosts.local: http://localhost:8765
+
+services:
+    # Avoid notifications in test env
+    # @todo fix this
+    notification_bundle.listener.deploy.status.update:
+        abstract: true

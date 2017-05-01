@@ -1,0 +1,20 @@
+services:
+    notification_bundle.notifier.slack:
+        class: "NotificationBundle\\Notifier\\Slack"
+        arguments:
+            - "%notification_bunlde.slack.notifications%"
+            - "@api_bundle.github_client"
+            - "@cl_slack.api_client"
+            - "%notification_bunlde.slack.name%"
+            - "%notification_bunlde.slack.icon%"
+
+    notification_bundle.listener.deploy.status.update:
+        class: "NotificationBundle\\Listener\\Deploy\\StatusUpdateListener"
+        tags:
+            -
+                name: "kernel.event_listener"
+                event: "api_bundle.events.deploy.status.update"
+                method: "onUpdate"
+        calls:
+            - ["addNotifier", ["@notification_bundle.notifier.slack"]]
+
