@@ -10,3 +10,5 @@ parameters:
     database.name: goprod
     database.user: ~
     database.password: ~
+    slack.notification.token: "xoxb-176989662084-C2inwQXwLHkRcz84Bi2SvRJN"
+    slack.notification.channel: "#test-deploy-bot"

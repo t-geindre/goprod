@@ -2,7 +2,6 @@ imports:
     - { resource: parameters.yml }
     - { resource: security.yml }
     - { resource: services.yml }
-    - { resource: "@ApiBundle/Resources/config/services.yml" }
 
 framework:
     router:
@@ -52,3 +51,25 @@ api:
 jms_serializer:
     metadata:
         auto_detection: true
+
+cl_slack:
+    api_token: "%slack.notification.token%"
+
+notification:
+    slack:
+        icon: "smirk_cat"
+        name: "Goprod"
+        notifications:
+            -
+                channel: "%slack.notification.channel%"
+                status: "new"
+                message: ":gear: New deployment started by *{user_name}*."
+                attach_pullrequest: true
+            -
+                channel: "%slack.notification.channel%"
+                status: "done"
+                message: ":white_check_mark: Deployment started by *{user_name}* is done."
+            -
+                channel: "%slack.notification.channel%"
+                status: "canceled"
+                message: ":boom: Deployment started by *{user_name}* has been canceled."

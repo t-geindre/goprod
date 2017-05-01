@@ -7,6 +7,7 @@ Requirements:
  * Npm
  * NodeJS 6+
  * PHP 7+
+ * Composer
 
 ## Features
 
@@ -15,8 +16,10 @@ Requirements:
    * Or a description provided by user
  * Manages deployment queues
  * The whole deployment process in one place:
+   * Slack notifications
    * Merge Github Pullrequest
    * Delete associated branch
+   * Create a new release (including semver managment)
    * Golive deployment
 
 ## Building the application

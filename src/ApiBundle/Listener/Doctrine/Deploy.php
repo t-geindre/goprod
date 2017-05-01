@@ -1,10 +1,13 @@
 <?php
+
 namespace ApiBundle\Listener\Doctrine;
 
 use ApiBundle\Entity\Deploy as Entity;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
+use Doctrine\ORM\Event\LifecycleEventArgs;
 use ApiBundle\Manager\DeployManager;
+use ApiBundle\Event\DeployStatusUpdateEvent;
 
 /**
  * Deploy listener
@@ -22,16 +25,41 @@ class Deploy
     protected $deployManager;
 
     /**
+     * @var Symfony\Component\EventDispatcher\EventDispatcherInterface
+     */
+    protected $eventDispatcher;
+
+    /**
      * @var ContainerInterface
      */
     protected $container;
 
     /**
+     * Note: Container injection to avoid cyclic dependency
+     *
      * @param ContainerInterface $container
      */
     public function __construct(ContainerInterface $container)
     {
+        $this->eventDispatcher = $container->get('event_dispatcher');
         $this->container = $container;
+    }
+
+    /**
+     * @param LifecycleEventArgs $event
+     */
+    public function prePersist(LifecycleEventArgs $event)
+    {
+        if ($this->isSupported($deploy = $event->getEntity())) {
+            $this->eventDispatcher->dispatch(
+                DeployStatusUpdateEvent::NAME,
+                new DeployStatusUpdateEvent(
+                    $deploy,
+                    null,
+                    $deploy->getStatus()
+                )
+            );
+        }
     }
 
     /**
@@ -41,15 +69,23 @@ class Deploy
     {
         $deploy = $event->getEntity();
 
-        if ($this->isSupported($deploy)
-            && $event->hasChangedField('status')
-            && in_array($deploy->getStatus(), [Entity::STATUS_CANCELED, Entity::STATUS_DONE])
-        ) {
-            // avoid duplicate entries
-            $this->queuesToUpdate[$deploy->getOwner().$deploy->getRepository()] = [
-                'owner' => $deploy->getOwner(),
-                'repository' => $deploy->getRepository(),
-            ];
+        if ($this->isSupported($deploy) && $event->hasChangedField('status')) {
+            $this->eventDispatcher->dispatch(
+                DeployStatusUpdateEvent::NAME,
+                new DeployStatusUpdateEvent(
+                    $deploy,
+                    $event->getOldValue('status'),
+                    $deploy->getStatus()
+                )
+            );
+
+            if (in_array($deploy->getStatus(), [Entity::STATUS_CANCELED, Entity::STATUS_DONE])) {
+                // avoid duplicate entries
+                $this->queuesToUpdate[$deploy->getOwner().$deploy->getRepository()] = [
+                    'owner' => $deploy->getOwner(),
+                    'repository' => $deploy->getRepository(),
+                ];
+            }
         }
     }
 

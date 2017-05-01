@@ -2,5 +2,5 @@ api:
     resource: "@ApiBundle/Resources/config/routing.yml"
     prefix:   /api
 
-app_bundle:
+front_bundle:
     resource: '@FrontBundle/Resources/config/routing.yml'
