@@ -4,6 +4,7 @@ services:
         arguments:
             - "%notification_bunlde.slack.notifications%"
             - "@api_bundle.github_client"
+            - "@router"
             - "@cl_slack.api_client"
             - "%notification_bunlde.slack.name%"
             - "%notification_bunlde.slack.icon%"

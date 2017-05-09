@@ -7,6 +7,8 @@ use CL\Slack\Payload\ChatPostMessagePayload;
 use CL\Slack\Model\Attachment;
 use ApiBundle\Entity\Deploy;
 use ApiBundle\Service\Github\Client as GithubClient;
+use Symfony\Bundle\FrameworkBundle\Routing\Router;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * Slack notifier
@@ -31,6 +33,7 @@ class Slack extends AbstractNotifier
     /**
      * @param array        $notifications
      * @param GithubClient $githubClient
+     * @param Router       $router
      * @param SlackClient  $client
      * @param string|null  $name
      * @param string|null  $icon
@@ -38,11 +41,12 @@ class Slack extends AbstractNotifier
     public function __construct(
         array $notifications,
         GithubClient $githubClient,
+        Router $router,
         SlackClient $client,
         string $name = null,
         string $icon = null
     ) {
-        parent::__construct($notifications, $githubClient);
+        parent::__construct($notifications, $githubClient, $router);
         $this->client = $client;
         $this->name = $name;
         $this->icon = $icon;
@@ -70,19 +74,31 @@ class Slack extends AbstractNotifier
         $attachment = new Attachment();
         $attachment->setText($notification['message']);
         $attachment->setMrkdwnIn(['text']);
+
         $attachment->setTitle($deploy->getDescription());
+        $attachment->setTitleLink(sprintf(
+            '%s#/deploys/%s',
+            $this->router->generate('index', [], UrlGeneratorInterface::ABSOLUTE_URL),
+            $deploy->getId()
+        ));
+
+        $attachment->setAuthorLink(sprintf(
+            '%s%s/%s',
+            $this->githubClient->getSiteUrl(),
+            $deploy->getOwner(),
+            $deploy->getRepository()
+        ));
+        $attachment->setAuthorName(sprintf('%s/%s', $owner, $repository));
+
         $attachment->setColor([
             'new' => 'warning',
             'done' => 'good',
             'canceled' => 'danger',
         ][$notification['status']]);
 
-        $attachment->setAuthorName(sprintf('%s/%s', $owner, $repository));
-
         if (!is_null($number = $deploy->getPullRequestId())) {
             $pullrequest = $this->githubClient->getPullRequest($owner, $repository, $number);
             $attachment->setAuthorLink($pullrequest['html_url']);
-            $attachment->setTitleLink($pullrequest['html_url']);
             $attachment->setAuthorName(sprintf('%s/%s#%d', $owner, $repository, $number));
         }
 

@@ -4,6 +4,7 @@ namespace NotificationBundle\Notifier;
 
 use ApiBundle\Entity\Deploy;
 use ApiBundle\Service\Github\Client as GithubClient;
+use Symfony\Bundle\FrameworkBundle\Routing\Router;
 
 /**
  * Common notifiers functions
@@ -21,13 +22,23 @@ abstract class AbstractNotifier
     protected $githubClient;
 
     /**
+     * @var Router
+     */
+    protected $router;
+
+    /**
      * @param array        $notifications
      * @param GithubClient $githubClient
+     * @param Router       $router
      */
-    public function __construct(array $notifications, GithubClient $githubClient)
-    {
+    public function __construct(
+        array $notifications,
+        GithubClient $githubClient,
+        Router $router
+    ) {
         $this->notifications = $notifications;
         $this->githubClient = $githubClient;
+        $this->router = $router;
     }
 
     /**

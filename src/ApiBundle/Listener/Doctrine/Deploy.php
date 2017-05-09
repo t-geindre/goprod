@@ -48,7 +48,7 @@ class Deploy
     /**
      * @param LifecycleEventArgs $event
      */
-    public function prePersist(LifecycleEventArgs $event)
+    public function postPersist(LifecycleEventArgs $event)
     {
         if ($this->isSupported($deploy = $event->getEntity())) {
             $this->eventDispatcher->dispatch(

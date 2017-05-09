@@ -57,7 +57,7 @@ services:
                 event: "preUpdate"
             -
                 name: "doctrine.event_listener"
-                event: "prePersist"
+                event: "postPersist"
             -
                 name: "kernel.event_listener"
                 event: "kernel.terminate"
