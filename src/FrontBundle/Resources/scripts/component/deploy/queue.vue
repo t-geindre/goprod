@@ -41,11 +41,11 @@ module.exports = {
     'deploy': require('./deploy.vue')
   },
   watch: {
-    deploy: {
-      handler: function () {
+    'deploy.repository': function () {
         this.update();
-      },
-      deep: true
+    },
+    'deploy.owner':  function () {
+        this.update();
     }
   },
   beforeDestroy: function () {
